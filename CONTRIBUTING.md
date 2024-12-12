@@ -24,7 +24,7 @@ Your input is vital to making sure that Onyx moves in the right direction.
 Before starting on implementation, please raise a GitHub issue.
 
 And always feel free to message us (Chris Weaver / Yuhong Sun) on
-[Slack](https://join.slack.com/t/onyx/shared_invite/zt-2lcmqw703-071hBuZBfNEOGUsLa5PXvQ) /
+[Slack](https://join.slack.com/t/danswer/shared_invite/zt-1w76msxmd-HJHLe3KNFIAIzk_0dSOKaQ) /
 [Discord](https://discord.gg/TDJ59cGV2X) directly about anything at all.
 
 ### Contributing Code
@@ -42,7 +42,7 @@ Our goal is to make contributing as easy as possible. If you run into any issues
 That way we can help future contributors and users can avoid the same issue.
 
 We also have support channels and generally interesting discussions on our
-[Slack](https://join.slack.com/t/onyx/shared_invite/zt-2afut44lv-Rw3kSWu6_OmdAXRpCv80DQ)
+[Slack](https://join.slack.com/t/danswer/shared_invite/zt-1w76msxmd-HJHLe3KNFIAIzk_0dSOKaQ)
 and
 [Discord](https://discord.gg/TDJ59cGV2X).
 

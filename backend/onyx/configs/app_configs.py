@@ -495,7 +495,7 @@ PARSE_WITH_TRAFILATURA = os.environ.get("PARSE_WITH_TRAFILATURA", "").lower() ==
 # NOTE: this should only be enabled if you have purchased an enterprise license.
 # if you're interested in an enterprise license, please reach out to us at
 # founders@onyx.app OR message Chris Weaver or Yuhong Sun in the Onyx
-# Slack community (https://join.slack.com/t/onyx/shared_invite/zt-1w76msxmd-HJHLe3KNFIAIzk_0dSOKaQ)
+# Slack community (https://join.slack.com/t/danswer/shared_invite/zt-1w76msxmd-HJHLe3KNFIAIzk_0dSOKaQ)
 ENTERPRISE_EDITION_ENABLED = (
     os.environ.get("ENABLE_PAID_ENTERPRISE_EDITION_FEATURES", "").lower() == "true"
 )
