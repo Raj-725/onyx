@@ -12,17 +12,17 @@ from sqlalchemy import func
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from danswer.auth.users import current_admin_user
-from danswer.configs.app_configs import AUTH_TYPE
-from danswer.configs.constants import AuthType
-from danswer.db.models import User
-from danswer.utils.logger import setup_logger
-from ee.danswer.configs.app_configs import JWT_PUBLIC_KEY_URL
-from ee.danswer.configs.app_configs import SUPER_CLOUD_API_KEY
-from ee.danswer.configs.app_configs import SUPER_USERS
-from ee.danswer.db.saml import get_saml_account
-from ee.danswer.server.seeding import get_seed_config
-from ee.danswer.utils.secrets import extract_hashed_cookie
+from ee.onyx.configs.app_configs import JWT_PUBLIC_KEY_URL
+from ee.onyx.configs.app_configs import SUPER_CLOUD_API_KEY
+from ee.onyx.configs.app_configs import SUPER_USERS
+from ee.onyx.db.saml import get_saml_account
+from ee.onyx.server.seeding import get_seed_config
+from ee.onyx.utils.secrets import extract_hashed_cookie
+from onyx.auth.users import current_admin_user
+from onyx.configs.app_configs import AUTH_TYPE
+from onyx.configs.constants import AuthType
+from onyx.db.models import User
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()

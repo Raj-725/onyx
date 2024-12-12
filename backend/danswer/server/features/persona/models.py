@@ -4,15 +4,15 @@ from uuid import UUID
 from pydantic import BaseModel
 from pydantic import Field
 
-from danswer.context.search.enums import RecencyBiasSetting
-from danswer.db.models import Persona
-from danswer.db.models import PersonaCategory
-from danswer.db.models import StarterMessage
-from danswer.server.features.document_set.models import DocumentSet
-from danswer.server.features.prompt.models import PromptSnapshot
-from danswer.server.features.tool.models import ToolSnapshot
-from danswer.server.models import MinimalUserSnapshot
-from danswer.utils.logger import setup_logger
+from onyx.context.search.enums import RecencyBiasSetting
+from onyx.db.models import Persona
+from onyx.db.models import PersonaCategory
+from onyx.db.models import StarterMessage
+from onyx.server.features.document_set.models import DocumentSet
+from onyx.server.features.prompt.models import PromptSnapshot
+from onyx.server.features.tool.models import ToolSnapshot
+from onyx.server.models import MinimalUserSnapshot
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

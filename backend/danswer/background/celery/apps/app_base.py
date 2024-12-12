@@ -16,24 +16,24 @@ from sentry_sdk.integrations.celery import CeleryIntegration
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from danswer.background.celery.apps.task_formatters import CeleryTaskColoredFormatter
-from danswer.background.celery.apps.task_formatters import CeleryTaskPlainFormatter
-from danswer.background.celery.celery_utils import celery_is_worker_primary
-from danswer.configs.constants import DanswerRedisLocks
-from danswer.db.engine import get_sqlalchemy_engine
-from danswer.document_index.vespa_constants import VESPA_CONFIG_SERVER_URL
-from danswer.redis.redis_connector import RedisConnector
-from danswer.redis.redis_connector_credential_pair import RedisConnectorCredentialPair
-from danswer.redis.redis_connector_delete import RedisConnectorDelete
-from danswer.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
-from danswer.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
-from danswer.redis.redis_connector_prune import RedisConnectorPrune
-from danswer.redis.redis_document_set import RedisDocumentSet
-from danswer.redis.redis_pool import get_redis_client
-from danswer.redis.redis_usergroup import RedisUserGroup
-from danswer.utils.logger import ColoredFormatter
-from danswer.utils.logger import PlainFormatter
-from danswer.utils.logger import setup_logger
+from onyx.background.celery.apps.task_formatters import CeleryTaskColoredFormatter
+from onyx.background.celery.apps.task_formatters import CeleryTaskPlainFormatter
+from onyx.background.celery.celery_utils import celery_is_worker_primary
+from onyx.configs.constants import OnyxRedisLocks
+from onyx.db.engine import get_sqlalchemy_engine
+from onyx.document_index.vespa_constants import VESPA_CONFIG_SERVER_URL
+from onyx.redis.redis_connector import RedisConnector
+from onyx.redis.redis_connector_credential_pair import RedisConnectorCredentialPair
+from onyx.redis.redis_connector_delete import RedisConnectorDelete
+from onyx.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
+from onyx.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
+from onyx.redis.redis_connector_prune import RedisConnectorPrune
+from onyx.redis.redis_document_set import RedisDocumentSet
+from onyx.redis.redis_pool import get_redis_client
+from onyx.redis.redis_usergroup import RedisUserGroup
+from onyx.utils.logger import ColoredFormatter
+from onyx.utils.logger import PlainFormatter
+from onyx.utils.logger import setup_logger
 from shared_configs.configs import SENTRY_DSN
 
 
@@ -300,7 +300,7 @@ def on_secondary_worker_init(sender: Any, **kwargs: Any) -> None:
 
     logger.info("Waiting for primary worker to be ready...")
     while True:
-        if r.exists(DanswerRedisLocks.PRIMARY_WORKER):
+        if r.exists(OnyxRedisLocks.PRIMARY_WORKER):
             break
 
         time_elapsed = time.monotonic() - time_start

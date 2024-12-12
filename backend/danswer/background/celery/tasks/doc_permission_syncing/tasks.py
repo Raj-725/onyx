@@ -10,35 +10,35 @@ from celery.exceptions import SoftTimeLimitExceeded
 from redis import Redis
 from redis.lock import Lock as RedisLock
 
-from danswer.access.models import DocExternalAccess
-from danswer.background.celery.apps.app_base import task_logger
-from danswer.configs.app_configs import JOB_TIMEOUT
-from danswer.configs.constants import CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT
-from danswer.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from danswer.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
-from danswer.configs.constants import DanswerCeleryPriority
-from danswer.configs.constants import DanswerCeleryQueues
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.configs.constants import DanswerRedisLocks
-from danswer.configs.constants import DocumentSource
-from danswer.db.connector_credential_pair import get_connector_credential_pair_from_id
-from danswer.db.document import upsert_document_by_connector_credential_pair
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.enums import AccessType
-from danswer.db.enums import ConnectorCredentialPairStatus
-from danswer.db.models import ConnectorCredentialPair
-from danswer.db.users import batch_add_ext_perm_user_if_not_exists
-from danswer.redis.redis_connector import RedisConnector
-from danswer.redis.redis_connector_doc_perm_sync import (
+from ee.onyx.db.connector_credential_pair import get_all_auto_sync_cc_pairs
+from ee.onyx.db.document import upsert_document_external_perms
+from ee.onyx.external_permissions.sync_params import DOC_PERMISSION_SYNC_PERIODS
+from ee.onyx.external_permissions.sync_params import DOC_PERMISSIONS_FUNC_MAP
+from onyx.access.models import DocExternalAccess
+from onyx.background.celery.apps.app_base import task_logger
+from onyx.configs.app_configs import JOB_TIMEOUT
+from onyx.configs.constants import CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT
+from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from onyx.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
+from onyx.configs.constants import DocumentSource
+from onyx.configs.constants import OnyxCeleryPriority
+from onyx.configs.constants import OnyxCeleryQueues
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.configs.constants import OnyxRedisLocks
+from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
+from onyx.db.document import upsert_document_by_connector_credential_pair
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.enums import AccessType
+from onyx.db.enums import ConnectorCredentialPairStatus
+from onyx.db.models import ConnectorCredentialPair
+from onyx.db.users import batch_add_ext_perm_user_if_not_exists
+from onyx.redis.redis_connector import RedisConnector
+from onyx.redis.redis_connector_doc_perm_sync import (
     RedisConnectorPermissionSyncPayload,
 )
-from danswer.redis.redis_pool import get_redis_client
-from danswer.utils.logger import doc_permission_sync_ctx
-from danswer.utils.logger import setup_logger
-from ee.danswer.db.connector_credential_pair import get_all_auto_sync_cc_pairs
-from ee.danswer.db.document import upsert_document_external_perms
-from ee.danswer.external_permissions.sync_params import DOC_PERMISSION_SYNC_PERIODS
-from ee.danswer.external_permissions.sync_params import DOC_PERMISSIONS_FUNC_MAP
+from onyx.redis.redis_pool import get_redis_client
+from onyx.utils.logger import doc_permission_sync_ctx
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -84,7 +84,7 @@ def _is_external_doc_permissions_sync_due(cc_pair: ConnectorCredentialPair) -> b
 
 
 @shared_task(
-    name=DanswerCeleryTask.CHECK_FOR_DOC_PERMISSIONS_SYNC,
+    name=OnyxCeleryTask.CHECK_FOR_DOC_PERMISSIONS_SYNC,
     soft_time_limit=JOB_TIMEOUT,
     bind=True,
 )
@@ -92,7 +92,7 @@ def check_for_doc_permissions_sync(self: Task, *, tenant_id: str | None) -> None
     r = get_redis_client(tenant_id=tenant_id)
 
     lock_beat = r.lock(
-        DanswerRedisLocks.CHECK_CONNECTOR_DOC_PERMISSIONS_SYNC_BEAT_LOCK,
+        OnyxRedisLocks.CHECK_CONNECTOR_DOC_PERMISSIONS_SYNC_BEAT_LOCK,
         timeout=CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -166,14 +166,14 @@ def try_creating_permissions_sync_task(
         custom_task_id = f"{redis_connector.permissions.generator_task_key}_{uuid4()}"
 
         result = app.send_task(
-            DanswerCeleryTask.CONNECTOR_PERMISSION_SYNC_GENERATOR_TASK,
+            OnyxCeleryTask.CONNECTOR_PERMISSION_SYNC_GENERATOR_TASK,
             kwargs=dict(
                 cc_pair_id=cc_pair_id,
                 tenant_id=tenant_id,
             ),
-            queue=DanswerCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC,
+            queue=OnyxCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC,
             task_id=custom_task_id,
-            priority=DanswerCeleryPriority.HIGH,
+            priority=OnyxCeleryPriority.HIGH,
         )
 
         # set a basic fence to start
@@ -193,7 +193,7 @@ def try_creating_permissions_sync_task(
 
 
 @shared_task(
-    name=DanswerCeleryTask.CONNECTOR_PERMISSION_SYNC_GENERATOR_TASK,
+    name=OnyxCeleryTask.CONNECTOR_PERMISSION_SYNC_GENERATOR_TASK,
     acks_late=False,
     soft_time_limit=JOB_TIMEOUT,
     track_started=True,
@@ -220,7 +220,7 @@ def connector_permission_sync_generator_task(
     r = get_redis_client(tenant_id=tenant_id)
 
     lock: RedisLock = r.lock(
-        DanswerRedisLocks.CONNECTOR_DOC_PERMISSIONS_SYNC_LOCK_PREFIX
+        OnyxRedisLocks.CONNECTOR_DOC_PERMISSIONS_SYNC_LOCK_PREFIX
         + f"_{redis_connector.id}",
         timeout=CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT,
     )
@@ -293,7 +293,7 @@ def connector_permission_sync_generator_task(
 
 
 @shared_task(
-    name=DanswerCeleryTask.UPDATE_EXTERNAL_DOCUMENT_PERMISSIONS_TASK,
+    name=OnyxCeleryTask.UPDATE_EXTERNAL_DOCUMENT_PERMISSIONS_TASK,
     soft_time_limit=LIGHT_SOFT_TIME_LIMIT,
     time_limit=LIGHT_TIME_LIMIT,
     max_retries=DOCUMENT_PERMISSIONS_UPDATE_MAX_RETRIES,

@@ -4,19 +4,19 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from danswer.configs.chat_configs import MAX_CHUNKS_FED_TO_CHAT
-from danswer.context.search.enums import RecencyBiasSetting
-from danswer.db.constants import SLACK_BOT_PERSONA_PREFIX
-from danswer.db.models import ChannelConfig
-from danswer.db.models import Persona
-from danswer.db.models import Persona__DocumentSet
-from danswer.db.models import SlackChannelConfig
-from danswer.db.models import User
-from danswer.db.persona import get_default_prompt
-from danswer.db.persona import mark_persona_as_deleted
-from danswer.db.persona import upsert_persona
-from danswer.utils.errors import EERequiredError
-from danswer.utils.variable_functionality import (
+from onyx.configs.chat_configs import MAX_CHUNKS_FED_TO_CHAT
+from onyx.context.search.enums import RecencyBiasSetting
+from onyx.db.constants import SLACK_BOT_PERSONA_PREFIX
+from onyx.db.models import ChannelConfig
+from onyx.db.models import Persona
+from onyx.db.models import Persona__DocumentSet
+from onyx.db.models import SlackChannelConfig
+from onyx.db.models import User
+from onyx.db.persona import get_default_prompt
+from onyx.db.persona import mark_persona_as_deleted
+from onyx.db.persona import upsert_persona
+from onyx.utils.errors import EERequiredError
+from onyx.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
 
@@ -87,7 +87,7 @@ def insert_slack_channel_config(
 ) -> SlackChannelConfig:
     versioned_fetch_standard_answer_categories_by_ids = (
         fetch_versioned_implementation_with_fallback(
-            "danswer.db.standard_answer",
+            "onyx.db.standard_answer",
             "fetch_standard_answer_categories_by_ids",
             _no_ee_standard_answer_categories,
         )
@@ -142,7 +142,7 @@ def update_slack_channel_config(
 
     versioned_fetch_standard_answer_categories_by_ids = (
         fetch_versioned_implementation_with_fallback(
-            "danswer.db.standard_answer",
+            "onyx.db.standard_answer",
             "fetch_standard_answer_categories_by_ids",
             _no_ee_standard_answer_categories,
         )

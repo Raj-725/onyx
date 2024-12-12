@@ -5,44 +5,44 @@ from pydantic import BaseModel
 from pydantic import Field
 from sqlalchemy.orm import Session
 
-from danswer.chat.models import AnswerStyleConfig
-from danswer.chat.models import CitationConfig
-from danswer.chat.models import DocumentPruningConfig
-from danswer.chat.models import PromptConfig
-from danswer.configs.app_configs import AZURE_DALLE_API_BASE
-from danswer.configs.app_configs import AZURE_DALLE_API_KEY
-from danswer.configs.app_configs import AZURE_DALLE_API_VERSION
-from danswer.configs.app_configs import AZURE_DALLE_DEPLOYMENT_NAME
-from danswer.configs.chat_configs import BING_API_KEY
-from danswer.configs.model_configs import GEN_AI_TEMPERATURE
-from danswer.context.search.enums import LLMEvaluationType
-from danswer.context.search.models import InferenceSection
-from danswer.context.search.models import RerankingDetails
-from danswer.context.search.models import RetrievalDetails
-from danswer.db.llm import fetch_existing_llm_providers
-from danswer.db.models import Persona
-from danswer.db.models import User
-from danswer.file_store.models import InMemoryChatFile
-from danswer.llm.interfaces import LLM
-from danswer.llm.interfaces import LLMConfig
-from danswer.natural_language_processing.utils import get_tokenizer
-from danswer.tools.built_in_tools import get_built_in_tool_by_id
-from danswer.tools.models import DynamicSchemaInfo
-from danswer.tools.tool import Tool
-from danswer.tools.tool_implementations.custom.custom_tool import (
+from onyx.chat.models import AnswerStyleConfig
+from onyx.chat.models import CitationConfig
+from onyx.chat.models import DocumentPruningConfig
+from onyx.chat.models import PromptConfig
+from onyx.configs.app_configs import AZURE_DALLE_API_BASE
+from onyx.configs.app_configs import AZURE_DALLE_API_KEY
+from onyx.configs.app_configs import AZURE_DALLE_API_VERSION
+from onyx.configs.app_configs import AZURE_DALLE_DEPLOYMENT_NAME
+from onyx.configs.chat_configs import BING_API_KEY
+from onyx.configs.model_configs import GEN_AI_TEMPERATURE
+from onyx.context.search.enums import LLMEvaluationType
+from onyx.context.search.models import InferenceSection
+from onyx.context.search.models import RerankingDetails
+from onyx.context.search.models import RetrievalDetails
+from onyx.db.llm import fetch_existing_llm_providers
+from onyx.db.models import Persona
+from onyx.db.models import User
+from onyx.file_store.models import InMemoryChatFile
+from onyx.llm.interfaces import LLM
+from onyx.llm.interfaces import LLMConfig
+from onyx.natural_language_processing.utils import get_tokenizer
+from onyx.tools.built_in_tools import get_built_in_tool_by_id
+from onyx.tools.models import DynamicSchemaInfo
+from onyx.tools.tool import Tool
+from onyx.tools.tool_implementations.custom.custom_tool import (
     build_custom_tools_from_openapi_schema_and_headers,
 )
-from danswer.tools.tool_implementations.images.image_generation_tool import (
+from onyx.tools.tool_implementations.images.image_generation_tool import (
     ImageGenerationTool,
 )
-from danswer.tools.tool_implementations.internet_search.internet_search_tool import (
+from onyx.tools.tool_implementations.internet_search.internet_search_tool import (
     InternetSearchTool,
 )
-from danswer.tools.tool_implementations.search.search_tool import SearchTool
-from danswer.tools.utils import compute_all_tool_tokens
-from danswer.tools.utils import explicit_tool_calling_supported
-from danswer.utils.headers import header_dict_to_header_list
-from danswer.utils.logger import setup_logger
+from onyx.tools.tool_implementations.search.search_tool import SearchTool
+from onyx.tools.utils import compute_all_tool_tokens
+from onyx.tools.utils import explicit_tool_calling_supported
+from onyx.utils.headers import header_dict_to_header_list
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -109,7 +109,7 @@ class SearchToolConfig(BaseModel):
     chunks_below: int = 0
     full_doc: bool = False
     latest_query_files: list[InMemoryChatFile] | None = None
-    # Use with care, should only be used for DanswerBot in channels with multiple users
+    # Use with care, should only be used for OnyxBot in channels with multiple users
     bypass_acl: bool = False
 
 
@@ -205,7 +205,7 @@ def construct_tools(
 
                 if not BING_API_KEY:
                     raise ValueError(
-                        "Internet search tool requires a Bing API key, please contact your Danswer admin to get it added!"
+                        "Internet search tool requires a Bing API key, please contact your Onyx admin to get it added!"
                     )
                 tool_dict[db_tool_model.id] = [
                     InternetSearchTool(

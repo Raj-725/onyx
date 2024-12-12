@@ -2,8 +2,8 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from danswer.connectors.google_utils.resources import GoogleDocsService
-from danswer.connectors.models import Section
+from onyx.connectors.google_utils.resources import GoogleDocsService
+from onyx.connectors.models import Section
 
 
 class CurrentHeading(BaseModel):

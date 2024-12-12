@@ -7,10 +7,10 @@ from unstructured_client import UnstructuredClient  # type: ignore
 from unstructured_client.models import operations  # type: ignore
 from unstructured_client.models import shared
 
-from danswer.configs.constants import KV_UNSTRUCTURED_API_KEY
-from danswer.key_value_store.factory import get_kv_store
-from danswer.key_value_store.interface import KvKeyNotFoundError
-from danswer.utils.logger import setup_logger
+from onyx.configs.constants import KV_UNSTRUCTURED_API_KEY
+from onyx.key_value_store.factory import get_kv_store
+from onyx.key_value_store.interface import KvKeyNotFoundError
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()

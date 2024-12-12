@@ -5,32 +5,32 @@ from typing import Dict
 from google.oauth2.credentials import Credentials as OAuthCredentials  # type: ignore
 from google.oauth2.service_account import Credentials as ServiceAccountCredentials  # type: ignore
 
-from danswer.configs.app_configs import INDEX_BATCH_SIZE
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
-from danswer.connectors.google_utils.google_auth import get_google_creds
-from danswer.connectors.google_utils.google_utils import execute_paginated_retrieval
-from danswer.connectors.google_utils.resources import get_admin_service
-from danswer.connectors.google_utils.resources import get_gmail_service
-from danswer.connectors.google_utils.shared_constants import (
+from onyx.configs.app_configs import INDEX_BATCH_SIZE
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
+from onyx.connectors.google_utils.google_auth import get_google_creds
+from onyx.connectors.google_utils.google_utils import execute_paginated_retrieval
+from onyx.connectors.google_utils.resources import get_admin_service
+from onyx.connectors.google_utils.resources import get_gmail_service
+from onyx.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_PRIMARY_ADMIN_KEY,
 )
-from danswer.connectors.google_utils.shared_constants import MISSING_SCOPES_ERROR_STR
-from danswer.connectors.google_utils.shared_constants import ONYX_SCOPE_INSTRUCTIONS
-from danswer.connectors.google_utils.shared_constants import SLIM_BATCH_SIZE
-from danswer.connectors.google_utils.shared_constants import USER_FIELDS
-from danswer.connectors.interfaces import GenerateDocumentsOutput
-from danswer.connectors.interfaces import GenerateSlimDocumentOutput
-from danswer.connectors.interfaces import LoadConnector
-from danswer.connectors.interfaces import PollConnector
-from danswer.connectors.interfaces import SecondsSinceUnixEpoch
-from danswer.connectors.interfaces import SlimConnector
-from danswer.connectors.models import BasicExpertInfo
-from danswer.connectors.models import Document
-from danswer.connectors.models import Section
-from danswer.connectors.models import SlimDocument
-from danswer.utils.logger import setup_logger
-from danswer.utils.retry_wrapper import retry_builder
+from onyx.connectors.google_utils.shared_constants import MISSING_SCOPES_ERROR_STR
+from onyx.connectors.google_utils.shared_constants import ONYX_SCOPE_INSTRUCTIONS
+from onyx.connectors.google_utils.shared_constants import SLIM_BATCH_SIZE
+from onyx.connectors.google_utils.shared_constants import USER_FIELDS
+from onyx.connectors.interfaces import GenerateDocumentsOutput
+from onyx.connectors.interfaces import GenerateSlimDocumentOutput
+from onyx.connectors.interfaces import LoadConnector
+from onyx.connectors.interfaces import PollConnector
+from onyx.connectors.interfaces import SecondsSinceUnixEpoch
+from onyx.connectors.interfaces import SlimConnector
+from onyx.connectors.models import BasicExpertInfo
+from onyx.connectors.models import Document
+from onyx.connectors.models import Section
+from onyx.connectors.models import SlimDocument
+from onyx.utils.logger import setup_logger
+from onyx.utils.retry_wrapper import retry_builder
 
 
 logger = setup_logger()

@@ -6,24 +6,24 @@ from langchain_core.messages import HumanMessage
 from langchain_core.messages import SystemMessage
 from pydantic.v1 import BaseModel as BaseModel__v1
 
-from danswer.chat.models import PromptConfig
-from danswer.chat.prompt_builder.citations_prompt import compute_max_llm_input_tokens
-from danswer.chat.prompt_builder.utils import translate_history_to_basemessages
-from danswer.file_store.models import InMemoryChatFile
-from danswer.llm.interfaces import LLMConfig
-from danswer.llm.models import PreviousMessage
-from danswer.llm.utils import build_content_with_imgs
-from danswer.llm.utils import check_message_tokens
-from danswer.llm.utils import message_to_prompt_and_imgs
-from danswer.natural_language_processing.utils import get_tokenizer
-from danswer.prompts.chat_prompts import CHAT_USER_CONTEXT_FREE_PROMPT
-from danswer.prompts.prompt_utils import add_date_time_to_prompt
-from danswer.prompts.prompt_utils import drop_messages_history_overflow
-from danswer.tools.force import ForceUseTool
-from danswer.tools.models import ToolCallFinalResult
-from danswer.tools.models import ToolCallKickoff
-from danswer.tools.models import ToolResponse
-from danswer.tools.tool import Tool
+from onyx.chat.models import PromptConfig
+from onyx.chat.prompt_builder.citations_prompt import compute_max_llm_input_tokens
+from onyx.chat.prompt_builder.utils import translate_history_to_basemessages
+from onyx.file_store.models import InMemoryChatFile
+from onyx.llm.interfaces import LLMConfig
+from onyx.llm.models import PreviousMessage
+from onyx.llm.utils import build_content_with_imgs
+from onyx.llm.utils import check_message_tokens
+from onyx.llm.utils import message_to_prompt_and_imgs
+from onyx.natural_language_processing.utils import get_tokenizer
+from onyx.prompts.chat_prompts import CHAT_USER_CONTEXT_FREE_PROMPT
+from onyx.prompts.prompt_utils import add_date_time_to_prompt
+from onyx.prompts.prompt_utils import drop_messages_history_overflow
+from onyx.tools.force import ForceUseTool
+from onyx.tools.models import ToolCallFinalResult
+from onyx.tools.models import ToolCallKickoff
+from onyx.tools.models import ToolResponse
+from onyx.tools.tool import Tool
 
 
 def default_build_system_message(

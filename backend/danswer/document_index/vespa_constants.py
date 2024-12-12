@@ -1,9 +1,9 @@
-from danswer.configs.app_configs import VESPA_CLOUD_URL
-from danswer.configs.app_configs import VESPA_CONFIG_SERVER_HOST
-from danswer.configs.app_configs import VESPA_HOST
-from danswer.configs.app_configs import VESPA_PORT
-from danswer.configs.app_configs import VESPA_TENANT_PORT
-from danswer.configs.constants import SOURCE_TYPE
+from onyx.configs.app_configs import VESPA_CLOUD_URL
+from onyx.configs.app_configs import VESPA_CONFIG_SERVER_HOST
+from onyx.configs.app_configs import VESPA_HOST
+from onyx.configs.app_configs import VESPA_PORT
+from onyx.configs.app_configs import VESPA_TENANT_PORT
+from onyx.configs.constants import SOURCE_TYPE
 
 VESPA_DIM_REPLACEMENT_PAT = "VARIABLE_DIM"
 DANSWER_CHUNK_REPLACEMENT_PAT = "DANSWER_CHUNK_NAME"
@@ -30,7 +30,7 @@ VESPA_APPLICATION_ENDPOINT = f"{VESPA_CONFIG_SERVER_URL}/application/v2"
 VESPA_APP_CONTAINER_URL = VESPA_CLOUD_URL or f"http://{VESPA_HOST}:{VESPA_PORT}"
 
 
-# danswer_chunk below is defined in vespa/app_configs/schemas/danswer_chunk.sd
+# onyx_chunk below is defined in vespa/app_configs/schemas/onyx_chunk.sd
 DOCUMENT_ID_ENDPOINT = (
     f"{VESPA_APP_CONTAINER_URL}/document/v1/default/{{index_name}}/docid"
 )

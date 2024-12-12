@@ -1,13 +1,13 @@
 import re
 from collections.abc import Generator
 
-from danswer.chat.models import CitationInfo
-from danswer.chat.models import DanswerAnswerPiece
-from danswer.chat.models import LlmDoc
-from danswer.chat.stream_processing.utils import DocumentIdOrderMapping
-from danswer.configs.chat_configs import STOP_STREAM_PAT
-from danswer.prompts.constants import TRIPLE_BACKTICK
-from danswer.utils.logger import setup_logger
+from onyx.chat.models import CitationInfo
+from onyx.chat.models import LlmDoc
+from onyx.chat.models import OnyxAnswerPiece
+from onyx.chat.stream_processing.utils import DocumentIdOrderMapping
+from onyx.configs.chat_configs import STOP_STREAM_PAT
+from onyx.prompts.constants import TRIPLE_BACKTICK
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -43,10 +43,10 @@ class CitationProcessor:
 
     def process_token(
         self, token: str | None
-    ) -> Generator[DanswerAnswerPiece | CitationInfo, None, None]:
+    ) -> Generator[OnyxAnswerPiece | CitationInfo, None, None]:
         # None -> end of stream
         if token is None:
-            yield DanswerAnswerPiece(answer_piece=self.curr_segment)
+            yield OnyxAnswerPiece(answer_piece=self.curr_segment)
             return
 
         if self.stop_stream:
@@ -192,4 +192,4 @@ class CitationProcessor:
             self.curr_segment = ""
 
         if result:
-            yield DanswerAnswerPiece(answer_piece=result)
+            yield OnyxAnswerPiece(answer_piece=result)

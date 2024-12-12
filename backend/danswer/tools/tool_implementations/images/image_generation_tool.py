@@ -8,25 +8,25 @@ import requests
 from litellm import image_generation  # type: ignore
 from pydantic import BaseModel
 
-from danswer.chat.chat_utils import combine_message_chain
-from danswer.chat.prompt_builder.build import AnswerPromptBuilder
-from danswer.configs.model_configs import GEN_AI_HISTORY_CUTOFF
-from danswer.configs.tool_configs import IMAGE_GENERATION_OUTPUT_FORMAT
-from danswer.llm.interfaces import LLM
-from danswer.llm.models import PreviousMessage
-from danswer.llm.utils import build_content_with_imgs
-from danswer.llm.utils import message_to_string
-from danswer.prompts.constants import GENERAL_SEP_PAT
-from danswer.tools.message import ToolCallSummary
-from danswer.tools.models import ToolResponse
-from danswer.tools.tool import Tool
-from danswer.tools.tool_implementations.images.prompt import (
+from onyx.chat.chat_utils import combine_message_chain
+from onyx.chat.prompt_builder.build import AnswerPromptBuilder
+from onyx.configs.model_configs import GEN_AI_HISTORY_CUTOFF
+from onyx.configs.tool_configs import IMAGE_GENERATION_OUTPUT_FORMAT
+from onyx.llm.interfaces import LLM
+from onyx.llm.models import PreviousMessage
+from onyx.llm.utils import build_content_with_imgs
+from onyx.llm.utils import message_to_string
+from onyx.prompts.constants import GENERAL_SEP_PAT
+from onyx.tools.message import ToolCallSummary
+from onyx.tools.models import ToolResponse
+from onyx.tools.tool import Tool
+from onyx.tools.tool_implementations.images.prompt import (
     build_image_generation_user_prompt,
 )
-from danswer.utils.headers import build_llm_extra_headers
-from danswer.utils.logger import setup_logger
-from danswer.utils.special_types import JSON_ro
-from danswer.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from onyx.utils.headers import build_llm_extra_headers
+from onyx.utils.logger import setup_logger
+from onyx.utils.special_types import JSON_ro
+from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
 
 
 logger = setup_logger()

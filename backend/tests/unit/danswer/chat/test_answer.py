@@ -11,21 +11,21 @@ from langchain_core.messages import SystemMessage
 from langchain_core.messages import ToolCall
 from langchain_core.messages import ToolCallChunk
 
-from danswer.chat.answer import Answer
-from danswer.chat.models import AnswerStyleConfig
-from danswer.chat.models import CitationInfo
-from danswer.chat.models import DanswerAnswerPiece
-from danswer.chat.models import LlmDoc
-from danswer.chat.models import PromptConfig
-from danswer.chat.models import StreamStopInfo
-from danswer.chat.models import StreamStopReason
-from danswer.llm.interfaces import LLM
-from danswer.tools.force import ForceUseTool
-from danswer.tools.models import ToolCallFinalResult
-from danswer.tools.models import ToolCallKickoff
-from danswer.tools.models import ToolResponse
-from tests.unit.danswer.chat.conftest import DEFAULT_SEARCH_ARGS
-from tests.unit.danswer.chat.conftest import QUERY
+from onyx.chat.answer import Answer
+from onyx.chat.models import AnswerStyleConfig
+from onyx.chat.models import CitationInfo
+from onyx.chat.models import LlmDoc
+from onyx.chat.models import OnyxAnswerPiece
+from onyx.chat.models import PromptConfig
+from onyx.chat.models import StreamStopInfo
+from onyx.chat.models import StreamStopReason
+from onyx.llm.interfaces import LLM
+from onyx.tools.force import ForceUseTool
+from onyx.tools.models import ToolCallFinalResult
+from onyx.tools.models import ToolCallKickoff
+from onyx.tools.models import ToolResponse
+from tests.unit.onyx.chat.conftest import DEFAULT_SEARCH_ARGS
+from tests.unit.onyx.chat.conftest import QUERY
 
 
 @pytest.fixture
@@ -50,13 +50,13 @@ def test_basic_answer(answer_instance: Answer) -> None:
 
     output = list(answer_instance.processed_streamed_output)
     assert len(output) == 2
-    assert isinstance(output[0], DanswerAnswerPiece)
-    assert isinstance(output[1], DanswerAnswerPiece)
+    assert isinstance(output[0], OnyxAnswerPiece)
+    assert isinstance(output[1], OnyxAnswerPiece)
 
     full_answer = "".join(
         piece.answer_piece
         for piece in output
-        if isinstance(piece, DanswerAnswerPiece) and piece.answer_piece is not None
+        if isinstance(piece, OnyxAnswerPiece) and piece.answer_piece is not None
     )
     assert full_answer == "This is a mock answer."
 
@@ -151,13 +151,13 @@ def test_answer_with_search_call(
         tool_args=expected_tool_args,
         tool_result=[json.loads(doc.model_dump_json()) for doc in mock_search_results],
     )
-    assert output[3] == DanswerAnswerPiece(answer_piece="Based on the search results, ")
+    assert output[3] == OnyxAnswerPiece(answer_piece="Based on the search results, ")
     expected_citation = CitationInfo(citation_num=1, document_id="doc1")
     assert output[4] == expected_citation
-    assert output[5] == DanswerAnswerPiece(
+    assert output[5] == OnyxAnswerPiece(
         answer_piece="the answer is abc[[1]](https://example.com/doc1). "
     )
-    assert output[6] == DanswerAnswerPiece(answer_piece="This is some other stuff.")
+    assert output[6] == OnyxAnswerPiece(answer_piece="This is some other stuff.")
 
     expected_answer = (
         "Based on the search results, "
@@ -167,7 +167,7 @@ def test_answer_with_search_call(
     full_answer = "".join(
         piece.answer_piece
         for piece in output
-        if isinstance(piece, DanswerAnswerPiece) and piece.answer_piece is not None
+        if isinstance(piece, OnyxAnswerPiece) and piece.answer_piece is not None
     )
     assert full_answer == expected_answer
 
@@ -242,13 +242,13 @@ def test_answer_with_search_no_tool_calling(
         tool_args=DEFAULT_SEARCH_ARGS,
         tool_result=[json.loads(doc.model_dump_json()) for doc in mock_search_results],
     )
-    assert output[3] == DanswerAnswerPiece(answer_piece="Based on the search results, ")
+    assert output[3] == OnyxAnswerPiece(answer_piece="Based on the search results, ")
     expected_citation = CitationInfo(citation_num=1, document_id="doc1")
     assert output[4] == expected_citation
-    assert output[5] == DanswerAnswerPiece(
+    assert output[5] == OnyxAnswerPiece(
         answer_piece="the answer is abc[[1]](https://example.com/doc1). "
     )
-    assert output[6] == DanswerAnswerPiece(answer_piece="This is some other stuff.")
+    assert output[6] == OnyxAnswerPiece(answer_piece="This is some other stuff.")
 
     expected_answer = (
         "Based on the search results, "
@@ -304,8 +304,8 @@ def test_is_cancelled(answer_instance: Answer) -> None:
             connection_status["connected"] = False
 
     assert len(output) == 3
-    assert output[0] == DanswerAnswerPiece(answer_piece="This is the ")
-    assert output[1] == DanswerAnswerPiece(answer_piece="first part.")
+    assert output[0] == OnyxAnswerPiece(answer_piece="This is the ")
+    assert output[1] == OnyxAnswerPiece(answer_piece="first part.")
     assert output[2] == StreamStopInfo(stop_reason=StreamStopReason.CANCELLED)
 
     # Verify that the stream was cancelled

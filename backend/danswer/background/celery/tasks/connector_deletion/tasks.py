@@ -8,19 +8,19 @@ from celery.exceptions import SoftTimeLimitExceeded
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from danswer.background.celery.apps.app_base import task_logger
-from danswer.configs.app_configs import JOB_TIMEOUT
-from danswer.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.configs.constants import DanswerRedisLocks
-from danswer.db.connector_credential_pair import get_connector_credential_pair_from_id
-from danswer.db.connector_credential_pair import get_connector_credential_pairs
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.enums import ConnectorCredentialPairStatus
-from danswer.db.search_settings import get_all_search_settings
-from danswer.redis.redis_connector import RedisConnector
-from danswer.redis.redis_connector_delete import RedisConnectorDeletePayload
-from danswer.redis.redis_pool import get_redis_client
+from onyx.background.celery.apps.app_base import task_logger
+from onyx.configs.app_configs import JOB_TIMEOUT
+from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.configs.constants import OnyxRedisLocks
+from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
+from onyx.db.connector_credential_pair import get_connector_credential_pairs
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.enums import ConnectorCredentialPairStatus
+from onyx.db.search_settings import get_all_search_settings
+from onyx.redis.redis_connector import RedisConnector
+from onyx.redis.redis_connector_delete import RedisConnectorDeletePayload
+from onyx.redis.redis_pool import get_redis_client
 
 
 class TaskDependencyError(RuntimeError):
@@ -29,7 +29,7 @@ class TaskDependencyError(RuntimeError):
 
 
 @shared_task(
-    name=DanswerCeleryTask.CHECK_FOR_CONNECTOR_DELETION,
+    name=OnyxCeleryTask.CHECK_FOR_CONNECTOR_DELETION,
     soft_time_limit=JOB_TIMEOUT,
     trail=False,
     bind=True,
@@ -38,7 +38,7 @@ def check_for_connector_deletion_task(self: Task, *, tenant_id: str | None) -> N
     r = get_redis_client(tenant_id=tenant_id)
 
     lock_beat: RedisLock = r.lock(
-        DanswerRedisLocks.CHECK_CONNECTOR_DELETION_BEAT_LOCK,
+        OnyxRedisLocks.CHECK_CONNECTOR_DELETION_BEAT_LOCK,
         timeout=CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT,
     )
 

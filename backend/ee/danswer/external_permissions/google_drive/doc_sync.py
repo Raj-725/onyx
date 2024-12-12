@@ -2,15 +2,15 @@ from datetime import datetime
 from datetime import timezone
 from typing import Any
 
-from danswer.access.models import DocExternalAccess
-from danswer.access.models import ExternalAccess
-from danswer.connectors.google_drive.connector import GoogleDriveConnector
-from danswer.connectors.google_utils.google_utils import execute_paginated_retrieval
-from danswer.connectors.google_utils.resources import get_drive_service
-from danswer.connectors.interfaces import GenerateSlimDocumentOutput
-from danswer.connectors.models import SlimDocument
-from danswer.db.models import ConnectorCredentialPair
-from danswer.utils.logger import setup_logger
+from onyx.access.models import DocExternalAccess
+from onyx.access.models import ExternalAccess
+from onyx.connectors.google_drive.connector import GoogleDriveConnector
+from onyx.connectors.google_utils.google_utils import execute_paginated_retrieval
+from onyx.connectors.google_utils.resources import get_drive_service
+from onyx.connectors.interfaces import GenerateSlimDocumentOutput
+from onyx.connectors.models import SlimDocument
+from onyx.db.models import ConnectorCredentialPair
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

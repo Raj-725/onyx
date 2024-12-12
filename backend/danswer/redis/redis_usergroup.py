@@ -8,13 +8,13 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from danswer.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from danswer.configs.constants import DanswerCeleryPriority
-from danswer.configs.constants import DanswerCeleryQueues
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.redis.redis_object_helper import RedisObjectHelper
-from danswer.utils.variable_functionality import fetch_versioned_implementation
-from danswer.utils.variable_functionality import global_version
+from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from onyx.configs.constants import OnyxCeleryPriority
+from onyx.configs.constants import OnyxCeleryQueues
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.redis.redis_object_helper import RedisObjectHelper
+from onyx.utils.variable_functionality import fetch_versioned_implementation
+from onyx.utils.variable_functionality import global_version
 
 
 class RedisUserGroup(RedisObjectHelper):
@@ -65,7 +65,7 @@ class RedisUserGroup(RedisObjectHelper):
 
         try:
             construct_document_select_by_usergroup = fetch_versioned_implementation(
-                "danswer.db.user_group",
+                "onyx.db.user_group",
                 "construct_document_select_by_usergroup",
             )
         except ModuleNotFoundError:
@@ -90,11 +90,11 @@ class RedisUserGroup(RedisObjectHelper):
             redis_client.sadd(self.taskset_key, custom_task_id)
 
             result = celery_app.send_task(
-                DanswerCeleryTask.VESPA_METADATA_SYNC_TASK,
+                OnyxCeleryTask.VESPA_METADATA_SYNC_TASK,
                 kwargs=dict(document_id=doc.id, tenant_id=tenant_id),
-                queue=DanswerCeleryQueues.VESPA_METADATA_SYNC,
+                queue=OnyxCeleryQueues.VESPA_METADATA_SYNC,
                 task_id=custom_task_id,
-                priority=DanswerCeleryPriority.LOW,
+                priority=OnyxCeleryPriority.LOW,
             )
 
             async_results.append(result)

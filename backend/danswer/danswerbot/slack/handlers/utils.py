@@ -1,8 +1,8 @@
 from slack_sdk import WebClient
 
-from danswer.chat.models import ThreadMessage
-from danswer.configs.constants import MessageType
-from danswer.danswerbot.slack.utils import respond_in_thread
+from onyx.chat.models import ThreadMessage
+from onyx.configs.constants import MessageType
+from onyx.onyxbot.slack.utils import respond_in_thread
 
 
 def slackify_message_thread(messages: list[ThreadMessage]) -> str:

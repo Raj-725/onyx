@@ -3,8 +3,8 @@ from typing import cast
 
 from redis import Redis
 
-from danswer.background.celery.configs.base import CELERY_SEPARATOR
-from danswer.configs.constants import DanswerCeleryPriority
+from onyx.background.celery.configs.base import CELERY_SEPARATOR
+from onyx.configs.constants import OnyxCeleryPriority
 
 
 def celery_get_queue_length(queue: str, r: Redis) -> int:
@@ -13,7 +13,7 @@ def celery_get_queue_length(queue: str, r: Redis) -> int:
     used to implement task prioritization.
     This operation is not atomic."""
     total_length = 0
-    for i in range(len(DanswerCeleryPriority)):
+    for i in range(len(OnyxCeleryPriority)):
         queue_name = queue
         if i > 0:
             queue_name += CELERY_SEPARATOR

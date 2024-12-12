@@ -8,19 +8,19 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import and_
 from sqlalchemy.sql.expression import or_
 
-from danswer.auth.schemas import UserRole
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.google_utils.shared_constants import (
+from onyx.auth.schemas import UserRole
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_DICT_SERVICE_ACCOUNT_KEY,
 )
-from danswer.db.models import ConnectorCredentialPair
-from danswer.db.models import Credential
-from danswer.db.models import Credential__UserGroup
-from danswer.db.models import DocumentByConnectorCredentialPair
-from danswer.db.models import User
-from danswer.db.models import User__UserGroup
-from danswer.server.documents.models import CredentialBase
-from danswer.utils.logger import setup_logger
+from onyx.db.models import ConnectorCredentialPair
+from onyx.db.models import Credential
+from onyx.db.models import Credential__UserGroup
+from onyx.db.models import DocumentByConnectorCredentialPair
+from onyx.db.models import User
+from onyx.db.models import User__UserGroup
+from onyx.server.documents.models import CredentialBase
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()

@@ -3,16 +3,16 @@ from typing import TYPE_CHECKING
 
 from langchain_core.messages import HumanMessage
 
-from danswer.llm.utils import message_to_prompt_and_imgs
-from danswer.tools.tool import Tool
+from onyx.llm.utils import message_to_prompt_and_imgs
+from onyx.tools.tool import Tool
 
 if TYPE_CHECKING:
-    from danswer.chat.prompt_builder.build import AnswerPromptBuilder
-    from danswer.tools.tool_implementations.custom.custom_tool import (
+    from onyx.chat.prompt_builder.build import AnswerPromptBuilder
+    from onyx.tools.tool_implementations.custom.custom_tool import (
         CustomToolCallSummary,
     )
-    from danswer.tools.message import ToolCallSummary
-    from danswer.tools.models import ToolResponse
+    from onyx.tools.message import ToolCallSummary
+    from onyx.tools.models import ToolResponse
 
 
 def build_user_message_for_non_tool_calling_llm(

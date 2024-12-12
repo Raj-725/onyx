@@ -3,12 +3,12 @@ from typing import cast
 from redis import Redis
 from sqlalchemy.orm import Session
 
-from danswer.background.celery.apps.app_base import task_logger
-from danswer.redis.redis_usergroup import RedisUserGroup
-from danswer.utils.logger import setup_logger
-from ee.danswer.db.user_group import delete_user_group
-from ee.danswer.db.user_group import fetch_user_group
-from ee.danswer.db.user_group import mark_user_group_as_synced
+from ee.onyx.db.user_group import delete_user_group
+from ee.onyx.db.user_group import fetch_user_group
+from ee.onyx.db.user_group import mark_user_group_as_synced
+from onyx.background.celery.apps.app_base import task_logger
+from onyx.redis.redis_usergroup import RedisUserGroup
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -11,20 +11,20 @@ from requests import RequestException
 from requests import Response
 from retry import retry
 
-from danswer.configs.app_configs import LARGE_CHUNK_RATIO
-from danswer.configs.model_configs import BATCH_SIZE_ENCODE_CHUNKS
-from danswer.configs.model_configs import (
+from onyx.configs.app_configs import LARGE_CHUNK_RATIO
+from onyx.configs.model_configs import BATCH_SIZE_ENCODE_CHUNKS
+from onyx.configs.model_configs import (
     BATCH_SIZE_ENCODE_CHUNKS_FOR_API_EMBEDDING_SERVICES,
 )
-from danswer.configs.model_configs import DOC_EMBEDDING_CONTEXT_SIZE
-from danswer.db.models import SearchSettings
-from danswer.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from danswer.natural_language_processing.exceptions import (
+from onyx.configs.model_configs import DOC_EMBEDDING_CONTEXT_SIZE
+from onyx.db.models import SearchSettings
+from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from onyx.natural_language_processing.exceptions import (
     ModelServerRateLimitError,
 )
-from danswer.natural_language_processing.utils import get_tokenizer
-from danswer.natural_language_processing.utils import tokenizer_trim_content
-from danswer.utils.logger import setup_logger
+from onyx.natural_language_processing.utils import get_tokenizer
+from onyx.natural_language_processing.utils import tokenizer_trim_content
+from onyx.utils.logger import setup_logger
 from shared_configs.configs import MODEL_SERVER_HOST
 from shared_configs.configs import MODEL_SERVER_PORT
 from shared_configs.enums import EmbeddingProvider
@@ -45,9 +45,9 @@ logger = setup_logger()
 
 
 WARM_UP_STRINGS = [
-    "Danswer is amazing!",
+    "Onyx is amazing!",
     "Check out our easy deployment guide at",
-    "https://docs.danswer.dev/quickstart",
+    "https://docs.onyx.app/quickstart",
 ]
 
 

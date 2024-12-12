@@ -6,35 +6,35 @@ from langchain.schema.messages import BaseMessage
 from langchain_core.messages import AIMessageChunk
 from langchain_core.messages import ToolCall
 
-from danswer.chat.llm_response_handler import LLMResponseHandlerManager
-from danswer.chat.models import AnswerQuestionPossibleReturn
-from danswer.chat.models import AnswerStyleConfig
-from danswer.chat.models import CitationInfo
-from danswer.chat.models import DanswerAnswerPiece
-from danswer.chat.models import PromptConfig
-from danswer.chat.prompt_builder.build import AnswerPromptBuilder
-from danswer.chat.prompt_builder.build import default_build_system_message
-from danswer.chat.prompt_builder.build import default_build_user_message
-from danswer.chat.prompt_builder.build import LLMCall
-from danswer.chat.stream_processing.answer_response_handler import (
+from onyx.chat.llm_response_handler import LLMResponseHandlerManager
+from onyx.chat.models import AnswerQuestionPossibleReturn
+from onyx.chat.models import AnswerStyleConfig
+from onyx.chat.models import CitationInfo
+from onyx.chat.models import OnyxAnswerPiece
+from onyx.chat.models import PromptConfig
+from onyx.chat.prompt_builder.build import AnswerPromptBuilder
+from onyx.chat.prompt_builder.build import default_build_system_message
+from onyx.chat.prompt_builder.build import default_build_user_message
+from onyx.chat.prompt_builder.build import LLMCall
+from onyx.chat.stream_processing.answer_response_handler import (
     CitationResponseHandler,
 )
-from danswer.chat.stream_processing.answer_response_handler import (
+from onyx.chat.stream_processing.answer_response_handler import (
     DummyAnswerResponseHandler,
 )
-from danswer.chat.stream_processing.utils import map_document_id_order
-from danswer.chat.tool_handling.tool_response_handler import ToolResponseHandler
-from danswer.file_store.utils import InMemoryChatFile
-from danswer.llm.interfaces import LLM
-from danswer.llm.models import PreviousMessage
-from danswer.natural_language_processing.utils import get_tokenizer
-from danswer.tools.force import ForceUseTool
-from danswer.tools.models import ToolResponse
-from danswer.tools.tool import Tool
-from danswer.tools.tool_implementations.search.search_tool import SearchTool
-from danswer.tools.tool_runner import ToolCallKickoff
-from danswer.tools.utils import explicit_tool_calling_supported
-from danswer.utils.logger import setup_logger
+from onyx.chat.stream_processing.utils import map_document_id_order
+from onyx.chat.tool_handling.tool_response_handler import ToolResponseHandler
+from onyx.file_store.utils import InMemoryChatFile
+from onyx.llm.interfaces import LLM
+from onyx.llm.models import PreviousMessage
+from onyx.natural_language_processing.utils import get_tokenizer
+from onyx.tools.force import ForceUseTool
+from onyx.tools.models import ToolResponse
+from onyx.tools.tool import Tool
+from onyx.tools.tool_implementations.search.search_tool import SearchTool
+from onyx.tools.tool_runner import ToolCallKickoff
+from onyx.tools.utils import explicit_tool_calling_supported
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()
@@ -292,7 +292,7 @@ class Answer:
     def llm_answer(self) -> str:
         answer = ""
         for packet in self.processed_streamed_output:
-            if isinstance(packet, DanswerAnswerPiece) and packet.answer_piece:
+            if isinstance(packet, OnyxAnswerPiece) and packet.answer_piece:
                 answer += packet.answer_piece
 
         return answer

@@ -7,17 +7,17 @@ from typing import Optional
 import redis
 from redis.client import Redis
 
-from danswer.configs.app_configs import REDIS_DB_NUMBER
-from danswer.configs.app_configs import REDIS_HEALTH_CHECK_INTERVAL
-from danswer.configs.app_configs import REDIS_HOST
-from danswer.configs.app_configs import REDIS_PASSWORD
-from danswer.configs.app_configs import REDIS_POOL_MAX_CONNECTIONS
-from danswer.configs.app_configs import REDIS_PORT
-from danswer.configs.app_configs import REDIS_SSL
-from danswer.configs.app_configs import REDIS_SSL_CA_CERTS
-from danswer.configs.app_configs import REDIS_SSL_CERT_REQS
-from danswer.configs.constants import REDIS_SOCKET_KEEPALIVE_OPTIONS
-from danswer.utils.logger import setup_logger
+from onyx.configs.app_configs import REDIS_DB_NUMBER
+from onyx.configs.app_configs import REDIS_HEALTH_CHECK_INTERVAL
+from onyx.configs.app_configs import REDIS_HOST
+from onyx.configs.app_configs import REDIS_PASSWORD
+from onyx.configs.app_configs import REDIS_POOL_MAX_CONNECTIONS
+from onyx.configs.app_configs import REDIS_PORT
+from onyx.configs.app_configs import REDIS_SSL
+from onyx.configs.app_configs import REDIS_SSL_CA_CERTS
+from onyx.configs.app_configs import REDIS_SSL_CERT_REQS
+from onyx.configs.constants import REDIS_SOCKET_KEEPALIVE_OPTIONS
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -14,49 +14,49 @@ from redis.exceptions import LockError
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from danswer.background.celery.apps.app_base import task_logger
-from danswer.background.indexing.job_client import SimpleJobClient
-from danswer.background.indexing.run_indexing import run_indexing_entrypoint
-from danswer.configs.app_configs import DISABLE_INDEX_UPDATE_ON_SWAP
-from danswer.configs.constants import CELERY_INDEXING_LOCK_TIMEOUT
-from danswer.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from danswer.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
-from danswer.configs.constants import DanswerCeleryPriority
-from danswer.configs.constants import DanswerCeleryQueues
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.configs.constants import DanswerRedisLocks
-from danswer.configs.constants import DocumentSource
-from danswer.db.connector import mark_ccpair_with_indexing_trigger
-from danswer.db.connector_credential_pair import fetch_connector_credential_pairs
-from danswer.db.connector_credential_pair import get_connector_credential_pair_from_id
-from danswer.db.engine import get_db_current_time
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.enums import ConnectorCredentialPairStatus
-from danswer.db.enums import IndexingMode
-from danswer.db.enums import IndexingStatus
-from danswer.db.enums import IndexModelStatus
-from danswer.db.index_attempt import create_index_attempt
-from danswer.db.index_attempt import delete_index_attempt
-from danswer.db.index_attempt import get_all_index_attempts_by_status
-from danswer.db.index_attempt import get_index_attempt
-from danswer.db.index_attempt import get_last_attempt_for_cc_pair
-from danswer.db.index_attempt import mark_attempt_canceled
-from danswer.db.index_attempt import mark_attempt_failed
-from danswer.db.models import ConnectorCredentialPair
-from danswer.db.models import IndexAttempt
-from danswer.db.models import SearchSettings
-from danswer.db.search_settings import get_active_search_settings
-from danswer.db.search_settings import get_current_search_settings
-from danswer.db.swap_index import check_index_swap
-from danswer.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from danswer.natural_language_processing.search_nlp_models import EmbeddingModel
-from danswer.natural_language_processing.search_nlp_models import warm_up_bi_encoder
-from danswer.redis.redis_connector import RedisConnector
-from danswer.redis.redis_connector_index import RedisConnectorIndex
-from danswer.redis.redis_connector_index import RedisConnectorIndexPayload
-from danswer.redis.redis_pool import get_redis_client
-from danswer.utils.logger import setup_logger
-from danswer.utils.variable_functionality import global_version
+from onyx.background.celery.apps.app_base import task_logger
+from onyx.background.indexing.job_client import SimpleJobClient
+from onyx.background.indexing.run_indexing import run_indexing_entrypoint
+from onyx.configs.app_configs import DISABLE_INDEX_UPDATE_ON_SWAP
+from onyx.configs.constants import CELERY_INDEXING_LOCK_TIMEOUT
+from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from onyx.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
+from onyx.configs.constants import DocumentSource
+from onyx.configs.constants import OnyxCeleryPriority
+from onyx.configs.constants import OnyxCeleryQueues
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.configs.constants import OnyxRedisLocks
+from onyx.db.connector import mark_ccpair_with_indexing_trigger
+from onyx.db.connector_credential_pair import fetch_connector_credential_pairs
+from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
+from onyx.db.engine import get_db_current_time
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.enums import ConnectorCredentialPairStatus
+from onyx.db.enums import IndexingMode
+from onyx.db.enums import IndexingStatus
+from onyx.db.enums import IndexModelStatus
+from onyx.db.index_attempt import create_index_attempt
+from onyx.db.index_attempt import delete_index_attempt
+from onyx.db.index_attempt import get_all_index_attempts_by_status
+from onyx.db.index_attempt import get_index_attempt
+from onyx.db.index_attempt import get_last_attempt_for_cc_pair
+from onyx.db.index_attempt import mark_attempt_canceled
+from onyx.db.index_attempt import mark_attempt_failed
+from onyx.db.models import ConnectorCredentialPair
+from onyx.db.models import IndexAttempt
+from onyx.db.models import SearchSettings
+from onyx.db.search_settings import get_active_search_settings
+from onyx.db.search_settings import get_current_search_settings
+from onyx.db.swap_index import check_index_swap
+from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
+from onyx.natural_language_processing.search_nlp_models import warm_up_bi_encoder
+from onyx.redis.redis_connector import RedisConnector
+from onyx.redis.redis_connector_index import RedisConnectorIndex
+from onyx.redis.redis_connector_index import RedisConnectorIndexPayload
+from onyx.redis.redis_pool import get_redis_client
+from onyx.utils.logger import setup_logger
+from onyx.utils.variable_functionality import global_version
 from shared_configs.configs import INDEXING_MODEL_SERVER_HOST
 from shared_configs.configs import INDEXING_MODEL_SERVER_PORT
 from shared_configs.configs import MULTI_TENANT
@@ -157,7 +157,7 @@ def get_unfenced_index_attempt_ids(db_session: Session, r: redis.Redis) -> list[
 
 
 @shared_task(
-    name=DanswerCeleryTask.CHECK_FOR_INDEXING,
+    name=OnyxCeleryTask.CHECK_FOR_INDEXING,
     soft_time_limit=300,
     bind=True,
 )
@@ -167,7 +167,7 @@ def check_for_indexing(self: Task, *, tenant_id: str | None) -> int | None:
     r = get_redis_client(tenant_id=tenant_id)
 
     lock_beat: RedisLock = r.lock(
-        DanswerRedisLocks.CHECK_INDEXING_BEAT_LOCK,
+        OnyxRedisLocks.CHECK_INDEXING_BEAT_LOCK,
         timeout=CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -487,16 +487,16 @@ def try_creating_indexing_task(
         # when the task is sent, we have yet to finish setting up the fence
         # therefore, the task must contain code that blocks until the fence is ready
         result = celery_app.send_task(
-            DanswerCeleryTask.CONNECTOR_INDEXING_PROXY_TASK,
+            OnyxCeleryTask.CONNECTOR_INDEXING_PROXY_TASK,
             kwargs=dict(
                 index_attempt_id=index_attempt_id,
                 cc_pair_id=cc_pair.id,
                 search_settings_id=search_settings.id,
                 tenant_id=tenant_id,
             ),
-            queue=DanswerCeleryQueues.CONNECTOR_INDEXING,
+            queue=OnyxCeleryQueues.CONNECTOR_INDEXING,
             task_id=custom_task_id,
-            priority=DanswerCeleryPriority.MEDIUM,
+            priority=OnyxCeleryPriority.MEDIUM,
         )
         if not result:
             raise RuntimeError("send_task for connector_indexing_proxy_task failed.")
@@ -525,7 +525,7 @@ def try_creating_indexing_task(
 
 
 @shared_task(
-    name=DanswerCeleryTask.CONNECTOR_INDEXING_PROXY_TASK,
+    name=OnyxCeleryTask.CONNECTOR_INDEXING_PROXY_TASK,
     bind=True,
     acks_late=False,
     track_started=True,

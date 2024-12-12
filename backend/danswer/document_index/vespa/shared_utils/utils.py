@@ -3,10 +3,10 @@ from typing import cast
 
 import httpx
 
-from danswer.configs.app_configs import MANAGED_VESPA
-from danswer.configs.app_configs import VESPA_CLOUD_CERT_PATH
-from danswer.configs.app_configs import VESPA_CLOUD_KEY_PATH
-from danswer.configs.app_configs import VESPA_REQUEST_TIMEOUT
+from onyx.configs.app_configs import MANAGED_VESPA
+from onyx.configs.app_configs import VESPA_CLOUD_CERT_PATH
+from onyx.configs.app_configs import VESPA_CLOUD_KEY_PATH
+from onyx.configs.app_configs import VESPA_REQUEST_TIMEOUT
 
 # NOTE: This does not seem to be used in reality despite the Vespa Docs pointing to this code
 # See here for reference: https://docs.vespa.ai/en/documents.html

@@ -1,21 +1,21 @@
 from typing import Any
 
-from danswer.chat.models import PersonaOverrideConfig
-from danswer.configs.app_configs import DISABLE_GENERATIVE_AI
-from danswer.configs.chat_configs import QA_TIMEOUT
-from danswer.configs.model_configs import GEN_AI_MODEL_FALLBACK_MAX_TOKENS
-from danswer.configs.model_configs import GEN_AI_TEMPERATURE
-from danswer.db.engine import get_session_context_manager
-from danswer.db.llm import fetch_default_provider
-from danswer.db.llm import fetch_provider
-from danswer.db.models import Persona
-from danswer.llm.chat_llm import DefaultMultiLLM
-from danswer.llm.exceptions import GenAIDisabledException
-from danswer.llm.interfaces import LLM
-from danswer.llm.override_models import LLMOverride
-from danswer.utils.headers import build_llm_extra_headers
-from danswer.utils.logger import setup_logger
-from danswer.utils.long_term_log import LongTermLogger
+from onyx.chat.models import PersonaOverrideConfig
+from onyx.configs.app_configs import DISABLE_GENERATIVE_AI
+from onyx.configs.chat_configs import QA_TIMEOUT
+from onyx.configs.model_configs import GEN_AI_MODEL_FALLBACK_MAX_TOKENS
+from onyx.configs.model_configs import GEN_AI_TEMPERATURE
+from onyx.db.engine import get_session_context_manager
+from onyx.db.llm import fetch_default_provider
+from onyx.db.llm import fetch_provider
+from onyx.db.models import Persona
+from onyx.llm.chat_llm import DefaultMultiLLM
+from onyx.llm.exceptions import GenAIDisabledException
+from onyx.llm.interfaces import LLM
+from onyx.llm.override_models import LLMOverride
+from onyx.utils.headers import build_llm_extra_headers
+from onyx.utils.logger import setup_logger
+from onyx.utils.long_term_log import LongTermLogger
 
 logger = setup_logger()
 

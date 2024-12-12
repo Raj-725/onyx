@@ -8,12 +8,12 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from danswer.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from danswer.configs.constants import DanswerCeleryPriority
-from danswer.configs.constants import DanswerCeleryQueues
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.db.document_set import construct_document_select_by_docset
-from danswer.redis.redis_object_helper import RedisObjectHelper
+from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from onyx.configs.constants import OnyxCeleryPriority
+from onyx.configs.constants import OnyxCeleryQueues
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.db.document_set import construct_document_select_by_docset
+from onyx.redis.redis_object_helper import RedisObjectHelper
 
 
 class RedisDocumentSet(RedisObjectHelper):
@@ -77,11 +77,11 @@ class RedisDocumentSet(RedisObjectHelper):
             redis_client.sadd(self.taskset_key, custom_task_id)
 
             result = celery_app.send_task(
-                DanswerCeleryTask.VESPA_METADATA_SYNC_TASK,
+                OnyxCeleryTask.VESPA_METADATA_SYNC_TASK,
                 kwargs=dict(document_id=doc.id, tenant_id=tenant_id),
-                queue=DanswerCeleryQueues.VESPA_METADATA_SYNC,
+                queue=OnyxCeleryQueues.VESPA_METADATA_SYNC,
                 task_id=custom_task_id,
-                priority=DanswerCeleryPriority.LOW,
+                priority=OnyxCeleryPriority.LOW,
             )
 
             async_results.append(result)

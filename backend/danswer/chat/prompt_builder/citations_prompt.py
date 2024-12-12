@@ -1,36 +1,36 @@
 from langchain.schema.messages import HumanMessage
 from langchain.schema.messages import SystemMessage
 
-from danswer.chat.models import LlmDoc
-from danswer.chat.models import PromptConfig
-from danswer.configs.model_configs import GEN_AI_SINGLE_USER_MESSAGE_EXPECTED_MAX_TOKENS
-from danswer.context.search.models import InferenceChunk
-from danswer.db.models import Persona
-from danswer.db.persona import get_default_prompt__read_only
-from danswer.db.search_settings import get_multilingual_expansion
-from danswer.llm.factory import get_llms_for_persona
-from danswer.llm.factory import get_main_llm_from_tuple
-from danswer.llm.interfaces import LLMConfig
-from danswer.llm.utils import build_content_with_imgs
-from danswer.llm.utils import check_number_of_tokens
-from danswer.llm.utils import get_max_input_tokens
-from danswer.llm.utils import message_to_prompt_and_imgs
-from danswer.prompts.chat_prompts import REQUIRE_CITATION_STATEMENT
-from danswer.prompts.constants import DEFAULT_IGNORE_STATEMENT
-from danswer.prompts.direct_qa_prompts import CITATIONS_PROMPT
-from danswer.prompts.direct_qa_prompts import CITATIONS_PROMPT_FOR_TOOL_CALLING
-from danswer.prompts.direct_qa_prompts import HISTORY_BLOCK
-from danswer.prompts.prompt_utils import add_date_time_to_prompt
-from danswer.prompts.prompt_utils import build_complete_context_str
-from danswer.prompts.prompt_utils import build_task_prompt_reminders
-from danswer.prompts.token_counts import ADDITIONAL_INFO_TOKEN_CNT
-from danswer.prompts.token_counts import (
+from onyx.chat.models import LlmDoc
+from onyx.chat.models import PromptConfig
+from onyx.configs.model_configs import GEN_AI_SINGLE_USER_MESSAGE_EXPECTED_MAX_TOKENS
+from onyx.context.search.models import InferenceChunk
+from onyx.db.models import Persona
+from onyx.db.persona import get_default_prompt__read_only
+from onyx.db.search_settings import get_multilingual_expansion
+from onyx.llm.factory import get_llms_for_persona
+from onyx.llm.factory import get_main_llm_from_tuple
+from onyx.llm.interfaces import LLMConfig
+from onyx.llm.utils import build_content_with_imgs
+from onyx.llm.utils import check_number_of_tokens
+from onyx.llm.utils import get_max_input_tokens
+from onyx.llm.utils import message_to_prompt_and_imgs
+from onyx.prompts.chat_prompts import REQUIRE_CITATION_STATEMENT
+from onyx.prompts.constants import DEFAULT_IGNORE_STATEMENT
+from onyx.prompts.direct_qa_prompts import CITATIONS_PROMPT
+from onyx.prompts.direct_qa_prompts import CITATIONS_PROMPT_FOR_TOOL_CALLING
+from onyx.prompts.direct_qa_prompts import HISTORY_BLOCK
+from onyx.prompts.prompt_utils import add_date_time_to_prompt
+from onyx.prompts.prompt_utils import build_complete_context_str
+from onyx.prompts.prompt_utils import build_task_prompt_reminders
+from onyx.prompts.token_counts import ADDITIONAL_INFO_TOKEN_CNT
+from onyx.prompts.token_counts import (
     CHAT_USER_PROMPT_WITH_CONTEXT_OVERHEAD_TOKEN_CNT,
 )
-from danswer.prompts.token_counts import CITATION_REMINDER_TOKEN_CNT
-from danswer.prompts.token_counts import CITATION_STATEMENT_TOKEN_CNT
-from danswer.prompts.token_counts import LANGUAGE_HINT_TOKEN_CNT
-from danswer.utils.logger import setup_logger
+from onyx.prompts.token_counts import CITATION_REMINDER_TOKEN_CNT
+from onyx.prompts.token_counts import CITATION_STATEMENT_TOKEN_CNT
+from onyx.prompts.token_counts import LANGUAGE_HINT_TOKEN_CNT
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

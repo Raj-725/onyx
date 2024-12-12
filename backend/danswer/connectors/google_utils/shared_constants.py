@@ -1,4 +1,4 @@
-from danswer.configs.constants import DocumentSource
+from onyx.configs.constants import DocumentSource
 
 # NOTE: do not need https://www.googleapis.com/auth/documents.readonly
 # this is counted under `/auth/drive.readonly`
@@ -29,9 +29,9 @@ USER_FIELDS = "nextPageToken, users(primaryEmail)"
 MISSING_SCOPES_ERROR_STR = "client not authorized for any of the scopes requested"
 
 # Documentation and error messages
-SCOPE_DOC_URL = "https://docs.danswer.dev/connectors/google_drive/overview"
+SCOPE_DOC_URL = "https://docs.onyx.app/connectors/google_drive/overview"
 ONYX_SCOPE_INSTRUCTIONS = (
-    "You have upgraded Danswer without updating the Google Auth scopes. "
+    "You have upgraded Onyx without updating the Google Auth scopes. "
     f"Please refer to the documentation to learn how to update the scopes: {SCOPE_DOC_URL}"
 )
 

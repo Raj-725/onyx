@@ -1,10 +1,10 @@
 from typing import cast
 
-from danswer.configs.constants import KV_SEARCH_SETTINGS
-from danswer.context.search.models import SavedSearchSettings
-from danswer.key_value_store.factory import get_kv_store
-from danswer.key_value_store.interface import KvKeyNotFoundError
-from danswer.utils.logger import setup_logger
+from onyx.configs.constants import KV_SEARCH_SETTINGS
+from onyx.context.search.models import SavedSearchSettings
+from onyx.key_value_store.factory import get_kv_store
+from onyx.key_value_store.interface import KvKeyNotFoundError
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

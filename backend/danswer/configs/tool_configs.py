@@ -16,7 +16,7 @@ if _CUSTOM_TOOL_PASS_THROUGH_HEADERS_RAW:
         )
     except Exception:
         # need to import here to avoid circular imports
-        from danswer.utils.logger import setup_logger
+        from onyx.utils.logger import setup_logger
 
         logger = setup_logger()
         logger.error(

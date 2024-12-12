@@ -16,64 +16,64 @@ from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 from tenacity import RetryError
 
-from danswer.access.access import get_access_for_document
-from danswer.background.celery.apps.app_base import task_logger
-from danswer.background.celery.celery_redis import celery_get_queue_length
-from danswer.background.celery.tasks.shared.RetryDocumentIndex import RetryDocumentIndex
-from danswer.background.celery.tasks.shared.tasks import LIGHT_SOFT_TIME_LIMIT
-from danswer.background.celery.tasks.shared.tasks import LIGHT_TIME_LIMIT
-from danswer.configs.app_configs import JOB_TIMEOUT
-from danswer.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from danswer.configs.constants import DanswerCeleryQueues
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.configs.constants import DanswerRedisLocks
-from danswer.db.connector import fetch_connector_by_id
-from danswer.db.connector import mark_cc_pair_as_permissions_synced
-from danswer.db.connector import mark_ccpair_as_pruned
-from danswer.db.connector_credential_pair import add_deletion_failure_message
-from danswer.db.connector_credential_pair import (
+from onyx.access.access import get_access_for_document
+from onyx.background.celery.apps.app_base import task_logger
+from onyx.background.celery.celery_redis import celery_get_queue_length
+from onyx.background.celery.tasks.shared.RetryDocumentIndex import RetryDocumentIndex
+from onyx.background.celery.tasks.shared.tasks import LIGHT_SOFT_TIME_LIMIT
+from onyx.background.celery.tasks.shared.tasks import LIGHT_TIME_LIMIT
+from onyx.configs.app_configs import JOB_TIMEOUT
+from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from onyx.configs.constants import OnyxCeleryQueues
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.configs.constants import OnyxRedisLocks
+from onyx.db.connector import fetch_connector_by_id
+from onyx.db.connector import mark_cc_pair_as_permissions_synced
+from onyx.db.connector import mark_ccpair_as_pruned
+from onyx.db.connector_credential_pair import add_deletion_failure_message
+from onyx.db.connector_credential_pair import (
     delete_connector_credential_pair__no_commit,
 )
-from danswer.db.connector_credential_pair import get_connector_credential_pair_from_id
-from danswer.db.connector_credential_pair import get_connector_credential_pairs
-from danswer.db.document import count_documents_by_needs_sync
-from danswer.db.document import get_document
-from danswer.db.document import get_document_ids_for_connector_credential_pair
-from danswer.db.document import mark_document_as_synced
-from danswer.db.document_set import delete_document_set
-from danswer.db.document_set import delete_document_set_cc_pair_relationship__no_commit
-from danswer.db.document_set import fetch_document_sets
-from danswer.db.document_set import fetch_document_sets_for_document
-from danswer.db.document_set import get_document_set_by_id
-from danswer.db.document_set import mark_document_set_as_synced
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.enums import IndexingStatus
-from danswer.db.index_attempt import delete_index_attempts
-from danswer.db.index_attempt import get_index_attempt
-from danswer.db.index_attempt import mark_attempt_failed
-from danswer.db.models import DocumentSet
-from danswer.document_index.document_index_utils import get_both_index_names
-from danswer.document_index.factory import get_default_document_index
-from danswer.document_index.interfaces import VespaDocumentFields
-from danswer.redis.redis_connector import RedisConnector
-from danswer.redis.redis_connector_credential_pair import RedisConnectorCredentialPair
-from danswer.redis.redis_connector_delete import RedisConnectorDelete
-from danswer.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
-from danswer.redis.redis_connector_doc_perm_sync import (
+from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
+from onyx.db.connector_credential_pair import get_connector_credential_pairs
+from onyx.db.document import count_documents_by_needs_sync
+from onyx.db.document import get_document
+from onyx.db.document import get_document_ids_for_connector_credential_pair
+from onyx.db.document import mark_document_as_synced
+from onyx.db.document_set import delete_document_set
+from onyx.db.document_set import delete_document_set_cc_pair_relationship__no_commit
+from onyx.db.document_set import fetch_document_sets
+from onyx.db.document_set import fetch_document_sets_for_document
+from onyx.db.document_set import get_document_set_by_id
+from onyx.db.document_set import mark_document_set_as_synced
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.enums import IndexingStatus
+from onyx.db.index_attempt import delete_index_attempts
+from onyx.db.index_attempt import get_index_attempt
+from onyx.db.index_attempt import mark_attempt_failed
+from onyx.db.models import DocumentSet
+from onyx.document_index.document_index_utils import get_both_index_names
+from onyx.document_index.factory import get_default_document_index
+from onyx.document_index.interfaces import VespaDocumentFields
+from onyx.redis.redis_connector import RedisConnector
+from onyx.redis.redis_connector_credential_pair import RedisConnectorCredentialPair
+from onyx.redis.redis_connector_delete import RedisConnectorDelete
+from onyx.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
+from onyx.redis.redis_connector_doc_perm_sync import (
     RedisConnectorPermissionSyncPayload,
 )
-from danswer.redis.redis_connector_index import RedisConnectorIndex
-from danswer.redis.redis_connector_prune import RedisConnectorPrune
-from danswer.redis.redis_document_set import RedisDocumentSet
-from danswer.redis.redis_pool import get_redis_client
-from danswer.redis.redis_usergroup import RedisUserGroup
-from danswer.utils.logger import setup_logger
-from danswer.utils.variable_functionality import fetch_versioned_implementation
-from danswer.utils.variable_functionality import (
+from onyx.redis.redis_connector_index import RedisConnectorIndex
+from onyx.redis.redis_connector_prune import RedisConnectorPrune
+from onyx.redis.redis_document_set import RedisDocumentSet
+from onyx.redis.redis_pool import get_redis_client
+from onyx.redis.redis_usergroup import RedisUserGroup
+from onyx.utils.logger import setup_logger
+from onyx.utils.variable_functionality import fetch_versioned_implementation
+from onyx.utils.variable_functionality import (
     fetch_versioned_implementation_with_fallback,
 )
-from danswer.utils.variable_functionality import global_version
-from danswer.utils.variable_functionality import noop_fallback
+from onyx.utils.variable_functionality import global_version
+from onyx.utils.variable_functionality import noop_fallback
 
 logger = setup_logger()
 
@@ -81,7 +81,7 @@ logger = setup_logger()
 # celery auto associates tasks created inside another task,
 # which bloats the result metadata considerably. trail=False prevents this.
 @shared_task(
-    name=DanswerCeleryTask.CHECK_FOR_VESPA_SYNC_TASK,
+    name=OnyxCeleryTask.CHECK_FOR_VESPA_SYNC_TASK,
     soft_time_limit=JOB_TIMEOUT,
     trail=False,
     bind=True,
@@ -93,7 +93,7 @@ def check_for_vespa_sync_task(self: Task, *, tenant_id: str | None) -> None:
     r = get_redis_client(tenant_id=tenant_id)
 
     lock_beat = r.lock(
-        DanswerRedisLocks.CHECK_VESPA_SYNC_BEAT_LOCK,
+        OnyxRedisLocks.CHECK_VESPA_SYNC_BEAT_LOCK,
         timeout=CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -129,7 +129,7 @@ def check_for_vespa_sync_task(self: Task, *, tenant_id: str | None) -> None:
         if global_version.is_ee_version():
             try:
                 fetch_user_groups = fetch_versioned_implementation(
-                    "danswer.db.user_group", "fetch_user_groups"
+                    "onyx.db.user_group", "fetch_user_groups"
                 )
             except ModuleNotFoundError:
                 # Always exceptions on the MIT version, which is expected
@@ -292,7 +292,7 @@ def try_generate_user_group_sync_tasks(
 
     # race condition with the monitor/cleanup function if we use a cached result!
     fetch_user_group = fetch_versioned_implementation(
-        "danswer.db.user_group", "fetch_user_group"
+        "onyx.db.user_group", "fetch_user_group"
     )
 
     usergroup = fetch_user_group(db_session, usergroup_id)
@@ -476,7 +476,7 @@ def monitor_connector_deletion_taskset(
 
             # user groups
             cleanup_user_groups = fetch_versioned_implementation_with_fallback(
-                "danswer.db.user_group",
+                "onyx.db.user_group",
                 "delete_user_group_cc_pair_relationship__no_commit",
                 noop_fallback,
             )
@@ -719,7 +719,7 @@ def monitor_ccpair_indexing_taskset(
     redis_connector_index.reset()
 
 
-@shared_task(name=DanswerCeleryTask.MONITOR_VESPA_SYNC, soft_time_limit=300, bind=True)
+@shared_task(name=OnyxCeleryTask.MONITOR_VESPA_SYNC, soft_time_limit=300, bind=True)
 def monitor_vespa_sync(self: Task, tenant_id: str | None) -> bool:
     """This is a celery beat task that monitors and finalizes metadata sync tasksets.
     It scans for fence values and then gets the counts of any associated tasksets.
@@ -733,7 +733,7 @@ def monitor_vespa_sync(self: Task, tenant_id: str | None) -> bool:
     r = get_redis_client(tenant_id=tenant_id)
 
     lock_beat: RedisLock = r.lock(
-        DanswerRedisLocks.MONITOR_VESPA_SYNC_BEAT_LOCK,
+        OnyxRedisLocks.MONITOR_VESPA_SYNC_BEAT_LOCK,
         timeout=CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -746,19 +746,17 @@ def monitor_vespa_sync(self: Task, tenant_id: str | None) -> bool:
         r_celery = self.app.broker_connection().channel().client  # type: ignore
         n_celery = celery_get_queue_length("celery", r_celery)
         n_indexing = celery_get_queue_length(
-            DanswerCeleryQueues.CONNECTOR_INDEXING, r_celery
+            OnyxCeleryQueues.CONNECTOR_INDEXING, r_celery
         )
-        n_sync = celery_get_queue_length(
-            DanswerCeleryQueues.VESPA_METADATA_SYNC, r_celery
-        )
+        n_sync = celery_get_queue_length(OnyxCeleryQueues.VESPA_METADATA_SYNC, r_celery)
         n_deletion = celery_get_queue_length(
-            DanswerCeleryQueues.CONNECTOR_DELETION, r_celery
+            OnyxCeleryQueues.CONNECTOR_DELETION, r_celery
         )
         n_pruning = celery_get_queue_length(
-            DanswerCeleryQueues.CONNECTOR_PRUNING, r_celery
+            OnyxCeleryQueues.CONNECTOR_PRUNING, r_celery
         )
         n_permissions_sync = celery_get_queue_length(
-            DanswerCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC, r_celery
+            OnyxCeleryQueues.CONNECTOR_DOC_PERMISSIONS_SYNC, r_celery
         )
 
         task_logger.info(
@@ -789,7 +787,7 @@ def monitor_vespa_sync(self: Task, tenant_id: str | None) -> bool:
         for key_bytes in r.scan_iter(RedisUserGroup.FENCE_PREFIX + "*"):
             lock_beat.reacquire()
             monitor_usergroup_taskset = fetch_versioned_implementation_with_fallback(
-                "danswer.background.celery.tasks.vespa.tasks",
+                "onyx.background.celery.tasks.vespa.tasks",
                 "monitor_usergroup_taskset",
                 noop_fallback,
             )
@@ -816,8 +814,8 @@ def monitor_vespa_sync(self: Task, tenant_id: str | None) -> bool:
 
         # uncomment for debugging if needed
         # r_celery = celery_app.broker_connection().channel().client
-        # length = celery_get_queue_length(DanswerCeleryQueues.VESPA_METADATA_SYNC, r_celery)
-        # task_logger.warning(f"queue={DanswerCeleryQueues.VESPA_METADATA_SYNC} length={length}")
+        # length = celery_get_queue_length(OnyxCeleryQueues.VESPA_METADATA_SYNC, r_celery)
+        # task_logger.warning(f"queue={OnyxCeleryQueues.VESPA_METADATA_SYNC} length={length}")
     except SoftTimeLimitExceeded:
         task_logger.info(
             "Soft time limit exceeded, task is being terminated gracefully."
@@ -830,7 +828,7 @@ def monitor_vespa_sync(self: Task, tenant_id: str | None) -> bool:
 
 
 @shared_task(
-    name=DanswerCeleryTask.VESPA_METADATA_SYNC_TASK,
+    name=OnyxCeleryTask.VESPA_METADATA_SYNC_TASK,
     bind=True,
     soft_time_limit=LIGHT_SOFT_TIME_LIMIT,
     time_limit=LIGHT_TIME_LIMIT,

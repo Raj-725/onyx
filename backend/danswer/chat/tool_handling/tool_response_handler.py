@@ -4,22 +4,22 @@ from langchain_core.messages import AIMessageChunk
 from langchain_core.messages import BaseMessage
 from langchain_core.messages import ToolCall
 
-from danswer.chat.models import ResponsePart
-from danswer.chat.prompt_builder.build import LLMCall
-from danswer.llm.interfaces import LLM
-from danswer.tools.force import ForceUseTool
-from danswer.tools.message import build_tool_message
-from danswer.tools.message import ToolCallSummary
-from danswer.tools.models import ToolCallFinalResult
-from danswer.tools.models import ToolCallKickoff
-from danswer.tools.models import ToolResponse
-from danswer.tools.tool import Tool
-from danswer.tools.tool_runner import (
+from onyx.chat.models import ResponsePart
+from onyx.chat.prompt_builder.build import LLMCall
+from onyx.llm.interfaces import LLM
+from onyx.tools.force import ForceUseTool
+from onyx.tools.message import build_tool_message
+from onyx.tools.message import ToolCallSummary
+from onyx.tools.models import ToolCallFinalResult
+from onyx.tools.models import ToolCallKickoff
+from onyx.tools.models import ToolResponse
+from onyx.tools.tool import Tool
+from onyx.tools.tool_runner import (
     check_which_tools_should_run_for_non_tool_calling_llm,
 )
-from danswer.tools.tool_runner import ToolRunner
-from danswer.tools.tool_selection import select_single_tool_for_non_tool_calling_llm
-from danswer.utils.logger import setup_logger
+from onyx.tools.tool_runner import ToolRunner
+from onyx.tools.tool_selection import select_single_tool_for_non_tool_calling_llm
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()

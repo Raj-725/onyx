@@ -20,50 +20,50 @@ from sqlalchemy import update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from danswer.auth.invited_users import get_invited_users
-from danswer.auth.invited_users import write_invited_users
-from danswer.auth.noauth_user import fetch_no_auth_user
-from danswer.auth.noauth_user import set_no_auth_user_preferences
-from danswer.auth.schemas import UserRole
-from danswer.auth.schemas import UserStatus
-from danswer.auth.users import current_admin_user
-from danswer.auth.users import current_curator_or_admin_user
-from danswer.auth.users import current_user
-from danswer.auth.users import optional_user
-from danswer.configs.app_configs import AUTH_TYPE
-from danswer.configs.app_configs import ENABLE_EMAIL_INVITES
-from danswer.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
-from danswer.configs.app_configs import VALID_EMAIL_DOMAINS
-from danswer.configs.constants import AuthType
-from danswer.db.api_key import is_api_key_email_address
-from danswer.db.auth import get_total_users_count
-from danswer.db.engine import CURRENT_TENANT_ID_CONTEXTVAR
-from danswer.db.engine import get_session
-from danswer.db.models import AccessToken
-from danswer.db.models import DocumentSet__User
-from danswer.db.models import Persona__User
-from danswer.db.models import SamlAccount
-from danswer.db.models import User
-from danswer.db.models import User__UserGroup
-from danswer.db.users import get_user_by_email
-from danswer.db.users import list_users
-from danswer.db.users import validate_user_role_update
-from danswer.key_value_store.factory import get_kv_store
-from danswer.server.manage.models import AllUsersResponse
-from danswer.server.manage.models import AutoScrollRequest
-from danswer.server.manage.models import UserByEmail
-from danswer.server.manage.models import UserInfo
-from danswer.server.manage.models import UserPreferences
-from danswer.server.manage.models import UserRoleResponse
-from danswer.server.manage.models import UserRoleUpdateRequest
-from danswer.server.models import FullUserSnapshot
-from danswer.server.models import InvitedUserSnapshot
-from danswer.server.models import MinimalUserSnapshot
-from danswer.server.utils import BasicAuthenticationError
-from danswer.server.utils import send_user_email_invite
-from danswer.utils.logger import setup_logger
-from danswer.utils.variable_functionality import fetch_ee_implementation_or_noop
-from ee.danswer.configs.app_configs import SUPER_USERS
+from ee.onyx.configs.app_configs import SUPER_USERS
+from onyx.auth.invited_users import get_invited_users
+from onyx.auth.invited_users import write_invited_users
+from onyx.auth.noauth_user import fetch_no_auth_user
+from onyx.auth.noauth_user import set_no_auth_user_preferences
+from onyx.auth.schemas import UserRole
+from onyx.auth.schemas import UserStatus
+from onyx.auth.users import current_admin_user
+from onyx.auth.users import current_curator_or_admin_user
+from onyx.auth.users import current_user
+from onyx.auth.users import optional_user
+from onyx.configs.app_configs import AUTH_TYPE
+from onyx.configs.app_configs import ENABLE_EMAIL_INVITES
+from onyx.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
+from onyx.configs.app_configs import VALID_EMAIL_DOMAINS
+from onyx.configs.constants import AuthType
+from onyx.db.api_key import is_api_key_email_address
+from onyx.db.auth import get_total_users_count
+from onyx.db.engine import CURRENT_TENANT_ID_CONTEXTVAR
+from onyx.db.engine import get_session
+from onyx.db.models import AccessToken
+from onyx.db.models import DocumentSet__User
+from onyx.db.models import Persona__User
+from onyx.db.models import SamlAccount
+from onyx.db.models import User
+from onyx.db.models import User__UserGroup
+from onyx.db.users import get_user_by_email
+from onyx.db.users import list_users
+from onyx.db.users import validate_user_role_update
+from onyx.key_value_store.factory import get_kv_store
+from onyx.server.manage.models import AllUsersResponse
+from onyx.server.manage.models import AutoScrollRequest
+from onyx.server.manage.models import UserByEmail
+from onyx.server.manage.models import UserInfo
+from onyx.server.manage.models import UserPreferences
+from onyx.server.manage.models import UserRoleResponse
+from onyx.server.manage.models import UserRoleUpdateRequest
+from onyx.server.models import FullUserSnapshot
+from onyx.server.models import InvitedUserSnapshot
+from onyx.server.models import MinimalUserSnapshot
+from onyx.server.utils import BasicAuthenticationError
+from onyx.server.utils import send_user_email_invite
+from onyx.utils.logger import setup_logger
+from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
@@ -106,7 +106,7 @@ def set_user_role(
     if requested_role == UserRole.CURATOR:
         # Remove all curator db relationships before changing role
         fetch_ee_implementation_or_noop(
-            "danswer.db.user_group",
+            "onyx.db.user_group",
             "remove_curator_status__no_commit",
         )(db_session, user_to_update)
 
@@ -242,14 +242,14 @@ def bulk_invite_users(
     if MULTI_TENANT:
         try:
             fetch_ee_implementation_or_noop(
-                "danswer.server.tenants.provisioning", "add_users_to_tenant", None
+                "onyx.server.tenants.provisioning", "add_users_to_tenant", None
             )(new_invited_emails, tenant_id)
 
         except IntegrityError as e:
             if isinstance(e.orig, UniqueViolation):
                 raise HTTPException(
                     status_code=400,
-                    detail="User has already been invited to a Danswer organization",
+                    detail="User has already been invited to a Onyx organization",
                 )
             raise
         except Exception as e:
@@ -265,7 +265,7 @@ def bulk_invite_users(
     try:
         logger.info("Registering tenant users")
         fetch_ee_implementation_or_noop(
-            "danswer.server.tenants.billing", "register_tenant_users", None
+            "onyx.server.tenants.billing", "register_tenant_users", None
         )(CURRENT_TENANT_ID_CONTEXTVAR.get(), get_total_users_count(db_session))
         if ENABLE_EMAIL_INVITES:
             try:
@@ -282,7 +282,7 @@ def bulk_invite_users(
         )
         write_invited_users(initial_invited_users)  # Reset to original state
         fetch_ee_implementation_or_noop(
-            "danswer.server.tenants.user_mapping", "remove_users_from_tenant", None
+            "onyx.server.tenants.user_mapping", "remove_users_from_tenant", None
         )(new_invited_emails, tenant_id)
         raise e
 
@@ -298,14 +298,14 @@ def remove_invited_user(
 
     tenant_id = CURRENT_TENANT_ID_CONTEXTVAR.get()
     fetch_ee_implementation_or_noop(
-        "danswer.server.tenants.user_mapping", "remove_users_from_tenant", None
+        "onyx.server.tenants.user_mapping", "remove_users_from_tenant", None
     )([user_email.user_email], tenant_id)
     number_of_invited_users = write_invited_users(remaining_users)
 
     try:
         if MULTI_TENANT:
             fetch_ee_implementation_or_noop(
-                "danswer.server.tenants.billing", "register_tenant_users", None
+                "onyx.server.tenants.billing", "register_tenant_users", None
             )(CURRENT_TENANT_ID_CONTEXTVAR.get(), get_total_users_count(db_session))
     except Exception:
         logger.error(
@@ -374,7 +374,7 @@ async def delete_user(
             db_session.delete(oauth_account)
 
         fetch_ee_implementation_or_noop(
-            "danswer.db.external_perm",
+            "onyx.db.external_perm",
             "delete_user__ext_group_for_user__no_commit",
         )(
             db_session=db_session,
@@ -540,7 +540,7 @@ def verify_user_logged_in(
         None if MULTI_TENANT else get_current_token_creation(user, db_session)
     )
     organization_name = fetch_ee_implementation_or_noop(
-        "danswer.server.tenants.user_mapping", "get_tenant_id_for_email", None
+        "onyx.server.tenants.user_mapping", "get_tenant_id_for_email", None
     )(user.email)
 
     user_info = UserInfo.from_model(

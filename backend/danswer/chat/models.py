@@ -10,20 +10,20 @@ from pydantic import ConfigDict
 from pydantic import Field
 from pydantic import model_validator
 
-from danswer.configs.constants import DocumentSource
-from danswer.configs.constants import MessageType
-from danswer.context.search.enums import QueryFlow
-from danswer.context.search.enums import RecencyBiasSetting
-from danswer.context.search.enums import SearchType
-from danswer.context.search.models import RetrievalDocs
-from danswer.llm.override_models import PromptOverride
-from danswer.tools.models import ToolCallFinalResult
-from danswer.tools.models import ToolCallKickoff
-from danswer.tools.models import ToolResponse
-from danswer.tools.tool_implementations.custom.base_tool_types import ToolResultType
+from onyx.configs.constants import DocumentSource
+from onyx.configs.constants import MessageType
+from onyx.context.search.enums import QueryFlow
+from onyx.context.search.enums import RecencyBiasSetting
+from onyx.context.search.enums import SearchType
+from onyx.context.search.models import RetrievalDocs
+from onyx.llm.override_models import PromptOverride
+from onyx.tools.models import ToolCallFinalResult
+from onyx.tools.models import ToolCallKickoff
+from onyx.tools.models import ToolResponse
+from onyx.tools.tool_implementations.custom.base_tool_types import ToolResultType
 
 if TYPE_CHECKING:
-    from danswer.db.models import Prompt
+    from onyx.db.models import Prompt
 
 
 class LlmDoc(BaseModel):
@@ -99,7 +99,7 @@ class DocumentRelevance(BaseModel):
     relevance_summaries: dict[str, RelevanceAnalysis]
 
 
-class DanswerAnswerPiece(BaseModel):
+class OnyxAnswerPiece(BaseModel):
     # A small piece of a complete answer. Used for streaming back answers.
     answer_piece: str | None  # if None, specifies the end of an Answer
 
@@ -131,18 +131,18 @@ class StreamingError(BaseModel):
     stack_trace: str | None = None
 
 
-class DanswerContext(BaseModel):
+class OnyxContext(BaseModel):
     content: str
     document_id: str
     semantic_identifier: str
     blurb: str
 
 
-class DanswerContexts(BaseModel):
-    contexts: list[DanswerContext]
+class OnyxContexts(BaseModel):
+    contexts: list[OnyxContext]
 
 
-class DanswerAnswer(BaseModel):
+class OnyxAnswer(BaseModel):
     answer: str | None
 
 
@@ -152,7 +152,7 @@ class ThreadMessage(BaseModel):
     role: MessageType = MessageType.USER
 
 
-class ChatDanswerBotResponse(BaseModel):
+class ChatOnyxBotResponse(BaseModel):
     answer: str | None = None
     citations: list[CitationInfo] | None = None
     docs: QADocsResponse | None = None
@@ -205,9 +205,9 @@ class PersonaOverrideConfig(BaseModel):
 
 
 AnswerQuestionPossibleReturn = (
-    DanswerAnswerPiece
+    OnyxAnswerPiece
     | CitationInfo
-    | DanswerContexts
+    | OnyxContexts
     | FileChatDisplay
     | CustomToolResponse
     | StreamingError
@@ -320,7 +320,7 @@ class PromptConfig(BaseModel):
 
 
 ResponsePart = (
-    DanswerAnswerPiece
+    OnyxAnswerPiece
     | CitationInfo
     | ToolCallKickoff
     | ToolResponse

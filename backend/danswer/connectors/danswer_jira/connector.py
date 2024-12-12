@@ -7,29 +7,29 @@ from typing import Any
 from jira import JIRA
 from jira.resources import Issue
 
-from danswer.configs.app_configs import INDEX_BATCH_SIZE
-from danswer.configs.app_configs import JIRA_CONNECTOR_LABELS_TO_SKIP
-from danswer.configs.app_configs import JIRA_CONNECTOR_MAX_TICKET_SIZE
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
-from danswer.connectors.danswer_jira.utils import best_effort_basic_expert_info
-from danswer.connectors.danswer_jira.utils import best_effort_get_field_from_issue
-from danswer.connectors.danswer_jira.utils import build_jira_client
-from danswer.connectors.danswer_jira.utils import build_jira_url
-from danswer.connectors.danswer_jira.utils import extract_jira_project
-from danswer.connectors.danswer_jira.utils import extract_text_from_adf
-from danswer.connectors.danswer_jira.utils import get_comment_strs
-from danswer.connectors.interfaces import GenerateDocumentsOutput
-from danswer.connectors.interfaces import GenerateSlimDocumentOutput
-from danswer.connectors.interfaces import LoadConnector
-from danswer.connectors.interfaces import PollConnector
-from danswer.connectors.interfaces import SecondsSinceUnixEpoch
-from danswer.connectors.interfaces import SlimConnector
-from danswer.connectors.models import ConnectorMissingCredentialError
-from danswer.connectors.models import Document
-from danswer.connectors.models import Section
-from danswer.connectors.models import SlimDocument
-from danswer.utils.logger import setup_logger
+from onyx.configs.app_configs import INDEX_BATCH_SIZE
+from onyx.configs.app_configs import JIRA_CONNECTOR_LABELS_TO_SKIP
+from onyx.configs.app_configs import JIRA_CONNECTOR_MAX_TICKET_SIZE
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
+from onyx.connectors.interfaces import GenerateDocumentsOutput
+from onyx.connectors.interfaces import GenerateSlimDocumentOutput
+from onyx.connectors.interfaces import LoadConnector
+from onyx.connectors.interfaces import PollConnector
+from onyx.connectors.interfaces import SecondsSinceUnixEpoch
+from onyx.connectors.interfaces import SlimConnector
+from onyx.connectors.models import ConnectorMissingCredentialError
+from onyx.connectors.models import Document
+from onyx.connectors.models import Section
+from onyx.connectors.models import SlimDocument
+from onyx.connectors.onyx_jira.utils import best_effort_basic_expert_info
+from onyx.connectors.onyx_jira.utils import best_effort_get_field_from_issue
+from onyx.connectors.onyx_jira.utils import build_jira_client
+from onyx.connectors.onyx_jira.utils import build_jira_url
+from onyx.connectors.onyx_jira.utils import extract_jira_project
+from onyx.connectors.onyx_jira.utils import extract_text_from_adf
+from onyx.connectors.onyx_jira.utils import get_comment_strs
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()

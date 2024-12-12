@@ -9,13 +9,13 @@ from pydantic import BaseModel
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from danswer.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from danswer.configs.constants import DanswerCeleryPriority
-from danswer.configs.constants import DanswerCeleryQueues
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.db.connector_credential_pair import get_connector_credential_pair_from_id
-from danswer.db.document import construct_document_select_for_connector_credential_pair
-from danswer.db.models import Document as DbDocument
+from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from onyx.configs.constants import OnyxCeleryPriority
+from onyx.configs.constants import OnyxCeleryQueues
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
+from onyx.db.document import construct_document_select_for_connector_credential_pair
+from onyx.db.models import Document as DbDocument
 
 
 class RedisConnectorDeletePayload(BaseModel):
@@ -115,16 +115,16 @@ class RedisConnectorDelete:
 
             # Priority on sync's triggered by new indexing should be medium
             result = celery_app.send_task(
-                DanswerCeleryTask.DOCUMENT_BY_CC_PAIR_CLEANUP_TASK,
+                OnyxCeleryTask.DOCUMENT_BY_CC_PAIR_CLEANUP_TASK,
                 kwargs=dict(
                     document_id=doc.id,
                     connector_id=cc_pair.connector_id,
                     credential_id=cc_pair.credential_id,
                     tenant_id=self.tenant_id,
                 ),
-                queue=DanswerCeleryQueues.CONNECTOR_DELETION,
+                queue=OnyxCeleryQueues.CONNECTOR_DELETION,
                 task_id=custom_task_id,
-                priority=DanswerCeleryPriority.MEDIUM,
+                priority=OnyxCeleryPriority.MEDIUM,
             )
 
             async_results.append(result)

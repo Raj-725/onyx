@@ -1,13 +1,13 @@
 from collections.abc import Sequence
 from typing import TypeVar
 
-from danswer.chat.models import SectionRelevancePiece
-from danswer.context.search.models import InferenceChunk
-from danswer.context.search.models import InferenceSection
-from danswer.context.search.models import SavedSearchDoc
-from danswer.context.search.models import SavedSearchDocWithContent
-from danswer.context.search.models import SearchDoc
-from danswer.db.models import SearchDoc as DBSearchDoc
+from onyx.chat.models import SectionRelevancePiece
+from onyx.context.search.models import InferenceChunk
+from onyx.context.search.models import InferenceSection
+from onyx.context.search.models import SavedSearchDoc
+from onyx.context.search.models import SavedSearchDocWithContent
+from onyx.context.search.models import SearchDoc
+from onyx.db.models import SearchDoc as DBSearchDoc
 
 
 T = TypeVar(

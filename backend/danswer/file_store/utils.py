@@ -7,14 +7,14 @@ from uuid import uuid4
 import requests
 from sqlalchemy.orm import Session
 
-from danswer.configs.constants import FileOrigin
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.models import ChatMessage
-from danswer.file_store.file_store import get_default_file_store
-from danswer.file_store.models import FileDescriptor
-from danswer.file_store.models import InMemoryChatFile
-from danswer.utils.b64 import get_image_type
-from danswer.utils.threadpool_concurrency import run_functions_tuples_in_parallel
+from onyx.configs.constants import FileOrigin
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.models import ChatMessage
+from onyx.file_store.file_store import get_default_file_store
+from onyx.file_store.models import FileDescriptor
+from onyx.file_store.models import InMemoryChatFile
+from onyx.utils.b64 import get_image_type
+from onyx.utils.threadpool_concurrency import run_functions_tuples_in_parallel
 
 
 def load_chat_file(

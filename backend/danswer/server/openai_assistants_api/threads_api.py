@@ -7,16 +7,16 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import current_user
-from danswer.db.chat import create_chat_session
-from danswer.db.chat import delete_chat_session
-from danswer.db.chat import get_chat_session_by_id
-from danswer.db.chat import get_chat_sessions_by_user
-from danswer.db.chat import update_chat_session
-from danswer.db.engine import get_session
-from danswer.db.models import User
-from danswer.server.query_and_chat.models import ChatSessionDetails
-from danswer.server.query_and_chat.models import ChatSessionsResponse
+from onyx.auth.users import current_user
+from onyx.db.chat import create_chat_session
+from onyx.db.chat import delete_chat_session
+from onyx.db.chat import get_chat_session_by_id
+from onyx.db.chat import get_chat_sessions_by_user
+from onyx.db.chat import update_chat_session
+from onyx.db.engine import get_session
+from onyx.db.models import User
+from onyx.server.query_and_chat.models import ChatSessionDetails
+from onyx.server.query_and_chat.models import ChatSessionsResponse
 
 router = APIRouter(prefix="/threads")
 

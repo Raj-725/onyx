@@ -3,25 +3,25 @@ import datetime
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
-from danswer.configs.danswerbot_configs import DANSWER_BOT_FEEDBACK_REMINDER
-from danswer.configs.danswerbot_configs import DANSWER_REACT_EMOJI
-from danswer.danswerbot.slack.blocks import get_feedback_reminder_blocks
-from danswer.danswerbot.slack.handlers.handle_regular_answer import (
+from onyx.configs.onyxbot_configs import DANSWER_BOT_FEEDBACK_REMINDER
+from onyx.configs.onyxbot_configs import DANSWER_REACT_EMOJI
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.models import SlackChannelConfig
+from onyx.db.users import add_slack_user_if_not_exists
+from onyx.onyxbot.slack.blocks import get_feedback_reminder_blocks
+from onyx.onyxbot.slack.handlers.handle_regular_answer import (
     handle_regular_answer,
 )
-from danswer.danswerbot.slack.handlers.handle_standard_answers import (
+from onyx.onyxbot.slack.handlers.handle_standard_answers import (
     handle_standard_answers,
 )
-from danswer.danswerbot.slack.models import SlackMessageInfo
-from danswer.danswerbot.slack.utils import fetch_slack_user_ids_from_emails
-from danswer.danswerbot.slack.utils import fetch_user_ids_from_groups
-from danswer.danswerbot.slack.utils import respond_in_thread
-from danswer.danswerbot.slack.utils import slack_usage_report
-from danswer.danswerbot.slack.utils import update_emote_react
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.models import SlackChannelConfig
-from danswer.db.users import add_slack_user_if_not_exists
-from danswer.utils.logger import setup_logger
+from onyx.onyxbot.slack.models import SlackMessageInfo
+from onyx.onyxbot.slack.utils import fetch_slack_user_ids_from_emails
+from onyx.onyxbot.slack.utils import fetch_user_ids_from_groups
+from onyx.onyxbot.slack.utils import respond_in_thread
+from onyx.onyxbot.slack.utils import slack_usage_report
+from onyx.onyxbot.slack.utils import update_emote_react
+from onyx.utils.logger import setup_logger
 from shared_configs.configs import SLACK_CHANNEL_ID
 
 logger_base = setup_logger()
@@ -116,7 +116,7 @@ def handle_message(
     Returns True if need to respond with an additional message to the user(s) after this
     function is finished. True indicates an unexpected failure that needs to be communicated
     Query thrown out by filters due to config does not count as a failure that should be notified
-    Danswer failing to answer/retrieve docs does count and should be notified
+    Onyx failing to answer/retrieve docs does count and should be notified
     """
     channel = message_info.channel_to_respond
 
@@ -176,7 +176,7 @@ def handle_message(
     if respond_tag_only and not bypass_filters:
         logger.info(
             "Skipping message since the channel is configured such that "
-            "DanswerBot only responds to tags"
+            "OnyxBot only responds to tags"
         )
         return False
 
@@ -194,7 +194,7 @@ def handle_message(
         if missing_users:
             logger.warning(f"Failed to find these users/groups: {missing_users}")
 
-    # If configured to respond to team members only, then cannot be used with a /DanswerBot command
+    # If configured to respond to team members only, then cannot be used with a /OnyxBot command
     # which would just respond to the sender
     if send_to and is_bot_msg:
         if sender_id:
@@ -202,7 +202,7 @@ def handle_message(
                 client=client,
                 channel=channel,
                 receiver_ids=[sender_id],
-                text="The DanswerBot slash command is not enabled for this channel",
+                text="The OnyxBot slash command is not enabled for this channel",
                 thread_ts=None,
             )
 

@@ -21,13 +21,13 @@ from fastapi import UploadFile
 from pypdf import PdfReader
 from pypdf.errors import PdfStreamError
 
-from danswer.configs.constants import DANSWER_METADATA_FILENAME
-from danswer.configs.constants import FileOrigin
-from danswer.file_processing.html_utils import parse_html_page_basic
-from danswer.file_processing.unstructured import get_unstructured_api_key
-from danswer.file_processing.unstructured import unstructured_to_text
-from danswer.file_store.file_store import FileStore
-from danswer.utils.logger import setup_logger
+from onyx.configs.constants import DANSWER_METADATA_FILENAME
+from onyx.configs.constants import FileOrigin
+from onyx.file_processing.html_utils import parse_html_page_basic
+from onyx.file_processing.unstructured import get_unstructured_api_key
+from onyx.file_processing.unstructured import unstructured_to_text
+from onyx.file_store.file_store import FileStore
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -97,7 +97,7 @@ def is_macos_resource_fork_file(file_name: str) -> bool:
     )
 
 
-# To include additional metadata in the search index, add a .danswer_metadata.json file
+# To include additional metadata in the search index, add a .onyx_metadata.json file
 # to the zip file. This file should contain a list of objects with the following format:
 # [{ "filename": "file1.txt", "link": "https://example.com/file1.txt" }]
 def load_files_from_zip(
@@ -133,7 +133,7 @@ def load_files_from_zip(
                 yield file_info, file, zip_metadata.get(file_info.filename, {})
 
 
-def _extract_danswer_metadata(line: str) -> dict | None:
+def _extract_onyx_metadata(line: str) -> dict | None:
     html_comment_pattern = r"<!--\s*DANSWER_METADATA=\{(.*?)\}\s*-->"
     hashtag_pattern = r"#DANSWER_METADATA=\{(.*?)\}"
 
@@ -157,7 +157,7 @@ def read_text_file(
     file: IO,
     encoding: str = "utf-8",
     errors: str = "replace",
-    ignore_danswer_metadata: bool = True,
+    ignore_onyx_metadata: bool = True,
 ) -> tuple[str, dict]:
     metadata = {}
     file_content_raw = ""
@@ -173,7 +173,7 @@ def read_text_file(
 
         if ind == 0:
             metadata_or_none = (
-                None if ignore_danswer_metadata else _extract_danswer_metadata(line)
+                None if ignore_onyx_metadata else _extract_onyx_metadata(line)
             )
             if metadata_or_none is not None:
                 metadata = metadata_or_none

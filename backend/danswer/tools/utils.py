@@ -2,12 +2,12 @@ import json
 
 from sqlalchemy.orm import Session
 
-from danswer.configs.app_configs import AZURE_DALLE_API_KEY
-from danswer.db.connector import check_connectors_exist
-from danswer.db.document import check_docs_exist
-from danswer.db.models import LLMProvider
-from danswer.natural_language_processing.utils import BaseTokenizer
-from danswer.tools.tool import Tool
+from onyx.configs.app_configs import AZURE_DALLE_API_KEY
+from onyx.db.connector import check_connectors_exist
+from onyx.db.document import check_docs_exist
+from onyx.db.models import LLMProvider
+from onyx.natural_language_processing.utils import BaseTokenizer
+from onyx.tools.tool import Tool
 
 
 OPEN_AI_TOOL_CALLING_MODELS = {

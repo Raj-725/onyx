@@ -11,9 +11,9 @@ from typing import Any
 from typing import Literal
 from typing import Optional
 
-from danswer.configs.constants import POSTGRES_CELERY_WORKER_INDEXING_CHILD_APP_NAME
-from danswer.db.engine import SqlEngine
-from danswer.utils.logger import setup_logger
+from onyx.configs.constants import POSTGRES_CELERY_WORKER_INDEXING_CHILD_APP_NAME
+from onyx.db.engine import SqlEngine
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

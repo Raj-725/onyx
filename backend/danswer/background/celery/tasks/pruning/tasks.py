@@ -11,31 +11,31 @@ from redis import Redis
 from redis.lock import Lock as RedisLock
 from sqlalchemy.orm import Session
 
-from danswer.background.celery.apps.app_base import task_logger
-from danswer.background.celery.celery_utils import extract_ids_from_runnable_connector
-from danswer.background.celery.tasks.indexing.tasks import IndexingCallback
-from danswer.configs.app_configs import ALLOW_SIMULTANEOUS_PRUNING
-from danswer.configs.app_configs import JOB_TIMEOUT
-from danswer.configs.constants import CELERY_PRUNING_LOCK_TIMEOUT
-from danswer.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from danswer.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
-from danswer.configs.constants import DanswerCeleryPriority
-from danswer.configs.constants import DanswerCeleryQueues
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.configs.constants import DanswerRedisLocks
-from danswer.connectors.factory import instantiate_connector
-from danswer.connectors.models import InputType
-from danswer.db.connector_credential_pair import get_connector_credential_pair
-from danswer.db.connector_credential_pair import get_connector_credential_pair_from_id
-from danswer.db.connector_credential_pair import get_connector_credential_pairs
-from danswer.db.document import get_documents_for_connector_credential_pair
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.enums import ConnectorCredentialPairStatus
-from danswer.db.models import ConnectorCredentialPair
-from danswer.redis.redis_connector import RedisConnector
-from danswer.redis.redis_pool import get_redis_client
-from danswer.utils.logger import pruning_ctx
-from danswer.utils.logger import setup_logger
+from onyx.background.celery.apps.app_base import task_logger
+from onyx.background.celery.celery_utils import extract_ids_from_runnable_connector
+from onyx.background.celery.tasks.indexing.tasks import IndexingCallback
+from onyx.configs.app_configs import ALLOW_SIMULTANEOUS_PRUNING
+from onyx.configs.app_configs import JOB_TIMEOUT
+from onyx.configs.constants import CELERY_PRUNING_LOCK_TIMEOUT
+from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from onyx.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
+from onyx.configs.constants import OnyxCeleryPriority
+from onyx.configs.constants import OnyxCeleryQueues
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.configs.constants import OnyxRedisLocks
+from onyx.connectors.factory import instantiate_connector
+from onyx.connectors.models import InputType
+from onyx.db.connector_credential_pair import get_connector_credential_pair
+from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
+from onyx.db.connector_credential_pair import get_connector_credential_pairs
+from onyx.db.document import get_documents_for_connector_credential_pair
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.enums import ConnectorCredentialPairStatus
+from onyx.db.models import ConnectorCredentialPair
+from onyx.redis.redis_connector import RedisConnector
+from onyx.redis.redis_pool import get_redis_client
+from onyx.utils.logger import pruning_ctx
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -77,7 +77,7 @@ def _is_pruning_due(cc_pair: ConnectorCredentialPair) -> bool:
 
 
 @shared_task(
-    name=DanswerCeleryTask.CHECK_FOR_PRUNING,
+    name=OnyxCeleryTask.CHECK_FOR_PRUNING,
     soft_time_limit=JOB_TIMEOUT,
     bind=True,
 )
@@ -85,7 +85,7 @@ def check_for_pruning(self: Task, *, tenant_id: str | None) -> None:
     r = get_redis_client(tenant_id=tenant_id)
 
     lock_beat = r.lock(
-        DanswerRedisLocks.CHECK_PRUNE_BEAT_LOCK,
+        OnyxRedisLocks.CHECK_PRUNE_BEAT_LOCK,
         timeout=CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -186,16 +186,16 @@ def try_creating_prune_generator_task(
         custom_task_id = f"{redis_connector.prune.generator_task_key}_{uuid4()}"
 
         celery_app.send_task(
-            DanswerCeleryTask.CONNECTOR_PRUNING_GENERATOR_TASK,
+            OnyxCeleryTask.CONNECTOR_PRUNING_GENERATOR_TASK,
             kwargs=dict(
                 cc_pair_id=cc_pair.id,
                 connector_id=cc_pair.connector_id,
                 credential_id=cc_pair.credential_id,
                 tenant_id=tenant_id,
             ),
-            queue=DanswerCeleryQueues.CONNECTOR_PRUNING,
+            queue=OnyxCeleryQueues.CONNECTOR_PRUNING,
             task_id=custom_task_id,
-            priority=DanswerCeleryPriority.LOW,
+            priority=OnyxCeleryPriority.LOW,
         )
 
         # set this only after all tasks have been added
@@ -211,7 +211,7 @@ def try_creating_prune_generator_task(
 
 
 @shared_task(
-    name=DanswerCeleryTask.CONNECTOR_PRUNING_GENERATOR_TASK,
+    name=OnyxCeleryTask.CONNECTOR_PRUNING_GENERATOR_TASK,
     acks_late=False,
     soft_time_limit=JOB_TIMEOUT,
     track_started=True,
@@ -243,7 +243,7 @@ def connector_pruning_generator_task(
     # set thread_local=False since we don't control what thread the indexing/pruning
     # might run our callback with
     lock: RedisLock = r.lock(
-        DanswerRedisLocks.PRUNING_LOCK_PREFIX + f"_{redis_connector.id}",
+        OnyxRedisLocks.PRUNING_LOCK_PREFIX + f"_{redis_connector.id}",
         timeout=CELERY_PRUNING_LOCK_TIMEOUT,
         thread_local=False,
     )

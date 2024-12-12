@@ -5,16 +5,16 @@ from unittest.mock import MagicMock
 import pytest
 from langchain_core.messages import SystemMessage
 
-from danswer.chat.models import AnswerStyleConfig
-from danswer.chat.models import CitationConfig
-from danswer.chat.models import LlmDoc
-from danswer.chat.models import PromptConfig
-from danswer.chat.prompt_builder.build import AnswerPromptBuilder
-from danswer.configs.constants import DocumentSource
-from danswer.llm.interfaces import LLMConfig
-from danswer.tools.models import ToolResponse
-from danswer.tools.tool_implementations.search.search_tool import SearchTool
-from danswer.tools.tool_implementations.search_like_tool_utils import (
+from onyx.chat.models import AnswerStyleConfig
+from onyx.chat.models import CitationConfig
+from onyx.chat.models import LlmDoc
+from onyx.chat.models import PromptConfig
+from onyx.chat.prompt_builder.build import AnswerPromptBuilder
+from onyx.configs.constants import DocumentSource
+from onyx.llm.interfaces import LLMConfig
+from onyx.tools.models import ToolResponse
+from onyx.tools.tool_implementations.search.search_tool import SearchTool
+from onyx.tools.tool_implementations.search_like_tool_utils import (
     FINAL_CONTEXT_DOCUMENTS_ID,
 )
 

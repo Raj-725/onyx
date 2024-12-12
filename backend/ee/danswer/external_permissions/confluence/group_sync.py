@@ -1,9 +1,9 @@
-from danswer.connectors.confluence.onyx_confluence import build_confluence_client
-from danswer.connectors.confluence.onyx_confluence import OnyxConfluence
-from danswer.connectors.confluence.utils import get_user_email_from_username__server
-from danswer.db.models import ConnectorCredentialPair
-from danswer.utils.logger import setup_logger
-from ee.danswer.db.external_perm import ExternalUserGroup
+from ee.onyx.db.external_perm import ExternalUserGroup
+from onyx.connectors.confluence.onyx_confluence import build_confluence_client
+from onyx.connectors.confluence.onyx_confluence import OnyxConfluence
+from onyx.connectors.confluence.utils import get_user_email_from_username__server
+from onyx.db.models import ConnectorCredentialPair
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()
@@ -52,13 +52,13 @@ def confluence_group_sync(
     group_member_email_map = _build_group_member_email_map(
         confluence_client=confluence_client,
     )
-    danswer_groups: list[ExternalUserGroup] = []
+    onyx_groups: list[ExternalUserGroup] = []
     for group_id, group_member_emails in group_member_email_map.items():
-        danswer_groups.append(
+        onyx_groups.append(
             ExternalUserGroup(
                 id=group_id,
                 user_emails=list(group_member_emails),
             )
         )
 
-    return danswer_groups
+    return onyx_groups

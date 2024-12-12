@@ -9,23 +9,23 @@ from sqlalchemy import select
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm import Session
 
-from danswer.configs.constants import DocumentSource
-from danswer.db.connector import fetch_connector_by_id
-from danswer.db.credentials import fetch_credential_by_id
-from danswer.db.enums import AccessType
-from danswer.db.enums import ConnectorCredentialPairStatus
-from danswer.db.models import ConnectorCredentialPair
-from danswer.db.models import IndexAttempt
-from danswer.db.models import IndexingStatus
-from danswer.db.models import IndexModelStatus
-from danswer.db.models import SearchSettings
-from danswer.db.models import User
-from danswer.db.models import User__UserGroup
-from danswer.db.models import UserGroup__ConnectorCredentialPair
-from danswer.db.models import UserRole
-from danswer.server.models import StatusResponse
-from danswer.utils.logger import setup_logger
-from danswer.utils.variable_functionality import fetch_ee_implementation_or_noop
+from onyx.configs.constants import DocumentSource
+from onyx.db.connector import fetch_connector_by_id
+from onyx.db.credentials import fetch_credential_by_id
+from onyx.db.enums import AccessType
+from onyx.db.enums import ConnectorCredentialPairStatus
+from onyx.db.models import ConnectorCredentialPair
+from onyx.db.models import IndexAttempt
+from onyx.db.models import IndexingStatus
+from onyx.db.models import IndexModelStatus
+from onyx.db.models import SearchSettings
+from onyx.db.models import User
+from onyx.db.models import User__UserGroup
+from onyx.db.models import UserGroup__ConnectorCredentialPair
+from onyx.db.models import UserRole
+from onyx.server.models import StatusResponse
+from onyx.utils.logger import setup_logger
+from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
 
 
 logger = setup_logger()
@@ -357,7 +357,7 @@ def add_credential_to_connector(
 
     if access_type == AccessType.SYNC:
         if not fetch_ee_implementation_or_noop(
-            "danswer.external_permissions.sync_params",
+            "onyx.external_permissions.sync_params",
             "check_if_valid_sync_source",
             noop_return_value=True,
         )(connector.source):
@@ -448,7 +448,7 @@ def remove_credential_from_connector(
 
     if association is not None:
         fetch_ee_implementation_or_noop(
-            "danswer.db.external_perm",
+            "onyx.db.external_perm",
             "delete_user__ext_group_for_cc_pair__no_commit",
         )(
             db_session=db_session,

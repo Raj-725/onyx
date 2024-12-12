@@ -13,104 +13,104 @@ from google.oauth2.credentials import Credentials  # type: ignore
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import current_admin_user
-from danswer.auth.users import current_curator_or_admin_user
-from danswer.auth.users import current_user
-from danswer.background.celery.celery_utils import get_deletion_attempt_snapshot
-from danswer.background.celery.versioned_apps.primary import app as primary_app
-from danswer.configs.app_configs import ENABLED_CONNECTOR_TYPES
-from danswer.configs.constants import DanswerCeleryPriority
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.configs.constants import DocumentSource
-from danswer.configs.constants import FileOrigin
-from danswer.connectors.google_utils.google_auth import (
+from onyx.auth.users import current_admin_user
+from onyx.auth.users import current_curator_or_admin_user
+from onyx.auth.users import current_user
+from onyx.background.celery.celery_utils import get_deletion_attempt_snapshot
+from onyx.background.celery.versioned_apps.primary import app as primary_app
+from onyx.configs.app_configs import ENABLED_CONNECTOR_TYPES
+from onyx.configs.constants import DocumentSource
+from onyx.configs.constants import FileOrigin
+from onyx.configs.constants import OnyxCeleryPriority
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.connectors.google_utils.google_auth import (
     get_google_oauth_creds,
 )
-from danswer.connectors.google_utils.google_kv import (
+from onyx.connectors.google_utils.google_kv import (
     build_service_account_creds,
 )
-from danswer.connectors.google_utils.google_kv import (
+from onyx.connectors.google_utils.google_kv import (
     delete_google_app_cred,
 )
-from danswer.connectors.google_utils.google_kv import (
+from onyx.connectors.google_utils.google_kv import (
     delete_service_account_key,
 )
-from danswer.connectors.google_utils.google_kv import get_auth_url
-from danswer.connectors.google_utils.google_kv import (
+from onyx.connectors.google_utils.google_kv import get_auth_url
+from onyx.connectors.google_utils.google_kv import (
     get_google_app_cred,
 )
-from danswer.connectors.google_utils.google_kv import (
+from onyx.connectors.google_utils.google_kv import (
     get_service_account_key,
 )
-from danswer.connectors.google_utils.google_kv import (
+from onyx.connectors.google_utils.google_kv import (
     update_credential_access_tokens,
 )
-from danswer.connectors.google_utils.google_kv import (
+from onyx.connectors.google_utils.google_kv import (
     upsert_google_app_cred,
 )
-from danswer.connectors.google_utils.google_kv import (
+from onyx.connectors.google_utils.google_kv import (
     upsert_service_account_key,
 )
-from danswer.connectors.google_utils.google_kv import verify_csrf
-from danswer.connectors.google_utils.shared_constants import (
+from onyx.connectors.google_utils.google_kv import verify_csrf
+from onyx.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_DICT_TOKEN_KEY,
 )
-from danswer.db.connector import create_connector
-from danswer.db.connector import delete_connector
-from danswer.db.connector import fetch_connector_by_id
-from danswer.db.connector import fetch_connectors
-from danswer.db.connector import get_connector_credential_ids
-from danswer.db.connector import mark_ccpair_with_indexing_trigger
-from danswer.db.connector import update_connector
-from danswer.db.connector_credential_pair import add_credential_to_connector
-from danswer.db.connector_credential_pair import get_cc_pair_groups_for_ids
-from danswer.db.connector_credential_pair import get_connector_credential_pair
-from danswer.db.connector_credential_pair import get_connector_credential_pairs
-from danswer.db.credentials import cleanup_gmail_credentials
-from danswer.db.credentials import cleanup_google_drive_credentials
-from danswer.db.credentials import create_credential
-from danswer.db.credentials import delete_service_account_credentials
-from danswer.db.credentials import fetch_credential_by_id
-from danswer.db.deletion_attempt import check_deletion_attempt_is_allowed
-from danswer.db.document import get_document_counts_for_cc_pairs
-from danswer.db.engine import get_current_tenant_id
-from danswer.db.engine import get_session
-from danswer.db.enums import AccessType
-from danswer.db.enums import IndexingMode
-from danswer.db.index_attempt import get_index_attempts_for_cc_pair
-from danswer.db.index_attempt import get_latest_index_attempt_for_cc_pair_id
-from danswer.db.index_attempt import get_latest_index_attempts
-from danswer.db.index_attempt import get_latest_index_attempts_by_status
-from danswer.db.models import IndexingStatus
-from danswer.db.models import SearchSettings
-from danswer.db.models import User
-from danswer.db.search_settings import get_current_search_settings
-from danswer.db.search_settings import get_secondary_search_settings
-from danswer.file_processing.extract_file_text import convert_docx_to_txt
-from danswer.file_store.file_store import get_default_file_store
-from danswer.key_value_store.interface import KvKeyNotFoundError
-from danswer.redis.redis_connector import RedisConnector
-from danswer.server.documents.models import AuthStatus
-from danswer.server.documents.models import AuthUrl
-from danswer.server.documents.models import ConnectorCredentialPairIdentifier
-from danswer.server.documents.models import ConnectorIndexingStatus
-from danswer.server.documents.models import ConnectorSnapshot
-from danswer.server.documents.models import ConnectorUpdateRequest
-from danswer.server.documents.models import CredentialBase
-from danswer.server.documents.models import CredentialSnapshot
-from danswer.server.documents.models import FailedConnectorIndexingStatus
-from danswer.server.documents.models import FileUploadResponse
-from danswer.server.documents.models import GDriveCallback
-from danswer.server.documents.models import GmailCallback
-from danswer.server.documents.models import GoogleAppCredentials
-from danswer.server.documents.models import GoogleServiceAccountCredentialRequest
-from danswer.server.documents.models import GoogleServiceAccountKey
-from danswer.server.documents.models import IndexAttemptSnapshot
-from danswer.server.documents.models import ObjectCreationIdResponse
-from danswer.server.documents.models import RunConnectorRequest
-from danswer.server.models import StatusResponse
-from danswer.utils.logger import setup_logger
-from danswer.utils.variable_functionality import fetch_ee_implementation_or_noop
+from onyx.db.connector import create_connector
+from onyx.db.connector import delete_connector
+from onyx.db.connector import fetch_connector_by_id
+from onyx.db.connector import fetch_connectors
+from onyx.db.connector import get_connector_credential_ids
+from onyx.db.connector import mark_ccpair_with_indexing_trigger
+from onyx.db.connector import update_connector
+from onyx.db.connector_credential_pair import add_credential_to_connector
+from onyx.db.connector_credential_pair import get_cc_pair_groups_for_ids
+from onyx.db.connector_credential_pair import get_connector_credential_pair
+from onyx.db.connector_credential_pair import get_connector_credential_pairs
+from onyx.db.credentials import cleanup_gmail_credentials
+from onyx.db.credentials import cleanup_google_drive_credentials
+from onyx.db.credentials import create_credential
+from onyx.db.credentials import delete_service_account_credentials
+from onyx.db.credentials import fetch_credential_by_id
+from onyx.db.deletion_attempt import check_deletion_attempt_is_allowed
+from onyx.db.document import get_document_counts_for_cc_pairs
+from onyx.db.engine import get_current_tenant_id
+from onyx.db.engine import get_session
+from onyx.db.enums import AccessType
+from onyx.db.enums import IndexingMode
+from onyx.db.index_attempt import get_index_attempts_for_cc_pair
+from onyx.db.index_attempt import get_latest_index_attempt_for_cc_pair_id
+from onyx.db.index_attempt import get_latest_index_attempts
+from onyx.db.index_attempt import get_latest_index_attempts_by_status
+from onyx.db.models import IndexingStatus
+from onyx.db.models import SearchSettings
+from onyx.db.models import User
+from onyx.db.search_settings import get_current_search_settings
+from onyx.db.search_settings import get_secondary_search_settings
+from onyx.file_processing.extract_file_text import convert_docx_to_txt
+from onyx.file_store.file_store import get_default_file_store
+from onyx.key_value_store.interface import KvKeyNotFoundError
+from onyx.redis.redis_connector import RedisConnector
+from onyx.server.documents.models import AuthStatus
+from onyx.server.documents.models import AuthUrl
+from onyx.server.documents.models import ConnectorCredentialPairIdentifier
+from onyx.server.documents.models import ConnectorIndexingStatus
+from onyx.server.documents.models import ConnectorSnapshot
+from onyx.server.documents.models import ConnectorUpdateRequest
+from onyx.server.documents.models import CredentialBase
+from onyx.server.documents.models import CredentialSnapshot
+from onyx.server.documents.models import FailedConnectorIndexingStatus
+from onyx.server.documents.models import FileUploadResponse
+from onyx.server.documents.models import GDriveCallback
+from onyx.server.documents.models import GmailCallback
+from onyx.server.documents.models import GoogleAppCredentials
+from onyx.server.documents.models import GoogleServiceAccountCredentialRequest
+from onyx.server.documents.models import GoogleServiceAccountKey
+from onyx.server.documents.models import IndexAttemptSnapshot
+from onyx.server.documents.models import ObjectCreationIdResponse
+from onyx.server.documents.models import RunConnectorRequest
+from onyx.server.models import StatusResponse
+from onyx.utils.logger import setup_logger
+from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
 
 logger = setup_logger()
 
@@ -668,7 +668,7 @@ def create_connector_from_model(
         _validate_connector_allowed(connector_data.source)
 
         fetch_ee_implementation_or_noop(
-            "danswer.db.user_group", "validate_user_creation_permissions", None
+            "onyx.db.user_group", "validate_user_creation_permissions", None
         )(
             db_session=db_session,
             user=user,
@@ -693,7 +693,7 @@ def create_connector_with_mock_credential(
     db_session: Session = Depends(get_session),
 ) -> StatusResponse:
     fetch_ee_implementation_or_noop(
-        "danswer.db.user_group", "validate_user_creation_permissions", None
+        "onyx.db.user_group", "validate_user_creation_permissions", None
     )(
         db_session=db_session,
         user=user,
@@ -744,7 +744,7 @@ def update_connector_from_model(
     try:
         _validate_connector_allowed(connector_data.source)
         fetch_ee_implementation_or_noop(
-            "danswer.db.user_group", "validate_user_creation_permissions", None
+            "onyx.db.user_group", "validate_user_creation_permissions", None
         )(
             db_session=db_session,
             user=user,
@@ -875,8 +875,8 @@ def connector_run_once(
 
     # run the beat task to pick up the triggers immediately
     primary_app.send_task(
-        DanswerCeleryTask.CHECK_FOR_INDEXING,
-        priority=DanswerCeleryPriority.HIGH,
+        OnyxCeleryTask.CHECK_FOR_INDEXING,
+        priority=OnyxCeleryPriority.HIGH,
         kwargs={"tenant_id": tenant_id},
     )
 

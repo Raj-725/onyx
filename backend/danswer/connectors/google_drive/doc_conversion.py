@@ -5,26 +5,26 @@ from datetime import timezone
 from googleapiclient.discovery import build  # type: ignore
 from googleapiclient.errors import HttpError  # type: ignore
 
-from danswer.configs.app_configs import CONTINUE_ON_CONNECTOR_FAILURE
-from danswer.configs.constants import DocumentSource
-from danswer.configs.constants import IGNORE_FOR_QA
-from danswer.connectors.google_drive.constants import DRIVE_FOLDER_TYPE
-from danswer.connectors.google_drive.constants import DRIVE_SHORTCUT_TYPE
-from danswer.connectors.google_drive.constants import UNSUPPORTED_FILE_TYPE_CONTENT
-from danswer.connectors.google_drive.models import GDriveMimeType
-from danswer.connectors.google_drive.models import GoogleDriveFileType
-from danswer.connectors.google_drive.section_extraction import get_document_sections
-from danswer.connectors.google_utils.resources import GoogleDocsService
-from danswer.connectors.google_utils.resources import GoogleDriveService
-from danswer.connectors.models import Document
-from danswer.connectors.models import Section
-from danswer.connectors.models import SlimDocument
-from danswer.file_processing.extract_file_text import docx_to_text
-from danswer.file_processing.extract_file_text import pptx_to_text
-from danswer.file_processing.extract_file_text import read_pdf_file
-from danswer.file_processing.unstructured import get_unstructured_api_key
-from danswer.file_processing.unstructured import unstructured_to_text
-from danswer.utils.logger import setup_logger
+from onyx.configs.app_configs import CONTINUE_ON_CONNECTOR_FAILURE
+from onyx.configs.constants import DocumentSource
+from onyx.configs.constants import IGNORE_FOR_QA
+from onyx.connectors.google_drive.constants import DRIVE_FOLDER_TYPE
+from onyx.connectors.google_drive.constants import DRIVE_SHORTCUT_TYPE
+from onyx.connectors.google_drive.constants import UNSUPPORTED_FILE_TYPE_CONTENT
+from onyx.connectors.google_drive.models import GDriveMimeType
+from onyx.connectors.google_drive.models import GoogleDriveFileType
+from onyx.connectors.google_drive.section_extraction import get_document_sections
+from onyx.connectors.google_utils.resources import GoogleDocsService
+from onyx.connectors.google_utils.resources import GoogleDriveService
+from onyx.connectors.models import Document
+from onyx.connectors.models import Section
+from onyx.connectors.models import SlimDocument
+from onyx.file_processing.extract_file_text import docx_to_text
+from onyx.file_processing.extract_file_text import pptx_to_text
+from onyx.file_processing.extract_file_text import read_pdf_file
+from onyx.file_processing.unstructured import get_unstructured_api_key
+from onyx.file_processing.unstructured import unstructured_to_text
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

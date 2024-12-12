@@ -11,15 +11,15 @@ from sqlalchemy import inspect
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from danswer.background.celery.apps.app_base import task_logger
-from danswer.configs.app_configs import JOB_TIMEOUT
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.configs.constants import PostgresAdvisoryLocks
-from danswer.db.engine import get_session_with_tenant
+from onyx.background.celery.apps.app_base import task_logger
+from onyx.configs.app_configs import JOB_TIMEOUT
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.configs.constants import PostgresAdvisoryLocks
+from onyx.db.engine import get_session_with_tenant
 
 
 @shared_task(
-    name=DanswerCeleryTask.KOMBU_MESSAGE_CLEANUP_TASK,
+    name=OnyxCeleryTask.KOMBU_MESSAGE_CLEANUP_TASK,
     soft_time_limit=JOB_TIMEOUT,
     bind=True,
     base=AbortableTask,

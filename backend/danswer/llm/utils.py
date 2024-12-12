@@ -28,17 +28,17 @@ from litellm.exceptions import RateLimitError  # type: ignore
 from litellm.exceptions import Timeout  # type: ignore
 from litellm.exceptions import UnprocessableEntityError  # type: ignore
 
-from danswer.configs.constants import MessageType
-from danswer.configs.model_configs import GEN_AI_MAX_TOKENS
-from danswer.configs.model_configs import GEN_AI_MODEL_FALLBACK_MAX_TOKENS
-from danswer.configs.model_configs import GEN_AI_NUM_RESERVED_OUTPUT_TOKENS
-from danswer.file_store.models import ChatFileType
-from danswer.file_store.models import InMemoryChatFile
-from danswer.llm.interfaces import LLM
-from danswer.prompts.constants import CODE_BLOCK_PAT
-from danswer.utils.b64 import get_image_type
-from danswer.utils.b64 import get_image_type_from_bytes
-from danswer.utils.logger import setup_logger
+from onyx.configs.constants import MessageType
+from onyx.configs.model_configs import GEN_AI_MAX_TOKENS
+from onyx.configs.model_configs import GEN_AI_MODEL_FALLBACK_MAX_TOKENS
+from onyx.configs.model_configs import GEN_AI_NUM_RESERVED_OUTPUT_TOKENS
+from onyx.file_store.models import ChatFileType
+from onyx.file_store.models import InMemoryChatFile
+from onyx.llm.interfaces import LLM
+from onyx.prompts.constants import CODE_BLOCK_PAT
+from onyx.utils.b64 import get_image_type
+from onyx.utils.b64 import get_image_type_from_bytes
+from onyx.utils.logger import setup_logger
 from shared_configs.configs import LOG_LEVEL
 
 logger = setup_logger()

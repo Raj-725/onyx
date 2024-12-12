@@ -4,20 +4,20 @@ from unittest.mock import patch
 
 import pytest
 
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.models import Document
-from danswer.connectors.models import Section
-from danswer.indexing.embedder import DefaultIndexingEmbedder
-from danswer.indexing.models import ChunkEmbedding
-from danswer.indexing.models import DocAwareChunk
-from danswer.indexing.models import IndexChunk
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.models import Document
+from onyx.connectors.models import Section
+from onyx.indexing.embedder import DefaultIndexingEmbedder
+from onyx.indexing.models import ChunkEmbedding
+from onyx.indexing.models import DocAwareChunk
+from onyx.indexing.models import IndexChunk
 from shared_configs.enums import EmbeddingProvider
 from shared_configs.enums import EmbedTextType
 
 
 @pytest.fixture
 def mock_embedding_model() -> Generator[Mock, None, None]:
-    with patch("danswer.indexing.embedder.EmbeddingModel") as mock:
+    with patch("onyx.indexing.embedder.EmbeddingModel") as mock:
         yield mock
 
 

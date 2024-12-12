@@ -1,9 +1,9 @@
 import pytest
 
-from danswer.chat.prune_and_merge import _merge_sections
-from danswer.configs.constants import DocumentSource
-from danswer.context.search.models import InferenceChunk
-from danswer.context.search.models import InferenceSection
+from onyx.chat.prune_and_merge import _merge_sections
+from onyx.configs.constants import DocumentSource
+from onyx.context.search.models import InferenceChunk
+from onyx.context.search.models import InferenceSection
 
 
 # This large test accounts for all of the following:

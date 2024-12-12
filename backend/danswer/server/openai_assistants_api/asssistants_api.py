@@ -9,18 +9,18 @@ from fastapi import Query
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import current_user
-from danswer.context.search.enums import RecencyBiasSetting
-from danswer.db.engine import get_session
-from danswer.db.models import Persona
-from danswer.db.models import User
-from danswer.db.persona import get_persona_by_id
-from danswer.db.persona import get_personas
-from danswer.db.persona import mark_persona_as_deleted
-from danswer.db.persona import upsert_persona
-from danswer.db.persona import upsert_prompt
-from danswer.db.tools import get_tool_by_name
-from danswer.utils.logger import setup_logger
+from onyx.auth.users import current_user
+from onyx.context.search.enums import RecencyBiasSetting
+from onyx.db.engine import get_session
+from onyx.db.models import Persona
+from onyx.db.models import User
+from onyx.db.persona import get_persona_by_id
+from onyx.db.persona import get_personas
+from onyx.db.persona import mark_persona_as_deleted
+from onyx.db.persona import upsert_persona
+from onyx.db.persona import upsert_prompt
+from onyx.db.tools import get_tool_by_name
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

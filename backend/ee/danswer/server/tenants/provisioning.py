@@ -7,34 +7,34 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import exceptions
-from danswer.configs.app_configs import CONTROL_PLANE_API_BASE_URL
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.engine import get_sqlalchemy_engine
-from danswer.db.llm import update_default_provider
-from danswer.db.llm import upsert_cloud_embedding_provider
-from danswer.db.llm import upsert_llm_provider
-from danswer.db.models import IndexModelStatus
-from danswer.db.models import SearchSettings
-from danswer.db.models import UserTenantMapping
-from danswer.llm.llm_provider_options import ANTHROPIC_MODEL_NAMES
-from danswer.llm.llm_provider_options import ANTHROPIC_PROVIDER_NAME
-from danswer.llm.llm_provider_options import OPEN_AI_MODEL_NAMES
-from danswer.llm.llm_provider_options import OPENAI_PROVIDER_NAME
-from danswer.server.manage.embedding.models import CloudEmbeddingProviderCreationRequest
-from danswer.server.manage.llm.models import LLMProviderUpsertRequest
-from danswer.setup import setup_danswer
-from ee.danswer.configs.app_configs import ANTHROPIC_DEFAULT_API_KEY
-from ee.danswer.configs.app_configs import COHERE_DEFAULT_API_KEY
-from ee.danswer.configs.app_configs import OPENAI_DEFAULT_API_KEY
-from ee.danswer.server.tenants.access import generate_data_plane_token
-from ee.danswer.server.tenants.models import TenantCreationPayload
-from ee.danswer.server.tenants.schema_management import create_schema_if_not_exists
-from ee.danswer.server.tenants.schema_management import drop_schema
-from ee.danswer.server.tenants.schema_management import run_alembic_migrations
-from ee.danswer.server.tenants.user_mapping import add_users_to_tenant
-from ee.danswer.server.tenants.user_mapping import get_tenant_id_for_email
-from ee.danswer.server.tenants.user_mapping import user_owns_a_tenant
+from ee.onyx.configs.app_configs import ANTHROPIC_DEFAULT_API_KEY
+from ee.onyx.configs.app_configs import COHERE_DEFAULT_API_KEY
+from ee.onyx.configs.app_configs import OPENAI_DEFAULT_API_KEY
+from ee.onyx.server.tenants.access import generate_data_plane_token
+from ee.onyx.server.tenants.models import TenantCreationPayload
+from ee.onyx.server.tenants.schema_management import create_schema_if_not_exists
+from ee.onyx.server.tenants.schema_management import drop_schema
+from ee.onyx.server.tenants.schema_management import run_alembic_migrations
+from ee.onyx.server.tenants.user_mapping import add_users_to_tenant
+from ee.onyx.server.tenants.user_mapping import get_tenant_id_for_email
+from ee.onyx.server.tenants.user_mapping import user_owns_a_tenant
+from onyx.auth.users import exceptions
+from onyx.configs.app_configs import CONTROL_PLANE_API_BASE_URL
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.engine import get_sqlalchemy_engine
+from onyx.db.llm import update_default_provider
+from onyx.db.llm import upsert_cloud_embedding_provider
+from onyx.db.llm import upsert_llm_provider
+from onyx.db.models import IndexModelStatus
+from onyx.db.models import SearchSettings
+from onyx.db.models import UserTenantMapping
+from onyx.llm.llm_provider_options import ANTHROPIC_MODEL_NAMES
+from onyx.llm.llm_provider_options import ANTHROPIC_PROVIDER_NAME
+from onyx.llm.llm_provider_options import OPEN_AI_MODEL_NAMES
+from onyx.llm.llm_provider_options import OPENAI_PROVIDER_NAME
+from onyx.server.manage.embedding.models import CloudEmbeddingProviderCreationRequest
+from onyx.server.manage.llm.models import LLMProviderUpsertRequest
+from onyx.setup import setup_onyx
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.configs import POSTGRES_DEFAULT_SCHEMA
 from shared_configs.configs import TENANT_ID_PREFIX
@@ -118,7 +118,7 @@ async def provision_tenant(tenant_id: str, email: str) -> None:
                 current_search_settings is not None
                 and current_search_settings.provider_type == EmbeddingProvider.COHERE
             )
-            setup_danswer(db_session, tenant_id, cohere_enabled=cohere_enabled)
+            setup_onyx(db_session, tenant_id, cohere_enabled=cohere_enabled)
 
         add_users_to_tenant([email], tenant_id)
 
@@ -243,7 +243,7 @@ def configure_default_api_keys(db_session: Session) -> None:
                 )
                 current_search_settings.provider_type = EmbeddingProvider.COHERE
                 current_search_settings.index_name = (
-                    "danswer_chunk_cohere_embed_english_v3_0"
+                    "onyx_chunk_cohere_embed_english_v3_0"
                 )
                 current_search_settings.query_prefix = ""
                 current_search_settings.passage_prefix = ""

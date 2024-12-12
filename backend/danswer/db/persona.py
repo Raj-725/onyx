@@ -16,28 +16,28 @@ from sqlalchemy.orm import aliased
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 
-from danswer.auth.schemas import UserRole
-from danswer.configs.chat_configs import BING_API_KEY
-from danswer.configs.chat_configs import CONTEXT_CHUNKS_ABOVE
-from danswer.configs.chat_configs import CONTEXT_CHUNKS_BELOW
-from danswer.context.search.enums import RecencyBiasSetting
-from danswer.db.constants import SLACK_BOT_PERSONA_PREFIX
-from danswer.db.engine import get_sqlalchemy_engine
-from danswer.db.models import DocumentSet
-from danswer.db.models import Persona
-from danswer.db.models import Persona__User
-from danswer.db.models import Persona__UserGroup
-from danswer.db.models import PersonaCategory
-from danswer.db.models import Prompt
-from danswer.db.models import StarterMessage
-from danswer.db.models import Tool
-from danswer.db.models import User
-from danswer.db.models import User__UserGroup
-from danswer.db.models import UserGroup
-from danswer.server.features.persona.models import CreatePersonaRequest
-from danswer.server.features.persona.models import PersonaSnapshot
-from danswer.utils.logger import setup_logger
-from danswer.utils.variable_functionality import fetch_versioned_implementation
+from onyx.auth.schemas import UserRole
+from onyx.configs.chat_configs import BING_API_KEY
+from onyx.configs.chat_configs import CONTEXT_CHUNKS_ABOVE
+from onyx.configs.chat_configs import CONTEXT_CHUNKS_BELOW
+from onyx.context.search.enums import RecencyBiasSetting
+from onyx.db.constants import SLACK_BOT_PERSONA_PREFIX
+from onyx.db.engine import get_sqlalchemy_engine
+from onyx.db.models import DocumentSet
+from onyx.db.models import Persona
+from onyx.db.models import Persona__User
+from onyx.db.models import Persona__UserGroup
+from onyx.db.models import PersonaCategory
+from onyx.db.models import Prompt
+from onyx.db.models import StarterMessage
+from onyx.db.models import Tool
+from onyx.db.models import User
+from onyx.db.models import User__UserGroup
+from onyx.db.models import UserGroup
+from onyx.server.features.persona.models import CreatePersonaRequest
+from onyx.server.features.persona.models import PersonaSnapshot
+from onyx.utils.logger import setup_logger
+from onyx.utils.variable_functionality import fetch_versioned_implementation
 
 logger = setup_logger()
 
@@ -168,7 +168,7 @@ def make_persona_private(
 
     # May cause error if someone switches down to MIT from EE
     if group_ids:
-        raise NotImplementedError("Danswer MIT does not support private Personas")
+        raise NotImplementedError("Onyx MIT does not support private Personas")
 
 
 def create_update_persona(
@@ -191,7 +191,7 @@ def create_update_persona(
         persona = upsert_persona(**persona_data)
 
         versioned_make_persona_private = fetch_versioned_implementation(
-            "danswer.db.persona", "make_persona_private"
+            "onyx.db.persona", "make_persona_private"
         )
 
         # Privatize Persona
@@ -226,7 +226,7 @@ def update_persona_shared_users(
         raise HTTPException(status_code=400, detail="Cannot share public persona")
 
     versioned_make_persona_private = fetch_versioned_implementation(
-        "danswer.db.persona", "make_persona_private"
+        "onyx.db.persona", "make_persona_private"
     )
 
     # Privatize Persona
@@ -634,7 +634,7 @@ def validate_persona_tools(tools: list[Tool]) -> None:
     for tool in tools:
         if tool.name == "InternetSearchTool" and not BING_API_KEY:
             raise ValueError(
-                "Bing API key not found, please contact your Danswer admin to get it added!"
+                "Bing API key not found, please contact your Onyx admin to get it added!"
             )
 
 

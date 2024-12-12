@@ -10,36 +10,36 @@ from celery.exceptions import SoftTimeLimitExceeded
 from redis import Redis
 from redis.lock import Lock as RedisLock
 
-from danswer.background.celery.apps.app_base import task_logger
-from danswer.configs.app_configs import JOB_TIMEOUT
-from danswer.configs.constants import CELERY_EXTERNAL_GROUP_SYNC_LOCK_TIMEOUT
-from danswer.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from danswer.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
-from danswer.configs.constants import DanswerCeleryPriority
-from danswer.configs.constants import DanswerCeleryQueues
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.configs.constants import DanswerRedisLocks
-from danswer.db.connector import mark_cc_pair_as_external_group_synced
-from danswer.db.connector_credential_pair import get_connector_credential_pair_from_id
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.enums import AccessType
-from danswer.db.enums import ConnectorCredentialPairStatus
-from danswer.db.models import ConnectorCredentialPair
-from danswer.redis.redis_connector import RedisConnector
-from danswer.redis.redis_connector_ext_group_sync import (
-    RedisConnectorExternalGroupSyncPayload,
-)
-from danswer.redis.redis_pool import get_redis_client
-from danswer.utils.logger import setup_logger
-from ee.danswer.db.connector_credential_pair import get_all_auto_sync_cc_pairs
-from ee.danswer.db.connector_credential_pair import get_cc_pairs_by_source
-from ee.danswer.db.external_perm import ExternalUserGroup
-from ee.danswer.db.external_perm import replace_user__ext_group_for_cc_pair
-from ee.danswer.external_permissions.sync_params import EXTERNAL_GROUP_SYNC_PERIODS
-from ee.danswer.external_permissions.sync_params import GROUP_PERMISSIONS_FUNC_MAP
-from ee.danswer.external_permissions.sync_params import (
+from ee.onyx.db.connector_credential_pair import get_all_auto_sync_cc_pairs
+from ee.onyx.db.connector_credential_pair import get_cc_pairs_by_source
+from ee.onyx.db.external_perm import ExternalUserGroup
+from ee.onyx.db.external_perm import replace_user__ext_group_for_cc_pair
+from ee.onyx.external_permissions.sync_params import EXTERNAL_GROUP_SYNC_PERIODS
+from ee.onyx.external_permissions.sync_params import GROUP_PERMISSIONS_FUNC_MAP
+from ee.onyx.external_permissions.sync_params import (
     GROUP_PERMISSIONS_IS_CC_PAIR_AGNOSTIC,
 )
+from onyx.background.celery.apps.app_base import task_logger
+from onyx.configs.app_configs import JOB_TIMEOUT
+from onyx.configs.constants import CELERY_EXTERNAL_GROUP_SYNC_LOCK_TIMEOUT
+from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from onyx.configs.constants import DANSWER_REDIS_FUNCTION_LOCK_PREFIX
+from onyx.configs.constants import OnyxCeleryPriority
+from onyx.configs.constants import OnyxCeleryQueues
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.configs.constants import OnyxRedisLocks
+from onyx.db.connector import mark_cc_pair_as_external_group_synced
+from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.enums import AccessType
+from onyx.db.enums import ConnectorCredentialPairStatus
+from onyx.db.models import ConnectorCredentialPair
+from onyx.redis.redis_connector import RedisConnector
+from onyx.redis.redis_connector_ext_group_sync import (
+    RedisConnectorExternalGroupSyncPayload,
+)
+from onyx.redis.redis_pool import get_redis_client
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -90,7 +90,7 @@ def _is_external_group_sync_due(cc_pair: ConnectorCredentialPair) -> bool:
 
 
 @shared_task(
-    name=DanswerCeleryTask.CHECK_FOR_EXTERNAL_GROUP_SYNC,
+    name=OnyxCeleryTask.CHECK_FOR_EXTERNAL_GROUP_SYNC,
     soft_time_limit=JOB_TIMEOUT,
     bind=True,
 )
@@ -98,7 +98,7 @@ def check_for_external_group_sync(self: Task, *, tenant_id: str | None) -> None:
     r = get_redis_client(tenant_id=tenant_id)
 
     lock_beat = r.lock(
-        DanswerRedisLocks.CHECK_CONNECTOR_EXTERNAL_GROUP_SYNC_BEAT_LOCK,
+        OnyxRedisLocks.CHECK_CONNECTOR_EXTERNAL_GROUP_SYNC_BEAT_LOCK,
         timeout=CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT,
     )
 
@@ -182,14 +182,14 @@ def try_creating_external_group_sync_task(
         custom_task_id = f"{redis_connector.external_group_sync.taskset_key}_{uuid4()}"
 
         result = app.send_task(
-            DanswerCeleryTask.CONNECTOR_EXTERNAL_GROUP_SYNC_GENERATOR_TASK,
+            OnyxCeleryTask.CONNECTOR_EXTERNAL_GROUP_SYNC_GENERATOR_TASK,
             kwargs=dict(
                 cc_pair_id=cc_pair_id,
                 tenant_id=tenant_id,
             ),
-            queue=DanswerCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC,
+            queue=OnyxCeleryQueues.CONNECTOR_EXTERNAL_GROUP_SYNC,
             task_id=custom_task_id,
-            priority=DanswerCeleryPriority.HIGH,
+            priority=OnyxCeleryPriority.HIGH,
         )
 
         payload = RedisConnectorExternalGroupSyncPayload(
@@ -212,7 +212,7 @@ def try_creating_external_group_sync_task(
 
 
 @shared_task(
-    name=DanswerCeleryTask.CONNECTOR_EXTERNAL_GROUP_SYNC_GENERATOR_TASK,
+    name=OnyxCeleryTask.CONNECTOR_EXTERNAL_GROUP_SYNC_GENERATOR_TASK,
     acks_late=False,
     soft_time_limit=JOB_TIMEOUT,
     track_started=True,
@@ -234,7 +234,7 @@ def connector_external_group_sync_generator_task(
     r = get_redis_client(tenant_id=tenant_id)
 
     lock: RedisLock = r.lock(
-        DanswerRedisLocks.CONNECTOR_EXTERNAL_GROUP_SYNC_LOCK_PREFIX
+        OnyxRedisLocks.CONNECTOR_EXTERNAL_GROUP_SYNC_LOCK_PREFIX
         + f"_{redis_connector.id}",
         timeout=CELERY_EXTERNAL_GROUP_SYNC_LOCK_TIMEOUT,
     )

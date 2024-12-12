@@ -8,35 +8,35 @@ from retry import retry
 from slack_sdk import WebClient
 from slack_sdk.models.blocks import SectionBlock
 
-from danswer.chat.chat_utils import prepare_chat_message_request
-from danswer.chat.models import ChatDanswerBotResponse
-from danswer.chat.process_message import gather_stream_for_slack
-from danswer.chat.process_message import stream_chat_message_objects
-from danswer.configs.app_configs import DISABLE_GENERATIVE_AI
-from danswer.configs.constants import DEFAULT_PERSONA_ID
-from danswer.configs.danswerbot_configs import DANSWER_BOT_DISABLE_DOCS_ONLY_ANSWER
-from danswer.configs.danswerbot_configs import DANSWER_BOT_DISPLAY_ERROR_MSGS
-from danswer.configs.danswerbot_configs import DANSWER_BOT_NUM_RETRIES
-from danswer.configs.danswerbot_configs import DANSWER_FOLLOWUP_EMOJI
-from danswer.configs.danswerbot_configs import DANSWER_REACT_EMOJI
-from danswer.configs.danswerbot_configs import MAX_THREAD_CONTEXT_PERCENTAGE
-from danswer.context.search.enums import OptionalSearchSetting
-from danswer.context.search.models import BaseFilters
-from danswer.context.search.models import RetrievalDetails
-from danswer.danswerbot.slack.blocks import build_slack_response_blocks
-from danswer.danswerbot.slack.handlers.utils import send_team_member_message
-from danswer.danswerbot.slack.handlers.utils import slackify_message_thread
-from danswer.danswerbot.slack.models import SlackMessageInfo
-from danswer.danswerbot.slack.utils import respond_in_thread
-from danswer.danswerbot.slack.utils import SlackRateLimiter
-from danswer.danswerbot.slack.utils import update_emote_react
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.models import SlackChannelConfig
-from danswer.db.models import User
-from danswer.db.persona import get_persona_by_id
-from danswer.db.users import get_user_by_email
-from danswer.server.query_and_chat.models import CreateChatMessageRequest
-from danswer.utils.logger import DanswerLoggingAdapter
+from onyx.chat.chat_utils import prepare_chat_message_request
+from onyx.chat.models import ChatOnyxBotResponse
+from onyx.chat.process_message import gather_stream_for_slack
+from onyx.chat.process_message import stream_chat_message_objects
+from onyx.configs.app_configs import DISABLE_GENERATIVE_AI
+from onyx.configs.constants import DEFAULT_PERSONA_ID
+from onyx.configs.onyxbot_configs import DANSWER_BOT_DISABLE_DOCS_ONLY_ANSWER
+from onyx.configs.onyxbot_configs import DANSWER_BOT_DISPLAY_ERROR_MSGS
+from onyx.configs.onyxbot_configs import DANSWER_BOT_NUM_RETRIES
+from onyx.configs.onyxbot_configs import DANSWER_FOLLOWUP_EMOJI
+from onyx.configs.onyxbot_configs import DANSWER_REACT_EMOJI
+from onyx.configs.onyxbot_configs import MAX_THREAD_CONTEXT_PERCENTAGE
+from onyx.context.search.enums import OptionalSearchSetting
+from onyx.context.search.models import BaseFilters
+from onyx.context.search.models import RetrievalDetails
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.models import SlackChannelConfig
+from onyx.db.models import User
+from onyx.db.persona import get_persona_by_id
+from onyx.db.users import get_user_by_email
+from onyx.onyxbot.slack.blocks import build_slack_response_blocks
+from onyx.onyxbot.slack.handlers.utils import send_team_member_message
+from onyx.onyxbot.slack.handlers.utils import slackify_message_thread
+from onyx.onyxbot.slack.models import SlackMessageInfo
+from onyx.onyxbot.slack.utils import respond_in_thread
+from onyx.onyxbot.slack.utils import SlackRateLimiter
+from onyx.onyxbot.slack.utils import update_emote_react
+from onyx.server.query_and_chat.models import CreateChatMessageRequest
+from onyx.utils.logger import OnyxLoggingAdapter
 
 srl = SlackRateLimiter()
 
@@ -68,7 +68,7 @@ def handle_regular_answer(
     receiver_ids: list[str] | None,
     client: WebClient,
     channel: str,
-    logger: DanswerLoggingAdapter,
+    logger: OnyxLoggingAdapter,
     feedback_reminder_id: str | None,
     tenant_id: str | None,
     num_retries: int = DANSWER_BOT_NUM_RETRIES,
@@ -139,7 +139,7 @@ def handle_regular_answer(
         bypass_acl = True
 
     if not message_ts_to_respond_to and not is_bot_msg:
-        # if the message is not "/danswer" command, then it should have a message ts to respond to
+        # if the message is not "/onyx" command, then it should have a message ts to respond to
         raise RuntimeError(
             "No message timestamp to respond to in `handle_message`. This should never happen."
         )
@@ -151,12 +151,12 @@ def handle_regular_answer(
     )
     @rate_limits(client=client, channel=channel, thread_ts=message_ts_to_respond_to)
     def _get_slack_answer(
-        new_message_request: CreateChatMessageRequest, danswer_user: User | None
-    ) -> ChatDanswerBotResponse:
+        new_message_request: CreateChatMessageRequest, onyx_user: User | None
+    ) -> ChatOnyxBotResponse:
         with get_session_with_tenant(tenant_id) as db_session:
             packets = stream_chat_message_objects(
                 new_msg_req=new_message_request,
-                user=danswer_user,
+                user=onyx_user,
                 db_session=db_session,
                 bypass_acl=bypass_acl,
             )
@@ -210,9 +210,7 @@ def handle_regular_answer(
                 db_session=db_session,
             )
 
-        answer = _get_slack_answer(
-            new_message_request=answer_request, danswer_user=user
-        )
+        answer = _get_slack_answer(new_message_request=answer_request, onyx_user=user)
 
     except Exception as e:
         logger.exception(
@@ -249,10 +247,10 @@ def handle_regular_answer(
                 client=client,
                 channel=channel,
                 receiver_ids=receiver_ids,
-                text="Hello! Danswer has some results for you!",
+                text="Hello! Onyx has some results for you!",
                 blocks=[
                     SectionBlock(
-                        text="Danswer is down for maintenance.\nWe're working hard on recharging the AI!"
+                        text="Onyx is down for maintenance.\nWe're working hard on recharging the AI!"
                     )
                 ],
                 thread_ts=message_ts_to_respond_to,
@@ -376,7 +374,7 @@ def handle_regular_answer(
             receiver_ids=[message_info.sender]
             if message_info.is_bot_msg and message_info.sender
             else receiver_ids,
-            text="Hello! Danswer has some results for you!",
+            text="Hello! Onyx has some results for you!",
             blocks=all_blocks,
             thread_ts=message_ts_to_respond_to,
             # don't unfurl, since otherwise we will have 5+ previews which makes the message very long
@@ -385,7 +383,7 @@ def handle_regular_answer(
 
         # For DM (ephemeral message), we need to create a thread via a normal message so the user can see
         # the ephemeral message. This also will give the user a notification which ephemeral message does not.
-        # if there is no message_ts_to_respond_to, and we have made it this far, then this is a /danswer message
+        # if there is no message_ts_to_respond_to, and we have made it this far, then this is a /onyx message
         # so we shouldn't send_team_member_message
         if receiver_ids and message_ts_to_respond_to is not None:
             send_team_member_message(

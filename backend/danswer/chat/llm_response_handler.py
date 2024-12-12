@@ -4,12 +4,12 @@ from collections.abc import Iterator
 
 from langchain_core.messages import BaseMessage
 
-from danswer.chat.models import ResponsePart
-from danswer.chat.models import StreamStopInfo
-from danswer.chat.models import StreamStopReason
-from danswer.chat.prompt_builder.build import LLMCall
-from danswer.chat.stream_processing.answer_response_handler import AnswerResponseHandler
-from danswer.chat.tool_handling.tool_response_handler import ToolResponseHandler
+from onyx.chat.models import ResponsePart
+from onyx.chat.models import StreamStopInfo
+from onyx.chat.models import StreamStopReason
+from onyx.chat.prompt_builder.build import LLMCall
+from onyx.chat.stream_processing.answer_response_handler import AnswerResponseHandler
+from onyx.chat.tool_handling.tool_response_handler import ToolResponseHandler
 
 
 class LLMResponseHandlerManager:

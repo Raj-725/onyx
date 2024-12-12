@@ -10,17 +10,17 @@ from celery.signals import worker_process_init
 from celery.signals import worker_ready
 from celery.signals import worker_shutdown
 
-import danswer.background.celery.apps.app_base as app_base
-from danswer.configs.constants import POSTGRES_CELERY_WORKER_INDEXING_APP_NAME
-from danswer.db.engine import SqlEngine
-from danswer.utils.logger import setup_logger
+import onyx.background.celery.apps.app_base as app_base
+from onyx.configs.constants import POSTGRES_CELERY_WORKER_INDEXING_APP_NAME
+from onyx.db.engine import SqlEngine
+from onyx.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 
 logger = setup_logger()
 
 celery_app = Celery(__name__)
-celery_app.config_from_object("danswer.background.celery.configs.indexing")
+celery_app.config_from_object("onyx.background.celery.configs.indexing")
 
 
 @signals.task_prerun.connect
@@ -96,6 +96,6 @@ def on_setup_logging(
 
 celery_app.autodiscover_tasks(
     [
-        "danswer.background.celery.tasks.indexing",
+        "onyx.background.celery.tasks.indexing",
     ]
 )

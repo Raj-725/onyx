@@ -13,36 +13,36 @@ from celery.signals import worker_ready
 from celery.signals import worker_shutdown
 from redis.lock import Lock as RedisLock
 
-import danswer.background.celery.apps.app_base as app_base
-from danswer.background.celery.apps.app_base import task_logger
-from danswer.background.celery.celery_utils import celery_is_worker_primary
-from danswer.background.celery.tasks.indexing.tasks import (
+import onyx.background.celery.apps.app_base as app_base
+from onyx.background.celery.apps.app_base import task_logger
+from onyx.background.celery.celery_utils import celery_is_worker_primary
+from onyx.background.celery.tasks.indexing.tasks import (
     get_unfenced_index_attempt_ids,
 )
-from danswer.configs.constants import CELERY_PRIMARY_WORKER_LOCK_TIMEOUT
-from danswer.configs.constants import DanswerRedisLocks
-from danswer.configs.constants import POSTGRES_CELERY_WORKER_PRIMARY_APP_NAME
-from danswer.db.engine import get_session_with_default_tenant
-from danswer.db.engine import SqlEngine
-from danswer.db.index_attempt import get_index_attempt
-from danswer.db.index_attempt import mark_attempt_canceled
-from danswer.redis.redis_connector_credential_pair import RedisConnectorCredentialPair
-from danswer.redis.redis_connector_delete import RedisConnectorDelete
-from danswer.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
-from danswer.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
-from danswer.redis.redis_connector_index import RedisConnectorIndex
-from danswer.redis.redis_connector_prune import RedisConnectorPrune
-from danswer.redis.redis_connector_stop import RedisConnectorStop
-from danswer.redis.redis_document_set import RedisDocumentSet
-from danswer.redis.redis_pool import get_redis_client
-from danswer.redis.redis_usergroup import RedisUserGroup
-from danswer.utils.logger import setup_logger
+from onyx.configs.constants import CELERY_PRIMARY_WORKER_LOCK_TIMEOUT
+from onyx.configs.constants import OnyxRedisLocks
+from onyx.configs.constants import POSTGRES_CELERY_WORKER_PRIMARY_APP_NAME
+from onyx.db.engine import get_session_with_default_tenant
+from onyx.db.engine import SqlEngine
+from onyx.db.index_attempt import get_index_attempt
+from onyx.db.index_attempt import mark_attempt_canceled
+from onyx.redis.redis_connector_credential_pair import RedisConnectorCredentialPair
+from onyx.redis.redis_connector_delete import RedisConnectorDelete
+from onyx.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
+from onyx.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
+from onyx.redis.redis_connector_index import RedisConnectorIndex
+from onyx.redis.redis_connector_prune import RedisConnectorPrune
+from onyx.redis.redis_connector_stop import RedisConnectorStop
+from onyx.redis.redis_document_set import RedisDocumentSet
+from onyx.redis.redis_pool import get_redis_client
+from onyx.redis.redis_usergroup import RedisUserGroup
+from onyx.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger()
 
 celery_app = Celery(__name__)
-celery_app.config_from_object("danswer.background.celery.configs.primary")
+celery_app.config_from_object("onyx.background.celery.configs.primary")
 
 
 @signals.task_prerun.connect
@@ -110,7 +110,7 @@ def on_worker_init(sender: Any, **kwargs: Any) -> None:
     # For the moment, we're assuming that we are the only primary worker
     # that should be running.
     # TODO: maybe check for or clean up another zombie primary worker if we detect it
-    r.delete(DanswerRedisLocks.PRIMARY_WORKER)
+    r.delete(OnyxRedisLocks.PRIMARY_WORKER)
 
     # this process wide lock is taken to help other workers start up in order.
     # it is planned to use this lock to enforce singleton behavior on the primary
@@ -120,7 +120,7 @@ def on_worker_init(sender: Any, **kwargs: Any) -> None:
     # set thread_local=False since we don't control what thread the periodic task might
     # reacquire the lock with
     lock: RedisLock = r.lock(
-        DanswerRedisLocks.PRIMARY_WORKER,
+        OnyxRedisLocks.PRIMARY_WORKER,
         timeout=CELERY_PRIMARY_WORKER_LOCK_TIMEOUT,
         thread_local=False,
     )
@@ -138,8 +138,8 @@ def on_worker_init(sender: Any, **kwargs: Any) -> None:
 
     # As currently designed, when this worker starts as "primary", we reinitialize redis
     # to a clean state (for our purposes, anyway)
-    r.delete(DanswerRedisLocks.CHECK_VESPA_SYNC_BEAT_LOCK)
-    r.delete(DanswerRedisLocks.MONITOR_VESPA_SYNC_BEAT_LOCK)
+    r.delete(OnyxRedisLocks.CHECK_VESPA_SYNC_BEAT_LOCK)
+    r.delete(OnyxRedisLocks.MONITOR_VESPA_SYNC_BEAT_LOCK)
 
     r.delete(RedisConnectorCredentialPair.get_taskset_key())
     r.delete(RedisConnectorCredentialPair.get_fence_key())
@@ -244,7 +244,7 @@ class HubPeriodicTask(bootsteps.StartStopStep):
                     "Reasons could be worker restart or lock expiration."
                 )
                 lock = r.lock(
-                    DanswerRedisLocks.PRIMARY_WORKER,
+                    OnyxRedisLocks.PRIMARY_WORKER,
                     timeout=CELERY_PRIMARY_WORKER_LOCK_TIMEOUT,
                 )
 
@@ -273,13 +273,13 @@ celery_app.steps["worker"].add(HubPeriodicTask)
 
 celery_app.autodiscover_tasks(
     [
-        "danswer.background.celery.tasks.connector_deletion",
-        "danswer.background.celery.tasks.indexing",
-        "danswer.background.celery.tasks.periodic",
-        "danswer.background.celery.tasks.doc_permission_syncing",
-        "danswer.background.celery.tasks.external_group_syncing",
-        "danswer.background.celery.tasks.pruning",
-        "danswer.background.celery.tasks.shared",
-        "danswer.background.celery.tasks.vespa",
+        "onyx.background.celery.tasks.connector_deletion",
+        "onyx.background.celery.tasks.indexing",
+        "onyx.background.celery.tasks.periodic",
+        "onyx.background.celery.tasks.doc_permission_syncing",
+        "onyx.background.celery.tasks.external_group_syncing",
+        "onyx.background.celery.tasks.pruning",
+        "onyx.background.celery.tasks.shared",
+        "onyx.background.celery.tasks.vespa",
     ]
 )

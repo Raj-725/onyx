@@ -4,19 +4,19 @@ from pydantic import BaseModel
 from pydantic import Field
 from pydantic import model_validator
 
-from danswer.chat.models import CitationInfo
-from danswer.chat.models import DanswerContexts
-from danswer.chat.models import PersonaOverrideConfig
-from danswer.chat.models import QADocsResponse
-from danswer.chat.models import ThreadMessage
-from danswer.configs.constants import DocumentSource
-from danswer.context.search.enums import LLMEvaluationType
-from danswer.context.search.enums import SearchType
-from danswer.context.search.models import ChunkContext
-from danswer.context.search.models import RerankingDetails
-from danswer.context.search.models import RetrievalDetails
-from danswer.context.search.models import SavedSearchDoc
-from ee.danswer.server.manage.models import StandardAnswer
+from ee.onyx.server.manage.models import StandardAnswer
+from onyx.chat.models import CitationInfo
+from onyx.chat.models import OnyxContexts
+from onyx.chat.models import PersonaOverrideConfig
+from onyx.chat.models import QADocsResponse
+from onyx.chat.models import ThreadMessage
+from onyx.configs.constants import DocumentSource
+from onyx.context.search.enums import LLMEvaluationType
+from onyx.context.search.enums import SearchType
+from onyx.context.search.models import ChunkContext
+from onyx.context.search.models import RerankingDetails
+from onyx.context.search.models import RetrievalDetails
+from onyx.context.search.models import SavedSearchDoc
 
 
 class StandardAnswerRequest(BaseModel):
@@ -145,4 +145,4 @@ class OneShotQAResponse(BaseModel):
     llm_selected_doc_indices: list[int] | None = None
     error_msg: str | None = None
     chat_message_id: int | None = None
-    contexts: DanswerContexts | None = None
+    contexts: OnyxContexts | None = None

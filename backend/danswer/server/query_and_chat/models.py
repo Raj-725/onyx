@@ -6,22 +6,22 @@ from uuid import UUID
 from pydantic import BaseModel
 from pydantic import model_validator
 
-from danswer.chat.models import PersonaOverrideConfig
-from danswer.chat.models import RetrievalDocs
-from danswer.configs.constants import DocumentSource
-from danswer.configs.constants import MessageType
-from danswer.configs.constants import SearchFeedbackType
-from danswer.context.search.models import BaseFilters
-from danswer.context.search.models import ChunkContext
-from danswer.context.search.models import RerankingDetails
-from danswer.context.search.models import RetrievalDetails
-from danswer.context.search.models import SearchDoc
-from danswer.context.search.models import Tag
-from danswer.db.enums import ChatSessionSharedStatus
-from danswer.file_store.models import FileDescriptor
-from danswer.llm.override_models import LLMOverride
-from danswer.llm.override_models import PromptOverride
-from danswer.tools.models import ToolCallFinalResult
+from onyx.chat.models import PersonaOverrideConfig
+from onyx.chat.models import RetrievalDocs
+from onyx.configs.constants import DocumentSource
+from onyx.configs.constants import MessageType
+from onyx.configs.constants import SearchFeedbackType
+from onyx.context.search.models import BaseFilters
+from onyx.context.search.models import ChunkContext
+from onyx.context.search.models import RerankingDetails
+from onyx.context.search.models import RetrievalDetails
+from onyx.context.search.models import SearchDoc
+from onyx.context.search.models import Tag
+from onyx.db.enums import ChatSessionSharedStatus
+from onyx.file_store.models import FileDescriptor
+from onyx.llm.override_models import LLMOverride
+from onyx.llm.override_models import PromptOverride
+from onyx.tools.models import ToolCallFinalResult
 
 if TYPE_CHECKING:
     pass
@@ -36,13 +36,13 @@ class TagResponse(BaseModel):
 
 
 class UpdateChatSessionThreadRequest(BaseModel):
-    # If not specified, use Danswer default persona
+    # If not specified, use Onyx default persona
     chat_session_id: UUID
     new_alternate_model: str
 
 
 class ChatSessionCreationRequest(BaseModel):
-    # If not specified, use Danswer default persona
+    # If not specified, use Onyx default persona
     persona_id: int = 0
     description: str | None = None
 

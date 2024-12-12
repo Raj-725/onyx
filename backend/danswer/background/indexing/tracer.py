@@ -1,13 +1,13 @@
 import tracemalloc
 
-from danswer.utils.logger import setup_logger
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 
 DANSWER_TRACEMALLOC_FRAMES = 10
 
 
-class DanswerTracer:
+class OnyxTracer:
     def __init__(self) -> None:
         self.snapshot_first: tracemalloc.Snapshot | None = None
         self.snapshot_prev: tracemalloc.Snapshot | None = None
@@ -68,10 +68,10 @@ class DanswerTracer:
         if not self.snapshot or not self.snapshot_prev:
             return
 
-        DanswerTracer.log_diff(self.snapshot, self.snapshot_prev, numEntries)
+        OnyxTracer.log_diff(self.snapshot, self.snapshot_prev, numEntries)
 
     def log_first_diff(self, numEntries: int) -> None:
         if not self.snapshot or not self.snapshot_first:
             return
 
-        DanswerTracer.log_diff(self.snapshot, self.snapshot_first, numEntries)
+        OnyxTracer.log_diff(self.snapshot, self.snapshot_first, numEntries)

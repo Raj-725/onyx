@@ -3,15 +3,15 @@ from collections.abc import Generator
 from typing import Any
 from typing import TYPE_CHECKING
 
-from danswer.llm.interfaces import LLM
-from danswer.llm.models import PreviousMessage
-from danswer.utils.special_types import JSON_ro
+from onyx.llm.interfaces import LLM
+from onyx.llm.models import PreviousMessage
+from onyx.utils.special_types import JSON_ro
 
 
 if TYPE_CHECKING:
-    from danswer.chat.prompt_builder.build import AnswerPromptBuilder
-    from danswer.tools.message import ToolCallSummary
-    from danswer.tools.models import ToolResponse
+    from onyx.chat.prompt_builder.build import AnswerPromptBuilder
+    from onyx.tools.message import ToolCallSummary
+    from onyx.tools.models import ToolResponse
 
 
 class Tool(abc.ABC):

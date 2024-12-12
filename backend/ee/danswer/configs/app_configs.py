@@ -5,7 +5,7 @@ import os
 OPENID_CONFIG_URL = os.environ.get("OPENID_CONFIG_URL", "")
 
 # Applicable for SAML Auth
-SAML_CONF_DIR = os.environ.get("SAML_CONF_DIR") or "/app/ee/danswer/configs/saml_config"
+SAML_CONF_DIR = os.environ.get("SAML_CONF_DIR") or "/app/ee/onyx/configs/saml_config"
 
 
 #####
@@ -34,7 +34,7 @@ JWT_PUBLIC_KEY_URL: str | None = os.getenv("JWT_PUBLIC_KEY_URL", None)
 
 
 # Super Users
-SUPER_USERS = json.loads(os.environ.get("SUPER_USERS", '["pablo@danswer.ai"]'))
+SUPER_USERS = json.loads(os.environ.get("SUPER_USERS", '["pablo@onyx.app"]'))
 SUPER_CLOUD_API_KEY = os.environ.get("SUPER_CLOUD_API_KEY", "api_key")
 
 OAUTH_SLACK_CLIENT_ID = os.environ.get("OAUTH_SLACK_CLIENT_ID", "")

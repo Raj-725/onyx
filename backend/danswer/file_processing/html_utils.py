@@ -7,12 +7,12 @@ import bs4
 import trafilatura  # type: ignore
 from trafilatura.settings import use_config  # type: ignore
 
-from danswer.configs.app_configs import HTML_BASED_CONNECTOR_TRANSFORM_LINKS_STRATEGY
-from danswer.configs.app_configs import PARSE_WITH_TRAFILATURA
-from danswer.configs.app_configs import WEB_CONNECTOR_IGNORED_CLASSES
-from danswer.configs.app_configs import WEB_CONNECTOR_IGNORED_ELEMENTS
-from danswer.file_processing.enums import HtmlBasedConnectorTransformLinksStrategy
-from danswer.utils.logger import setup_logger
+from onyx.configs.app_configs import HTML_BASED_CONNECTOR_TRANSFORM_LINKS_STRATEGY
+from onyx.configs.app_configs import PARSE_WITH_TRAFILATURA
+from onyx.configs.app_configs import WEB_CONNECTOR_IGNORED_CLASSES
+from onyx.configs.app_configs import WEB_CONNECTOR_IGNORED_ELEMENTS
+from onyx.file_processing.enums import HtmlBasedConnectorTransformLinksStrategy
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

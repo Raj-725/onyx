@@ -19,67 +19,67 @@ from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
 from sqlalchemy.orm import Session
 
-from danswer.chat.models import ThreadMessage
-from danswer.configs.app_configs import DEV_MODE
-from danswer.configs.app_configs import POD_NAME
-from danswer.configs.app_configs import POD_NAMESPACE
-from danswer.configs.constants import DanswerRedisLocks
-from danswer.configs.constants import MessageType
-from danswer.configs.danswerbot_configs import DANSWER_BOT_REPHRASE_MESSAGE
-from danswer.configs.danswerbot_configs import DANSWER_BOT_RESPOND_EVERY_CHANNEL
-from danswer.configs.danswerbot_configs import NOTIFY_SLACKBOT_NO_ANSWER
-from danswer.connectors.slack.utils import expert_info_from_slack_id
-from danswer.context.search.retrieval.search_runner import download_nltk_data
-from danswer.danswerbot.slack.config import get_slack_channel_config_for_bot_and_channel
-from danswer.danswerbot.slack.config import MAX_TENANTS_PER_POD
-from danswer.danswerbot.slack.config import TENANT_ACQUISITION_INTERVAL
-from danswer.danswerbot.slack.config import TENANT_HEARTBEAT_EXPIRATION
-from danswer.danswerbot.slack.config import TENANT_HEARTBEAT_INTERVAL
-from danswer.danswerbot.slack.config import TENANT_LOCK_EXPIRATION
-from danswer.danswerbot.slack.constants import DISLIKE_BLOCK_ACTION_ID
-from danswer.danswerbot.slack.constants import FEEDBACK_DOC_BUTTON_BLOCK_ACTION_ID
-from danswer.danswerbot.slack.constants import FOLLOWUP_BUTTON_ACTION_ID
-from danswer.danswerbot.slack.constants import FOLLOWUP_BUTTON_RESOLVED_ACTION_ID
-from danswer.danswerbot.slack.constants import GENERATE_ANSWER_BUTTON_ACTION_ID
-from danswer.danswerbot.slack.constants import IMMEDIATE_RESOLVED_BUTTON_ACTION_ID
-from danswer.danswerbot.slack.constants import LIKE_BLOCK_ACTION_ID
-from danswer.danswerbot.slack.constants import VIEW_DOC_FEEDBACK_ID
-from danswer.danswerbot.slack.handlers.handle_buttons import handle_doc_feedback_button
-from danswer.danswerbot.slack.handlers.handle_buttons import handle_followup_button
-from danswer.danswerbot.slack.handlers.handle_buttons import (
+from onyx.chat.models import ThreadMessage
+from onyx.configs.app_configs import DEV_MODE
+from onyx.configs.app_configs import POD_NAME
+from onyx.configs.app_configs import POD_NAMESPACE
+from onyx.configs.constants import MessageType
+from onyx.configs.constants import OnyxRedisLocks
+from onyx.configs.onyxbot_configs import DANSWER_BOT_REPHRASE_MESSAGE
+from onyx.configs.onyxbot_configs import DANSWER_BOT_RESPOND_EVERY_CHANNEL
+from onyx.configs.onyxbot_configs import NOTIFY_SLACKBOT_NO_ANSWER
+from onyx.connectors.slack.utils import expert_info_from_slack_id
+from onyx.context.search.retrieval.search_runner import download_nltk_data
+from onyx.db.engine import get_all_tenant_ids
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.models import SlackBot
+from onyx.db.search_settings import get_current_search_settings
+from onyx.db.slack_bot import fetch_slack_bots
+from onyx.key_value_store.interface import KvKeyNotFoundError
+from onyx.natural_language_processing.search_nlp_models import EmbeddingModel
+from onyx.natural_language_processing.search_nlp_models import warm_up_bi_encoder
+from onyx.onyxbot.slack.config import get_slack_channel_config_for_bot_and_channel
+from onyx.onyxbot.slack.config import MAX_TENANTS_PER_POD
+from onyx.onyxbot.slack.config import TENANT_ACQUISITION_INTERVAL
+from onyx.onyxbot.slack.config import TENANT_HEARTBEAT_EXPIRATION
+from onyx.onyxbot.slack.config import TENANT_HEARTBEAT_INTERVAL
+from onyx.onyxbot.slack.config import TENANT_LOCK_EXPIRATION
+from onyx.onyxbot.slack.constants import DISLIKE_BLOCK_ACTION_ID
+from onyx.onyxbot.slack.constants import FEEDBACK_DOC_BUTTON_BLOCK_ACTION_ID
+from onyx.onyxbot.slack.constants import FOLLOWUP_BUTTON_ACTION_ID
+from onyx.onyxbot.slack.constants import FOLLOWUP_BUTTON_RESOLVED_ACTION_ID
+from onyx.onyxbot.slack.constants import GENERATE_ANSWER_BUTTON_ACTION_ID
+from onyx.onyxbot.slack.constants import IMMEDIATE_RESOLVED_BUTTON_ACTION_ID
+from onyx.onyxbot.slack.constants import LIKE_BLOCK_ACTION_ID
+from onyx.onyxbot.slack.constants import VIEW_DOC_FEEDBACK_ID
+from onyx.onyxbot.slack.handlers.handle_buttons import handle_doc_feedback_button
+from onyx.onyxbot.slack.handlers.handle_buttons import handle_followup_button
+from onyx.onyxbot.slack.handlers.handle_buttons import (
     handle_followup_resolved_button,
 )
-from danswer.danswerbot.slack.handlers.handle_buttons import (
+from onyx.onyxbot.slack.handlers.handle_buttons import (
     handle_generate_answer_button,
 )
-from danswer.danswerbot.slack.handlers.handle_buttons import handle_slack_feedback
-from danswer.danswerbot.slack.handlers.handle_message import handle_message
-from danswer.danswerbot.slack.handlers.handle_message import (
+from onyx.onyxbot.slack.handlers.handle_buttons import handle_slack_feedback
+from onyx.onyxbot.slack.handlers.handle_message import handle_message
+from onyx.onyxbot.slack.handlers.handle_message import (
     remove_scheduled_feedback_reminder,
 )
-from danswer.danswerbot.slack.handlers.handle_message import schedule_feedback_reminder
-from danswer.danswerbot.slack.models import SlackMessageInfo
-from danswer.danswerbot.slack.utils import check_message_limit
-from danswer.danswerbot.slack.utils import decompose_action_id
-from danswer.danswerbot.slack.utils import get_channel_name_from_id
-from danswer.danswerbot.slack.utils import get_danswer_bot_slack_bot_id
-from danswer.danswerbot.slack.utils import read_slack_thread
-from danswer.danswerbot.slack.utils import remove_danswer_bot_tag
-from danswer.danswerbot.slack.utils import rephrase_slack_message
-from danswer.danswerbot.slack.utils import respond_in_thread
-from danswer.danswerbot.slack.utils import TenantSocketModeClient
-from danswer.db.engine import get_all_tenant_ids
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.models import SlackBot
-from danswer.db.search_settings import get_current_search_settings
-from danswer.db.slack_bot import fetch_slack_bots
-from danswer.key_value_store.interface import KvKeyNotFoundError
-from danswer.natural_language_processing.search_nlp_models import EmbeddingModel
-from danswer.natural_language_processing.search_nlp_models import warm_up_bi_encoder
-from danswer.redis.redis_pool import get_redis_client
-from danswer.server.manage.models import SlackBotTokens
-from danswer.utils.logger import setup_logger
-from danswer.utils.variable_functionality import set_is_ee_based_on_env_variable
+from onyx.onyxbot.slack.handlers.handle_message import schedule_feedback_reminder
+from onyx.onyxbot.slack.models import SlackMessageInfo
+from onyx.onyxbot.slack.utils import check_message_limit
+from onyx.onyxbot.slack.utils import decompose_action_id
+from onyx.onyxbot.slack.utils import get_channel_name_from_id
+from onyx.onyxbot.slack.utils import get_onyx_bot_slack_bot_id
+from onyx.onyxbot.slack.utils import read_slack_thread
+from onyx.onyxbot.slack.utils import remove_onyx_bot_tag
+from onyx.onyxbot.slack.utils import rephrase_slack_message
+from onyx.onyxbot.slack.utils import respond_in_thread
+from onyx.onyxbot.slack.utils import TenantSocketModeClient
+from onyx.redis.redis_pool import get_redis_client
+from onyx.server.manage.models import SlackBotTokens
+from onyx.utils.logger import setup_logger
+from onyx.utils.variable_functionality import set_is_ee_based_on_env_variable
 from shared_configs.configs import DISALLOWED_SLACK_BOT_TENANT_LIST
 from shared_configs.configs import MODEL_SERVER_HOST
 from shared_configs.configs import MODEL_SERVER_PORT
@@ -246,7 +246,7 @@ class SlackbotHandler:
             redis_client = get_redis_client(tenant_id=tenant_id)
             pod_id = self.pod_id
             acquired = redis_client.set(
-                DanswerRedisLocks.SLACK_BOT_LOCK,
+                OnyxRedisLocks.SLACK_BOT_LOCK,
                 pod_id,
                 nx=True,
                 ex=TENANT_LOCK_EXPIRATION,
@@ -290,9 +290,7 @@ class SlackbotHandler:
         logger.debug(f"Sending heartbeats for {len(self.tenant_ids)} tenants")
         for tenant_id in self.tenant_ids:
             redis_client = get_redis_client(tenant_id=tenant_id)
-            heartbeat_key = (
-                f"{DanswerRedisLocks.SLACK_BOT_HEARTBEAT_PREFIX}:{self.pod_id}"
-            )
+            heartbeat_key = f"{OnyxRedisLocks.SLACK_BOT_HEARTBEAT_PREFIX}:{self.pod_id}"
             redis_client.set(
                 heartbeat_key, current_time, ex=TENANT_HEARTBEAT_EXPIRATION
             )
@@ -347,7 +345,7 @@ class SlackbotHandler:
         for tenant_id in self.tenant_ids:
             try:
                 redis_client = get_redis_client(tenant_id=tenant_id)
-                redis_client.delete(DanswerRedisLocks.SLACK_BOT_LOCK)
+                redis_client.delete(OnyxRedisLocks.SLACK_BOT_LOCK)
                 logger.info(f"Released lock for tenant {tenant_id}")
             except Exception as e:
                 logger.error(f"Error releasing lock for tenant {tenant_id}: {e}")
@@ -393,7 +391,7 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
 
         if (
             msg in _SLACK_GREETINGS_TO_IGNORE
-            or remove_danswer_bot_tag(msg, client=client.web_client)
+            or remove_onyx_bot_tag(msg, client=client.web_client)
             in _SLACK_GREETINGS_TO_IGNORE
         ):
             channel_specific_logger.error(
@@ -412,18 +410,18 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
             )
             return False
 
-        bot_tag_id = get_danswer_bot_slack_bot_id(client.web_client)
+        bot_tag_id = get_onyx_bot_slack_bot_id(client.web_client)
         if event_type == "message":
             is_dm = event.get("channel_type") == "im"
             is_tagged = bot_tag_id and bot_tag_id in msg
-            is_danswer_bot_msg = bot_tag_id and bot_tag_id in event.get("user", "")
+            is_onyx_bot_msg = bot_tag_id and bot_tag_id in event.get("user", "")
 
-            # DanswerBot should never respond to itself
-            if is_danswer_bot_msg:
-                logger.info("Ignoring message from DanswerBot")
+            # OnyxBot should never respond to itself
+            if is_onyx_bot_msg:
+                logger.info("Ignoring message from OnyxBot")
                 return False
 
-            # DMs with the bot don't pick up the @DanswerBot so we have to keep the
+            # DMs with the bot don't pick up the @OnyxBot so we have to keep the
             # caught events_api
             if is_tagged and not is_dm:
                 # Let the tag flow handle this case, don't reply twice
@@ -440,7 +438,7 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
                     slack_bot_id=client.slack_bot_id,
                     channel_name=channel_name,
                 )
-            # If DanswerBot is not specifically tagged and the channel is not set to respond to bots, ignore the message
+            # If OnyxBot is not specifically tagged and the channel is not set to respond to bots, ignore the message
             if (not bot_tag_id or bot_tag_id not in msg) and (
                 not slack_channel_config
                 or not slack_channel_config.channel_config.get("respond_to_bots")
@@ -461,7 +459,7 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
         message_ts = event.get("ts")
         thread_ts = event.get("thread_ts")
         # Pick the root of the thread (if a thread exists)
-        # Can respond in thread if it's an "im" directly to Danswer or @DanswerBot is tagged
+        # Can respond in thread if it's an "im" directly to Onyx or @OnyxBot is tagged
         if (
             thread_ts
             and message_ts != thread_ts
@@ -485,14 +483,14 @@ def prefilter_requests(req: SocketModeRequest, client: TenantSocketModeClient) -
 
         if not channel:
             channel_specific_logger.error(
-                "Received DanswerBot command without channel - skipping"
+                "Received OnyxBot command without channel - skipping"
             )
             return False
 
         sender = req.payload.get("user_id")
         if not sender:
             channel_specific_logger.error(
-                "Cannot respond to DanswerBot command without sender to respond to."
+                "Cannot respond to OnyxBot command without sender to respond to."
             )
             return False
 
@@ -548,7 +546,7 @@ def build_request_details(
         )
         email = expert_info.email if expert_info else None
 
-        msg = remove_danswer_bot_tag(msg, client=client.web_client)
+        msg = remove_onyx_bot_tag(msg, client=client.web_client)
 
         if DANSWER_BOT_REPHRASE_MESSAGE:
             logger.info(f"Rephrasing Slack message. Original message: {msg}")
@@ -561,7 +559,7 @@ def build_request_details(
             logger.info(f"Received Slack message: {msg}")
 
         if tagged:
-            logger.debug("User tagged DanswerBot")
+            logger.debug("User tagged OnyxBot")
 
         if thread_ts != message_ts and thread_ts is not None:
             thread_messages = read_slack_thread(
@@ -661,7 +659,7 @@ def process_message(
                 and not respond_every_channel
                 # Can't have configs for DMs so don't toss them out
                 and not is_dm
-                # If /DanswerBot (is_bot_msg) or @DanswerBot (bypass_filters)
+                # If /OnyxBot (is_bot_msg) or @OnyxBot (bypass_filters)
                 # always respond with the default configs
                 and not (details.is_bot_msg or details.bypass_filters)
             ):
@@ -759,7 +757,7 @@ def _get_socket_client(
     slack_bot_tokens: SlackBotTokens, tenant_id: str | None, slack_bot_id: int
 ) -> TenantSocketModeClient:
     # For more info on how to set this up, checkout the docs:
-    # https://docs.danswer.dev/slack_bot_setup
+    # https://docs.onyx.app/slack_bot_setup
     return TenantSocketModeClient(
         # This app-level token will be used only for establishing a connection
         app_token=slack_bot_tokens.app_token,

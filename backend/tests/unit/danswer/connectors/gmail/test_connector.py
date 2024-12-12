@@ -2,11 +2,11 @@ import datetime
 import json
 import os
 
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
-from danswer.connectors.gmail.connector import _build_time_range_query
-from danswer.connectors.gmail.connector import thread_to_document
-from danswer.connectors.models import Document
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.cross_connector_utils.miscellaneous_utils import time_str_to_utc
+from onyx.connectors.gmail.connector import _build_time_range_query
+from onyx.connectors.gmail.connector import thread_to_document
+from onyx.connectors.models import Document
 
 
 def test_thread_to_document() -> None:

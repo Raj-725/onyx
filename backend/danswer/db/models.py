@@ -35,31 +35,31 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.types import LargeBinary
 from sqlalchemy.types import TypeDecorator
 
-from danswer.auth.schemas import UserRole
-from danswer.configs.chat_configs import NUM_POSTPROCESSED_RESULTS
-from danswer.configs.constants import DEFAULT_BOOST
-from danswer.configs.constants import DocumentSource
-from danswer.configs.constants import FileOrigin
-from danswer.configs.constants import MessageType
-from danswer.db.enums import AccessType, IndexingMode
-from danswer.configs.constants import NotificationType
-from danswer.configs.constants import SearchFeedbackType
-from danswer.configs.constants import TokenRateLimitScope
-from danswer.connectors.models import InputType
-from danswer.db.enums import ChatSessionSharedStatus
-from danswer.db.enums import ConnectorCredentialPairStatus
-from danswer.db.enums import IndexingStatus
-from danswer.db.enums import IndexModelStatus
-from danswer.db.enums import TaskStatus
-from danswer.db.pydantic_type import PydanticType
-from danswer.utils.special_types import JSON_ro
-from danswer.file_store.models import FileDescriptor
-from danswer.llm.override_models import LLMOverride
-from danswer.llm.override_models import PromptOverride
-from danswer.context.search.enums import RecencyBiasSetting
-from danswer.utils.encryption import decrypt_bytes_to_string
-from danswer.utils.encryption import encrypt_string_to_bytes
-from danswer.utils.headers import HeaderItemDict
+from onyx.auth.schemas import UserRole
+from onyx.configs.chat_configs import NUM_POSTPROCESSED_RESULTS
+from onyx.configs.constants import DEFAULT_BOOST
+from onyx.configs.constants import DocumentSource
+from onyx.configs.constants import FileOrigin
+from onyx.configs.constants import MessageType
+from onyx.db.enums import AccessType, IndexingMode
+from onyx.configs.constants import NotificationType
+from onyx.configs.constants import SearchFeedbackType
+from onyx.configs.constants import TokenRateLimitScope
+from onyx.connectors.models import InputType
+from onyx.db.enums import ChatSessionSharedStatus
+from onyx.db.enums import ConnectorCredentialPairStatus
+from onyx.db.enums import IndexingStatus
+from onyx.db.enums import IndexModelStatus
+from onyx.db.enums import TaskStatus
+from onyx.db.pydantic_type import PydanticType
+from onyx.utils.special_types import JSON_ro
+from onyx.file_store.models import FileDescriptor
+from onyx.llm.override_models import LLMOverride
+from onyx.llm.override_models import PromptOverride
+from onyx.context.search.enums import RecencyBiasSetting
+from onyx.utils.encryption import decrypt_bytes_to_string
+from onyx.utils.encryption import encrypt_string_to_bytes
+from onyx.utils.headers import HeaderItemDict
 from shared_configs.enums import EmbeddingProvider
 from shared_configs.enums import RerankerProvider
 
@@ -388,7 +388,7 @@ class ConnectorCredentialPair(Base):
 
     # source type (defined in the connector's `source` field)
     # E.g. for google_drive perm sync:
-    # {"customer_id": "123567", "company_domain": "@danswer.ai"}
+    # {"customer_id": "123567", "company_domain": "@onyx.app"}
     auto_sync_options: Mapped[dict[str, Any] | None] = mapped_column(
         postgresql.JSONB(), nullable=True
     )
@@ -448,7 +448,7 @@ class Document(Base):
     # NOTE: if more sensitive data is added here for display, make sure to add user/group permission
 
     # this should correspond to the ID of the document
-    # (as is passed around in Danswer)
+    # (as is passed around in Onyx)
     id: Mapped[str] = mapped_column(String, primary_key=True)
     from_ingestion_api: Mapped[bool] = mapped_column(
         Boolean, default=False, nullable=True
@@ -481,7 +481,7 @@ class Document(Base):
         DateTime(timezone=True), nullable=True, index=True
     )
     # The following are not attached to User because the account/email may not be known
-    # within Danswer
+    # within Onyx
     # Something like the document creator
     primary_owners: Mapped[list[str] | None] = mapped_column(
         postgresql.ARRAY(String), nullable=True
@@ -955,8 +955,8 @@ class ChatSession(Base):
         ForeignKey("persona.id"), nullable=True
     )
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    # This chat created by DanswerBot
-    danswerbot_flow: Mapped[bool] = mapped_column(Boolean, default=False)
+    # This chat created by OnyxBot
+    onyxbot_flow: Mapped[bool] = mapped_column(Boolean, default=False)
     # Only ever set to True if system is set to not hard-delete chats
     deleted: Mapped[bool] = mapped_column(Boolean, default=False)
     # controls whether or not this conversation is viewable by others
@@ -1567,11 +1567,11 @@ class PGFileStore(Base):
 Enterprise Edition Models
 ************************************************************************
 
-These models are only used in Enterprise Edition only features in Danswer.
+These models are only used in Enterprise Edition only features in Onyx.
 They are kept here to simplify the codebase and avoid having different assumptions
-on the shape of data being passed around between the MIT and EE versions of Danswer.
+on the shape of data being passed around between the MIT and EE versions of Onyx.
 
-In the MIT version of Danswer, assume these tables are always empty.
+In the MIT version of Onyx, assume these tables are always empty.
 """
 
 
@@ -1805,7 +1805,7 @@ class User__ExternalUserGroupId(Base):
     """Maps user info both internal and external to the name of the external group
     This maps the user to all of their external groups so that the external group name can be
     attached to the ACL list matching during query time. User level permissions can be handled by
-    directly adding the Danswer user to the doc ACL list"""
+    directly adding the Onyx user to the doc ACL list"""
 
     __tablename__ = "user__external_user_group_id"
 

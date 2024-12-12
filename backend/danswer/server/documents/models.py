@@ -5,21 +5,21 @@ from uuid import UUID
 from pydantic import BaseModel
 from pydantic import Field
 
-from danswer.configs.app_configs import MASK_CREDENTIAL_PREFIX
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.models import DocumentErrorSummary
-from danswer.connectors.models import InputType
-from danswer.db.enums import AccessType
-from danswer.db.enums import ConnectorCredentialPairStatus
-from danswer.db.models import Connector
-from danswer.db.models import ConnectorCredentialPair
-from danswer.db.models import Credential
-from danswer.db.models import Document as DbDocument
-from danswer.db.models import IndexAttempt
-from danswer.db.models import IndexAttemptError as DbIndexAttemptError
-from danswer.db.models import IndexingStatus
-from danswer.db.models import TaskStatus
-from danswer.server.utils import mask_credential_dict
+from onyx.configs.app_configs import MASK_CREDENTIAL_PREFIX
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.models import DocumentErrorSummary
+from onyx.connectors.models import InputType
+from onyx.db.enums import AccessType
+from onyx.db.enums import ConnectorCredentialPairStatus
+from onyx.db.models import Connector
+from onyx.db.models import ConnectorCredentialPair
+from onyx.db.models import Credential
+from onyx.db.models import Document as DbDocument
+from onyx.db.models import IndexAttempt
+from onyx.db.models import IndexAttemptError as DbIndexAttemptError
+from onyx.db.models import IndexingStatus
+from onyx.db.models import TaskStatus
+from onyx.server.utils import mask_credential_dict
 
 
 class DocumentSyncStatus(BaseModel):

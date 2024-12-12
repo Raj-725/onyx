@@ -2,17 +2,17 @@ from typing import cast
 
 from langchain_core.messages import HumanMessage
 
-from danswer.chat.models import AnswerStyleConfig
-from danswer.chat.models import LlmDoc
-from danswer.chat.models import PromptConfig
-from danswer.chat.prompt_builder.build import AnswerPromptBuilder
-from danswer.chat.prompt_builder.citations_prompt import (
+from onyx.chat.models import AnswerStyleConfig
+from onyx.chat.models import LlmDoc
+from onyx.chat.models import PromptConfig
+from onyx.chat.prompt_builder.build import AnswerPromptBuilder
+from onyx.chat.prompt_builder.citations_prompt import (
     build_citations_system_message,
 )
-from danswer.chat.prompt_builder.citations_prompt import build_citations_user_message
-from danswer.chat.prompt_builder.quotes_prompt import build_quotes_user_message
-from danswer.tools.message import ToolCallSummary
-from danswer.tools.models import ToolResponse
+from onyx.chat.prompt_builder.citations_prompt import build_citations_user_message
+from onyx.chat.prompt_builder.quotes_prompt import build_quotes_user_message
+from onyx.tools.message import ToolCallSummary
+from onyx.tools.models import ToolResponse
 
 
 ORIGINAL_CONTEXT_DOCUMENTS_ID = "search_doc_content"

@@ -6,53 +6,53 @@ from typing import cast
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from danswer.chat.chat_utils import llm_doc_from_inference_section
-from danswer.chat.llm_response_handler import LLMCall
-from danswer.chat.models import AnswerStyleConfig
-from danswer.chat.models import ContextualPruningConfig
-from danswer.chat.models import DanswerContext
-from danswer.chat.models import DanswerContexts
-from danswer.chat.models import DocumentPruningConfig
-from danswer.chat.models import LlmDoc
-from danswer.chat.models import PromptConfig
-from danswer.chat.models import SectionRelevancePiece
-from danswer.chat.prompt_builder.build import AnswerPromptBuilder
-from danswer.chat.prompt_builder.citations_prompt import compute_max_llm_input_tokens
-from danswer.chat.prune_and_merge import prune_and_merge_sections
-from danswer.chat.prune_and_merge import prune_sections
-from danswer.configs.chat_configs import CONTEXT_CHUNKS_ABOVE
-from danswer.configs.chat_configs import CONTEXT_CHUNKS_BELOW
-from danswer.configs.model_configs import GEN_AI_MODEL_FALLBACK_MAX_TOKENS
-from danswer.context.search.enums import LLMEvaluationType
-from danswer.context.search.enums import QueryFlow
-from danswer.context.search.enums import SearchType
-from danswer.context.search.models import IndexFilters
-from danswer.context.search.models import InferenceSection
-from danswer.context.search.models import RerankingDetails
-from danswer.context.search.models import RetrievalDetails
-from danswer.context.search.models import SearchRequest
-from danswer.context.search.pipeline import SearchPipeline
-from danswer.db.models import Persona
-from danswer.db.models import User
-from danswer.llm.interfaces import LLM
-from danswer.llm.models import PreviousMessage
-from danswer.secondary_llm_flows.choose_search import check_if_need_search
-from danswer.secondary_llm_flows.query_expansion import history_based_query_rephrase
-from danswer.tools.message import ToolCallSummary
-from danswer.tools.models import ToolResponse
-from danswer.tools.tool import Tool
-from danswer.tools.tool_implementations.search.search_utils import llm_doc_to_dict
-from danswer.tools.tool_implementations.search_like_tool_utils import (
+from onyx.chat.chat_utils import llm_doc_from_inference_section
+from onyx.chat.llm_response_handler import LLMCall
+from onyx.chat.models import AnswerStyleConfig
+from onyx.chat.models import ContextualPruningConfig
+from onyx.chat.models import DocumentPruningConfig
+from onyx.chat.models import LlmDoc
+from onyx.chat.models import OnyxContext
+from onyx.chat.models import OnyxContexts
+from onyx.chat.models import PromptConfig
+from onyx.chat.models import SectionRelevancePiece
+from onyx.chat.prompt_builder.build import AnswerPromptBuilder
+from onyx.chat.prompt_builder.citations_prompt import compute_max_llm_input_tokens
+from onyx.chat.prune_and_merge import prune_and_merge_sections
+from onyx.chat.prune_and_merge import prune_sections
+from onyx.configs.chat_configs import CONTEXT_CHUNKS_ABOVE
+from onyx.configs.chat_configs import CONTEXT_CHUNKS_BELOW
+from onyx.configs.model_configs import GEN_AI_MODEL_FALLBACK_MAX_TOKENS
+from onyx.context.search.enums import LLMEvaluationType
+from onyx.context.search.enums import QueryFlow
+from onyx.context.search.enums import SearchType
+from onyx.context.search.models import IndexFilters
+from onyx.context.search.models import InferenceSection
+from onyx.context.search.models import RerankingDetails
+from onyx.context.search.models import RetrievalDetails
+from onyx.context.search.models import SearchRequest
+from onyx.context.search.pipeline import SearchPipeline
+from onyx.db.models import Persona
+from onyx.db.models import User
+from onyx.llm.interfaces import LLM
+from onyx.llm.models import PreviousMessage
+from onyx.secondary_llm_flows.choose_search import check_if_need_search
+from onyx.secondary_llm_flows.query_expansion import history_based_query_rephrase
+from onyx.tools.message import ToolCallSummary
+from onyx.tools.models import ToolResponse
+from onyx.tools.tool import Tool
+from onyx.tools.tool_implementations.search.search_utils import llm_doc_to_dict
+from onyx.tools.tool_implementations.search_like_tool_utils import (
     build_next_prompt_for_search_like_tool,
 )
-from danswer.tools.tool_implementations.search_like_tool_utils import (
+from onyx.tools.tool_implementations.search_like_tool_utils import (
     FINAL_CONTEXT_DOCUMENTS_ID,
 )
-from danswer.tools.tool_implementations.search_like_tool_utils import (
+from onyx.tools.tool_implementations.search_like_tool_utils import (
     ORIGINAL_CONTEXT_DOCUMENTS_ID,
 )
-from danswer.utils.logger import setup_logger
-from danswer.utils.special_types import JSON_ro
+from onyx.utils.logger import setup_logger
+from onyx.utils.special_types import JSON_ro
 
 logger = setup_logger()
 
@@ -332,9 +332,9 @@ class SearchTool(Tool):
 
         yield ToolResponse(
             id=SEARCH_DOC_CONTENT_ID,
-            response=DanswerContexts(
+            response=OnyxContexts(
                 contexts=[
-                    DanswerContext(
+                    OnyxContext(
                         content=section.combined_content,
                         document_id=section.center_chunk.document_id,
                         semantic_identifier=section.center_chunk.semantic_identifier,

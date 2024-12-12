@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from danswer.auth.schemas import UserStatus
+from onyx.auth.schemas import UserStatus
 
 
 class FlowType(str, Enum):

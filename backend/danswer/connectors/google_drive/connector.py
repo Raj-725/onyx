@@ -9,38 +9,38 @@ from typing import cast
 from google.oauth2.credentials import Credentials as OAuthCredentials  # type: ignore
 from google.oauth2.service_account import Credentials as ServiceAccountCredentials  # type: ignore
 
-from danswer.configs.app_configs import INDEX_BATCH_SIZE
-from danswer.configs.app_configs import MAX_FILE_SIZE_BYTES
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.google_drive.doc_conversion import build_slim_document
-from danswer.connectors.google_drive.doc_conversion import (
+from onyx.configs.app_configs import INDEX_BATCH_SIZE
+from onyx.configs.app_configs import MAX_FILE_SIZE_BYTES
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.google_drive.doc_conversion import build_slim_document
+from onyx.connectors.google_drive.doc_conversion import (
     convert_drive_item_to_document,
 )
-from danswer.connectors.google_drive.file_retrieval import crawl_folders_for_files
-from danswer.connectors.google_drive.file_retrieval import get_all_files_for_oauth
-from danswer.connectors.google_drive.file_retrieval import get_all_files_in_my_drive
-from danswer.connectors.google_drive.file_retrieval import get_files_in_shared_drive
-from danswer.connectors.google_drive.models import GoogleDriveFileType
-from danswer.connectors.google_utils.google_auth import get_google_creds
-from danswer.connectors.google_utils.google_utils import execute_paginated_retrieval
-from danswer.connectors.google_utils.resources import get_admin_service
-from danswer.connectors.google_utils.resources import get_drive_service
-from danswer.connectors.google_utils.resources import get_google_docs_service
-from danswer.connectors.google_utils.shared_constants import (
+from onyx.connectors.google_drive.file_retrieval import crawl_folders_for_files
+from onyx.connectors.google_drive.file_retrieval import get_all_files_for_oauth
+from onyx.connectors.google_drive.file_retrieval import get_all_files_in_my_drive
+from onyx.connectors.google_drive.file_retrieval import get_files_in_shared_drive
+from onyx.connectors.google_drive.models import GoogleDriveFileType
+from onyx.connectors.google_utils.google_auth import get_google_creds
+from onyx.connectors.google_utils.google_utils import execute_paginated_retrieval
+from onyx.connectors.google_utils.resources import get_admin_service
+from onyx.connectors.google_utils.resources import get_drive_service
+from onyx.connectors.google_utils.resources import get_google_docs_service
+from onyx.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_PRIMARY_ADMIN_KEY,
 )
-from danswer.connectors.google_utils.shared_constants import MISSING_SCOPES_ERROR_STR
-from danswer.connectors.google_utils.shared_constants import ONYX_SCOPE_INSTRUCTIONS
-from danswer.connectors.google_utils.shared_constants import SCOPE_DOC_URL
-from danswer.connectors.google_utils.shared_constants import SLIM_BATCH_SIZE
-from danswer.connectors.google_utils.shared_constants import USER_FIELDS
-from danswer.connectors.interfaces import GenerateDocumentsOutput
-from danswer.connectors.interfaces import GenerateSlimDocumentOutput
-from danswer.connectors.interfaces import LoadConnector
-from danswer.connectors.interfaces import PollConnector
-from danswer.connectors.interfaces import SecondsSinceUnixEpoch
-from danswer.connectors.interfaces import SlimConnector
-from danswer.utils.logger import setup_logger
+from onyx.connectors.google_utils.shared_constants import MISSING_SCOPES_ERROR_STR
+from onyx.connectors.google_utils.shared_constants import ONYX_SCOPE_INSTRUCTIONS
+from onyx.connectors.google_utils.shared_constants import SCOPE_DOC_URL
+from onyx.connectors.google_utils.shared_constants import SLIM_BATCH_SIZE
+from onyx.connectors.google_utils.shared_constants import USER_FIELDS
+from onyx.connectors.interfaces import GenerateDocumentsOutput
+from onyx.connectors.interfaces import GenerateSlimDocumentOutput
+from onyx.connectors.interfaces import LoadConnector
+from onyx.connectors.interfaces import PollConnector
+from onyx.connectors.interfaces import SecondsSinceUnixEpoch
+from onyx.connectors.interfaces import SlimConnector
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 # TODO: Improve this by using the batch utility: https://googleapis.github.io/google-api-python-client/docs/batch.html

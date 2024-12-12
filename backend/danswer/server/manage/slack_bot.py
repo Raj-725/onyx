@@ -3,28 +3,28 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import current_admin_user
-from danswer.danswerbot.slack.config import validate_channel_name
-from danswer.db.constants import SLACK_BOT_PERSONA_PREFIX
-from danswer.db.engine import get_session
-from danswer.db.models import ChannelConfig
-from danswer.db.models import User
-from danswer.db.persona import get_persona_by_id
-from danswer.db.slack_bot import fetch_slack_bot
-from danswer.db.slack_bot import fetch_slack_bots
-from danswer.db.slack_bot import insert_slack_bot
-from danswer.db.slack_bot import remove_slack_bot
-from danswer.db.slack_bot import update_slack_bot
-from danswer.db.slack_channel_config import create_slack_channel_persona
-from danswer.db.slack_channel_config import fetch_slack_channel_config
-from danswer.db.slack_channel_config import fetch_slack_channel_configs
-from danswer.db.slack_channel_config import insert_slack_channel_config
-from danswer.db.slack_channel_config import remove_slack_channel_config
-from danswer.db.slack_channel_config import update_slack_channel_config
-from danswer.server.manage.models import SlackBot
-from danswer.server.manage.models import SlackBotCreationRequest
-from danswer.server.manage.models import SlackChannelConfig
-from danswer.server.manage.models import SlackChannelConfigCreationRequest
+from onyx.auth.users import current_admin_user
+from onyx.db.constants import SLACK_BOT_PERSONA_PREFIX
+from onyx.db.engine import get_session
+from onyx.db.models import ChannelConfig
+from onyx.db.models import User
+from onyx.db.persona import get_persona_by_id
+from onyx.db.slack_bot import fetch_slack_bot
+from onyx.db.slack_bot import fetch_slack_bots
+from onyx.db.slack_bot import insert_slack_bot
+from onyx.db.slack_bot import remove_slack_bot
+from onyx.db.slack_bot import update_slack_bot
+from onyx.db.slack_channel_config import create_slack_channel_persona
+from onyx.db.slack_channel_config import fetch_slack_channel_config
+from onyx.db.slack_channel_config import fetch_slack_channel_configs
+from onyx.db.slack_channel_config import insert_slack_channel_config
+from onyx.db.slack_channel_config import remove_slack_channel_config
+from onyx.db.slack_channel_config import update_slack_channel_config
+from onyx.onyxbot.slack.config import validate_channel_name
+from onyx.server.manage.models import SlackBot
+from onyx.server.manage.models import SlackBotCreationRequest
+from onyx.server.manage.models import SlackChannelConfig
+from onyx.server.manage.models import SlackChannelConfigCreationRequest
 
 
 router = APIRouter(prefix="/manage")
@@ -64,7 +64,7 @@ def _form_channel_config(
 
     if respond_tag_only and respond_member_group_list:
         raise ValueError(
-            "Cannot set DanswerBot to only respond to tags only and "
+            "Cannot set OnyxBot to only respond to tags only and "
             "also respond to a predetermined set of users."
         )
 
@@ -163,7 +163,7 @@ def patch_slack_channel_config(
             if not persona.name.startswith(SLACK_BOT_PERSONA_PREFIX):
                 # Don't update actual non-slackbot specific personas
                 # Since this one specified document sets, we have to create a new persona
-                # for this DanswerBot config
+                # for this OnyxBot config
                 existing_persona_id = None
             else:
                 existing_persona_id = existing_slack_channel_config.persona_id

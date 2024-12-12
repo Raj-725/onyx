@@ -6,11 +6,11 @@ THERE IS NO USERGROUP <-> DOCUMENT PERMISSION MAPPING
 """
 from slack_sdk import WebClient
 
-from danswer.connectors.slack.connector import make_paginated_slack_api_call_w_retries
-from danswer.db.models import ConnectorCredentialPair
-from danswer.utils.logger import setup_logger
-from ee.danswer.db.external_perm import ExternalUserGroup
-from ee.danswer.external_permissions.slack.utils import fetch_user_id_to_email_map
+from ee.onyx.db.external_perm import ExternalUserGroup
+from ee.onyx.external_permissions.slack.utils import fetch_user_id_to_email_map
+from onyx.connectors.slack.connector import make_paginated_slack_api_call_w_retries
+from onyx.db.models import ConnectorCredentialPair
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -58,7 +58,7 @@ def slack_group_sync(
     )
     user_id_to_email_map = fetch_user_id_to_email_map(slack_client)
 
-    danswer_groups: list[ExternalUserGroup] = []
+    onyx_groups: list[ExternalUserGroup] = []
     for group_name in _get_slack_group_ids(slack_client):
         group_member_emails = _get_slack_group_members_email(
             slack_client=slack_client,
@@ -67,7 +67,7 @@ def slack_group_sync(
         )
         if not group_member_emails:
             continue
-        danswer_groups.append(
+        onyx_groups.append(
             ExternalUserGroup(id=group_name, user_emails=group_member_emails)
         )
-    return danswer_groups
+    return onyx_groups

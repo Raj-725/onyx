@@ -1,8 +1,8 @@
 import os
 
 
-PROMPTS_YAML = "./danswer/seeding/prompts.yaml"
-PERSONAS_YAML = "./danswer/seeding/personas.yaml"
+PROMPTS_YAML = "./onyx/seeding/prompts.yaml"
+PERSONAS_YAML = "./onyx/seeding/personas.yaml"
 
 NUM_RETURNED_HITS = 50
 # Used for LLM filtering and reranking

@@ -5,34 +5,34 @@ from typing import cast
 
 from sqlalchemy.orm import Session
 
-from danswer.access.models import default_public_access
-from danswer.configs.constants import DEFAULT_BOOST
-from danswer.configs.constants import DocumentSource
-from danswer.configs.constants import KV_DOCUMENTS_SEEDED_KEY
-from danswer.configs.model_configs import DEFAULT_DOCUMENT_ENCODER_MODEL
-from danswer.connectors.models import Document
-from danswer.connectors.models import IndexAttemptMetadata
-from danswer.connectors.models import InputType
-from danswer.connectors.models import Section
-from danswer.db.connector import check_connectors_exist
-from danswer.db.connector import create_connector
-from danswer.db.connector_credential_pair import add_credential_to_connector
-from danswer.db.credentials import PUBLIC_CREDENTIAL_ID
-from danswer.db.document import check_docs_exist
-from danswer.db.enums import AccessType
-from danswer.db.enums import ConnectorCredentialPairStatus
-from danswer.db.index_attempt import mock_successful_index_attempt
-from danswer.db.search_settings import get_current_search_settings
-from danswer.document_index.factory import get_default_document_index
-from danswer.indexing.indexing_pipeline import index_doc_batch_prepare
-from danswer.indexing.models import ChunkEmbedding
-from danswer.indexing.models import DocMetadataAwareIndexChunk
-from danswer.key_value_store.factory import get_kv_store
-from danswer.key_value_store.interface import KvKeyNotFoundError
-from danswer.server.documents.models import ConnectorBase
-from danswer.utils.logger import setup_logger
-from danswer.utils.retry_wrapper import retry_builder
-from danswer.utils.variable_functionality import fetch_versioned_implementation
+from onyx.access.models import default_public_access
+from onyx.configs.constants import DEFAULT_BOOST
+from onyx.configs.constants import DocumentSource
+from onyx.configs.constants import KV_DOCUMENTS_SEEDED_KEY
+from onyx.configs.model_configs import DEFAULT_DOCUMENT_ENCODER_MODEL
+from onyx.connectors.models import Document
+from onyx.connectors.models import IndexAttemptMetadata
+from onyx.connectors.models import InputType
+from onyx.connectors.models import Section
+from onyx.db.connector import check_connectors_exist
+from onyx.db.connector import create_connector
+from onyx.db.connector_credential_pair import add_credential_to_connector
+from onyx.db.credentials import PUBLIC_CREDENTIAL_ID
+from onyx.db.document import check_docs_exist
+from onyx.db.enums import AccessType
+from onyx.db.enums import ConnectorCredentialPairStatus
+from onyx.db.index_attempt import mock_successful_index_attempt
+from onyx.db.search_settings import get_current_search_settings
+from onyx.document_index.factory import get_default_document_index
+from onyx.indexing.indexing_pipeline import index_doc_batch_prepare
+from onyx.indexing.models import ChunkEmbedding
+from onyx.indexing.models import DocMetadataAwareIndexChunk
+from onyx.key_value_store.factory import get_kv_store
+from onyx.key_value_store.interface import KvKeyNotFoundError
+from onyx.server.documents.models import ConnectorBase
+from onyx.utils.logger import setup_logger
+from onyx.utils.retry_wrapper import retry_builder
+from onyx.utils.variable_functionality import fetch_versioned_implementation
 
 logger = setup_logger()
 
@@ -95,7 +95,7 @@ def _create_indexable_chunks(
 def load_processed_docs(cohere_enabled: bool) -> list[dict]:
     initial_docs_path = os.path.join(
         os.getcwd(),
-        "danswer",
+        "onyx",
         "seeding",
         "initial_docs.json",
     )
@@ -163,7 +163,7 @@ def seed_initial_documents(
         source=DocumentSource.WEB,
         input_type=InputType.LOAD_STATE,
         connector_specific_config={
-            "base_url": "https://docs.danswer.dev/more/use_cases",
+            "base_url": "https://docs.onyx.app/more/use_cases",
             "web_connector_type": "recursive",
         },
         refresh_freq=None,  # Never refresh by default
@@ -189,7 +189,7 @@ def seed_initial_documents(
     )
     cc_pair_id = cast(int, result.data)
     processed_docs = fetch_versioned_implementation(
-        "danswer.seeding.load_docs",
+        "onyx.seeding.load_docs",
         "load_processed_docs",
     )(cohere_enabled)
 

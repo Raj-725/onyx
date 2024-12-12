@@ -4,22 +4,22 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from danswer.configs.app_configs import MAX_PRUNING_DOCUMENT_RETRIEVAL_PER_MINUTE
-from danswer.connectors.cross_connector_utils.rate_limit_wrapper import (
+from onyx.configs.app_configs import MAX_PRUNING_DOCUMENT_RETRIEVAL_PER_MINUTE
+from onyx.connectors.cross_connector_utils.rate_limit_wrapper import (
     rate_limit_builder,
 )
-from danswer.connectors.interfaces import BaseConnector
-from danswer.connectors.interfaces import LoadConnector
-from danswer.connectors.interfaces import PollConnector
-from danswer.connectors.interfaces import SlimConnector
-from danswer.connectors.models import Document
-from danswer.db.connector_credential_pair import get_connector_credential_pair
-from danswer.db.enums import TaskStatus
-from danswer.db.models import TaskQueueState
-from danswer.indexing.indexing_heartbeat import IndexingHeartbeatInterface
-from danswer.redis.redis_connector import RedisConnector
-from danswer.server.documents.models import DeletionAttemptSnapshot
-from danswer.utils.logger import setup_logger
+from onyx.connectors.interfaces import BaseConnector
+from onyx.connectors.interfaces import LoadConnector
+from onyx.connectors.interfaces import PollConnector
+from onyx.connectors.interfaces import SlimConnector
+from onyx.connectors.models import Document
+from onyx.db.connector_credential_pair import get_connector_credential_pair
+from onyx.db.enums import TaskStatus
+from onyx.db.models import TaskQueueState
+from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from onyx.redis.redis_connector import RedisConnector
+from onyx.server.documents.models import DeletionAttemptSnapshot
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()

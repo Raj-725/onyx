@@ -3,12 +3,12 @@ from collections.abc import Generator
 
 from langchain_core.messages import BaseMessage
 
-from danswer.chat.llm_response_handler import ResponsePart
-from danswer.chat.models import CitationInfo
-from danswer.chat.models import LlmDoc
-from danswer.chat.stream_processing.citation_processing import CitationProcessor
-from danswer.chat.stream_processing.utils import DocumentIdOrderMapping
-from danswer.utils.logger import setup_logger
+from onyx.chat.llm_response_handler import ResponsePart
+from onyx.chat.models import CitationInfo
+from onyx.chat.models import LlmDoc
+from onyx.chat.stream_processing.citation_processing import CitationProcessor
+from onyx.chat.stream_processing.utils import DocumentIdOrderMapping
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

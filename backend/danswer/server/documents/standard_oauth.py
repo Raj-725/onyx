@@ -9,18 +9,18 @@ from fastapi import Query
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import current_user
-from danswer.configs.app_configs import WEB_DOMAIN
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.interfaces import OAuthConnector
-from danswer.db.credentials import create_credential
-from danswer.db.engine import get_current_tenant_id
-from danswer.db.engine import get_session
-from danswer.db.models import User
-from danswer.redis.redis_pool import get_redis_client
-from danswer.server.documents.models import CredentialBase
-from danswer.utils.logger import setup_logger
-from danswer.utils.subclasses import find_all_subclasses_in_dir
+from onyx.auth.users import current_user
+from onyx.configs.app_configs import WEB_DOMAIN
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.interfaces import OAuthConnector
+from onyx.db.credentials import create_credential
+from onyx.db.engine import get_current_tenant_id
+from onyx.db.engine import get_session
+from onyx.db.models import User
+from onyx.redis.redis_pool import get_redis_client
+from onyx.server.documents.models import CredentialBase
+from onyx.utils.logger import setup_logger
+from onyx.utils.subclasses import find_all_subclasses_in_dir
 
 logger = setup_logger()
 
@@ -40,7 +40,7 @@ def _discover_oauth_connectors() -> dict[DocumentSource, type[OAuthConnector]]:
         return _OAUTH_CONNECTORS
 
     oauth_connectors = find_all_subclasses_in_dir(
-        cast(type[OAuthConnector], OAuthConnector), "danswer.connectors"
+        cast(type[OAuthConnector], OAuthConnector), "onyx.connectors"
     )
 
     _OAUTH_CONNECTORS = {cls.oauth_id(): cls for cls in oauth_connectors}

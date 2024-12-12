@@ -51,47 +51,47 @@ from pydantic import BaseModel
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from danswer.auth.api_key import get_hashed_api_key_from_request
-from danswer.auth.invited_users import get_invited_users
-from danswer.auth.schemas import UserCreate
-from danswer.auth.schemas import UserRole
-from danswer.auth.schemas import UserUpdate
-from danswer.configs.app_configs import AUTH_TYPE
-from danswer.configs.app_configs import DISABLE_AUTH
-from danswer.configs.app_configs import EMAIL_FROM
-from danswer.configs.app_configs import REQUIRE_EMAIL_VERIFICATION
-from danswer.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
-from danswer.configs.app_configs import SMTP_PASS
-from danswer.configs.app_configs import SMTP_PORT
-from danswer.configs.app_configs import SMTP_SERVER
-from danswer.configs.app_configs import SMTP_USER
-from danswer.configs.app_configs import TRACK_EXTERNAL_IDP_EXPIRY
-from danswer.configs.app_configs import USER_AUTH_SECRET
-from danswer.configs.app_configs import VALID_EMAIL_DOMAINS
-from danswer.configs.app_configs import WEB_DOMAIN
-from danswer.configs.constants import AuthType
-from danswer.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
-from danswer.configs.constants import DANSWER_API_KEY_PREFIX
-from danswer.configs.constants import UNNAMED_KEY_PLACEHOLDER
-from danswer.db.api_key import fetch_user_for_api_key
-from danswer.db.auth import get_access_token_db
-from danswer.db.auth import get_default_admin_user_emails
-from danswer.db.auth import get_user_count
-from danswer.db.auth import get_user_db
-from danswer.db.auth import SQLAlchemyUserAdminDB
-from danswer.db.engine import get_async_session
-from danswer.db.engine import get_async_session_with_tenant
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.models import AccessToken
-from danswer.db.models import OAuthAccount
-from danswer.db.models import User
-from danswer.db.users import get_user_by_email
-from danswer.server.utils import BasicAuthenticationError
-from danswer.utils.logger import setup_logger
-from danswer.utils.telemetry import optional_telemetry
-from danswer.utils.telemetry import RecordType
-from danswer.utils.variable_functionality import fetch_ee_implementation_or_noop
-from danswer.utils.variable_functionality import fetch_versioned_implementation
+from onyx.auth.api_key import get_hashed_api_key_from_request
+from onyx.auth.invited_users import get_invited_users
+from onyx.auth.schemas import UserCreate
+from onyx.auth.schemas import UserRole
+from onyx.auth.schemas import UserUpdate
+from onyx.configs.app_configs import AUTH_TYPE
+from onyx.configs.app_configs import DISABLE_AUTH
+from onyx.configs.app_configs import EMAIL_FROM
+from onyx.configs.app_configs import REQUIRE_EMAIL_VERIFICATION
+from onyx.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
+from onyx.configs.app_configs import SMTP_PASS
+from onyx.configs.app_configs import SMTP_PORT
+from onyx.configs.app_configs import SMTP_SERVER
+from onyx.configs.app_configs import SMTP_USER
+from onyx.configs.app_configs import TRACK_EXTERNAL_IDP_EXPIRY
+from onyx.configs.app_configs import USER_AUTH_SECRET
+from onyx.configs.app_configs import VALID_EMAIL_DOMAINS
+from onyx.configs.app_configs import WEB_DOMAIN
+from onyx.configs.constants import AuthType
+from onyx.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
+from onyx.configs.constants import DANSWER_API_KEY_PREFIX
+from onyx.configs.constants import UNNAMED_KEY_PLACEHOLDER
+from onyx.db.api_key import fetch_user_for_api_key
+from onyx.db.auth import get_access_token_db
+from onyx.db.auth import get_default_admin_user_emails
+from onyx.db.auth import get_user_count
+from onyx.db.auth import get_user_db
+from onyx.db.auth import SQLAlchemyUserAdminDB
+from onyx.db.engine import get_async_session
+from onyx.db.engine import get_async_session_with_tenant
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.models import AccessToken
+from onyx.db.models import OAuthAccount
+from onyx.db.models import User
+from onyx.db.users import get_user_by_email
+from onyx.server.utils import BasicAuthenticationError
+from onyx.utils.logger import setup_logger
+from onyx.utils.telemetry import optional_telemetry
+from onyx.utils.telemetry import RecordType
+from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
+from onyx.utils.variable_functionality import fetch_versioned_implementation
 from shared_configs.configs import async_return_default_schema
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
@@ -195,7 +195,7 @@ def send_user_verification_email(
     mail_from: str = EMAIL_FROM,
 ) -> None:
     msg = MIMEMultipart()
-    msg["Subject"] = "Danswer Email Verification"
+    msg["Subject"] = "Onyx Email Verification"
     msg["To"] = user_email
     if mail_from:
         msg["From"] = mail_from
@@ -230,7 +230,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             referral_source = request.cookies.get("referral_source", None)
 
         tenant_id = await fetch_ee_implementation_or_noop(
-            "danswer.server.tenants.provisioning",
+            "onyx.server.tenants.provisioning",
             "get_or_create_tenant_id",
             async_return_default_schema,
         )(
@@ -298,7 +298,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             referral_source = getattr(request.state, "referral_source", None)
 
         tenant_id = await fetch_ee_implementation_or_noop(
-            "danswer.server.tenants.provisioning",
+            "onyx.server.tenants.provisioning",
             "get_or_create_tenant_id",
             async_return_default_schema,
         )(
@@ -448,7 +448,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
 
         # Get tenant_id from mapping table
         tenant_id = await fetch_ee_implementation_or_noop(
-            "danswer.server.tenants.provisioning",
+            "onyx.server.tenants.provisioning",
             "get_or_create_tenant_id",
             async_return_default_schema,
         )(
@@ -509,7 +509,7 @@ cookie_transport = CookieTransport(
 class TenantAwareJWTStrategy(JWTStrategy):
     async def _create_token_data(self, user: User, impersonate: bool = False) -> dict:
         tenant_id = await fetch_ee_implementation_or_noop(
-            "danswer.server.tenants.provisioning",
+            "onyx.server.tenants.provisioning",
             "get_or_create_tenant_id",
             async_return_default_schema,
         )(
@@ -618,7 +618,7 @@ async def optional_user(
     user: User | None = Depends(optional_fastapi_current_user),
 ) -> User | None:
     versioned_fetch_user = fetch_versioned_implementation(
-        "danswer.auth.users", "optional_user_"
+        "onyx.auth.users", "optional_user_"
     )
     user = await versioned_fetch_user(request, user, async_db_session)
 
@@ -720,7 +720,7 @@ async def current_admin_user(user: User | None = Depends(current_user)) -> User 
 
 
 def get_default_admin_user_emails_() -> list[str]:
-    # No default seeding available for Danswer MIT
+    # No default seeding available for Onyx MIT
     return []
 
 
@@ -740,7 +740,7 @@ def generate_state_token(
 
 
 # refer to https://github.com/fastapi-users/fastapi-users/blob/42ddc241b965475390e2bce887b084152ae1a2cd/fastapi_users/fastapi_users.py#L91
-def create_danswer_oauth_router(
+def create_onyx_oauth_router(
     oauth_client: BaseOAuth2,
     backend: AuthenticationBackend,
     state_secret: SecretType,

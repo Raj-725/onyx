@@ -6,11 +6,11 @@ from sqlalchemy import delete
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from danswer.access.utils import prefix_group_w_source
-from danswer.configs.constants import DocumentSource
-from danswer.db.models import User__ExternalUserGroupId
-from danswer.db.users import batch_add_ext_perm_user_if_not_exists
-from danswer.utils.logger import setup_logger
+from onyx.access.utils import prefix_group_w_source
+from onyx.configs.constants import DocumentSource
+from onyx.db.models import User__ExternalUserGroupId
+from onyx.db.users import batch_add_ext_perm_user_if_not_exists
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

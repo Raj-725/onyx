@@ -25,18 +25,18 @@ from langchain_core.messages.tool import ToolCallChunk
 from langchain_core.messages.tool import ToolMessage
 from langchain_core.prompt_values import PromptValue
 
-from danswer.configs.app_configs import LOG_DANSWER_MODEL_INTERACTIONS
-from danswer.configs.model_configs import (
+from onyx.configs.app_configs import LOG_DANSWER_MODEL_INTERACTIONS
+from onyx.configs.model_configs import (
     DISABLE_LITELLM_STREAMING,
 )
-from danswer.configs.model_configs import GEN_AI_TEMPERATURE
-from danswer.configs.model_configs import LITELLM_EXTRA_BODY
-from danswer.llm.interfaces import LLM
-from danswer.llm.interfaces import LLMConfig
-from danswer.llm.interfaces import ToolChoiceOptions
-from danswer.server.utils import mask_string
-from danswer.utils.logger import setup_logger
-from danswer.utils.long_term_log import LongTermLogger
+from onyx.configs.model_configs import GEN_AI_TEMPERATURE
+from onyx.configs.model_configs import LITELLM_EXTRA_BODY
+from onyx.llm.interfaces import LLM
+from onyx.llm.interfaces import LLMConfig
+from onyx.llm.interfaces import ToolChoiceOptions
+from onyx.server.utils import mask_string
+from onyx.utils.logger import setup_logger
+from onyx.utils.long_term_log import LongTermLogger
 
 
 logger = setup_logger()

@@ -5,22 +5,22 @@ from typing import TypeVar
 
 from pydantic import BaseModel
 
-from danswer.chat.models import ContextualPruningConfig
-from danswer.chat.models import (
+from onyx.chat.models import ContextualPruningConfig
+from onyx.chat.models import (
     LlmDoc,
 )
-from danswer.chat.models import PromptConfig
-from danswer.chat.prompt_builder.citations_prompt import compute_max_document_tokens
-from danswer.configs.constants import IGNORE_FOR_QA
-from danswer.configs.model_configs import DOC_EMBEDDING_CONTEXT_SIZE
-from danswer.context.search.models import InferenceChunk
-from danswer.context.search.models import InferenceSection
-from danswer.llm.interfaces import LLMConfig
-from danswer.natural_language_processing.utils import get_tokenizer
-from danswer.natural_language_processing.utils import tokenizer_trim_content
-from danswer.prompts.prompt_utils import build_doc_context_str
-from danswer.tools.tool_implementations.search.search_utils import section_to_dict
-from danswer.utils.logger import setup_logger
+from onyx.chat.models import PromptConfig
+from onyx.chat.prompt_builder.citations_prompt import compute_max_document_tokens
+from onyx.configs.constants import IGNORE_FOR_QA
+from onyx.configs.model_configs import DOC_EMBEDDING_CONTEXT_SIZE
+from onyx.context.search.models import InferenceChunk
+from onyx.context.search.models import InferenceSection
+from onyx.llm.interfaces import LLMConfig
+from onyx.natural_language_processing.utils import get_tokenizer
+from onyx.natural_language_processing.utils import tokenizer_trim_content
+from onyx.prompts.prompt_utils import build_doc_context_str
+from onyx.tools.tool_implementations.search.search_utils import section_to_dict
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()

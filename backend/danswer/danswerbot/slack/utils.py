@@ -15,34 +15,34 @@ from slack_sdk.models.blocks import SectionBlock
 from slack_sdk.models.metadata import Metadata
 from slack_sdk.socket_mode import SocketModeClient
 
-from danswer.configs.app_configs import DISABLE_TELEMETRY
-from danswer.configs.constants import ID_SEPARATOR
-from danswer.configs.constants import MessageType
-from danswer.configs.danswerbot_configs import DANSWER_BOT_FEEDBACK_VISIBILITY
-from danswer.configs.danswerbot_configs import DANSWER_BOT_MAX_QPM
-from danswer.configs.danswerbot_configs import DANSWER_BOT_MAX_WAIT_TIME
-from danswer.configs.danswerbot_configs import DANSWER_BOT_NUM_RETRIES
-from danswer.configs.danswerbot_configs import (
+from onyx.configs.app_configs import DISABLE_TELEMETRY
+from onyx.configs.constants import ID_SEPARATOR
+from onyx.configs.constants import MessageType
+from onyx.configs.onyxbot_configs import DANSWER_BOT_FEEDBACK_VISIBILITY
+from onyx.configs.onyxbot_configs import DANSWER_BOT_MAX_QPM
+from onyx.configs.onyxbot_configs import DANSWER_BOT_MAX_WAIT_TIME
+from onyx.configs.onyxbot_configs import DANSWER_BOT_NUM_RETRIES
+from onyx.configs.onyxbot_configs import (
     DANSWER_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD,
 )
-from danswer.configs.danswerbot_configs import (
+from onyx.configs.onyxbot_configs import (
     DANSWER_BOT_RESPONSE_LIMIT_TIME_PERIOD_SECONDS,
 )
-from danswer.connectors.slack.utils import make_slack_api_rate_limited
-from danswer.connectors.slack.utils import SlackTextCleaner
-from danswer.danswerbot.slack.constants import FeedbackVisibility
-from danswer.danswerbot.slack.models import ThreadMessage
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.users import get_user_by_email
-from danswer.llm.exceptions import GenAIDisabledException
-from danswer.llm.factory import get_default_llms
-from danswer.llm.utils import dict_based_prompt_to_langchain_prompt
-from danswer.llm.utils import message_to_string
-from danswer.prompts.miscellaneous_prompts import SLACK_LANGUAGE_REPHRASE_PROMPT
-from danswer.utils.logger import setup_logger
-from danswer.utils.telemetry import optional_telemetry
-from danswer.utils.telemetry import RecordType
-from danswer.utils.text_processing import replace_whitespaces_w_space
+from onyx.connectors.slack.utils import make_slack_api_rate_limited
+from onyx.connectors.slack.utils import SlackTextCleaner
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.users import get_user_by_email
+from onyx.llm.exceptions import GenAIDisabledException
+from onyx.llm.factory import get_default_llms
+from onyx.llm.utils import dict_based_prompt_to_langchain_prompt
+from onyx.llm.utils import message_to_string
+from onyx.onyxbot.slack.constants import FeedbackVisibility
+from onyx.onyxbot.slack.models import ThreadMessage
+from onyx.prompts.miscellaneous_prompts import SLACK_LANGUAGE_REPHRASE_PROMPT
+from onyx.utils.logger import setup_logger
+from onyx.utils.telemetry import optional_telemetry
+from onyx.utils.telemetry import RecordType
+from onyx.utils.text_processing import replace_whitespaces_w_space
 
 logger = setup_logger()
 
@@ -52,7 +52,7 @@ _DANSWER_BOT_MESSAGE_COUNT: int = 0
 _DANSWER_BOT_COUNT_START_TIME: float = time.time()
 
 
-def get_danswer_bot_slack_bot_id(web_client: WebClient) -> Any:
+def get_onyx_bot_slack_bot_id(web_client: WebClient) -> Any:
     global _DANSWER_BOT_SLACK_BOT_ID
     if _DANSWER_BOT_SLACK_BOT_ID is None:
         _DANSWER_BOT_SLACK_BOT_ID = web_client.auth_test().get("user_id")
@@ -75,9 +75,9 @@ def check_message_limit() -> bool:
         _DANSWER_BOT_COUNT_START_TIME = time.time()
     if (_DANSWER_BOT_MESSAGE_COUNT + 1) > DANSWER_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD:
         logger.error(
-            f"DanswerBot has reached the message limit {DANSWER_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD}"
+            f"OnyxBot has reached the message limit {DANSWER_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD}"
             f" for the time period {DANSWER_BOT_RESPONSE_LIMIT_TIME_PERIOD_SECONDS} seconds."
-            " These limits are configurable in backend/danswer/configs/danswerbot_configs.py"
+            " These limits are configurable in backend/onyx/configs/onyxbot_configs.py"
         )
         return False
     _DANSWER_BOT_MESSAGE_COUNT += 1
@@ -136,8 +136,8 @@ def update_emote_react(
             logger.error(f"Was not able to react to user message due to: {e}")
 
 
-def remove_danswer_bot_tag(message_str: str, client: WebClient) -> str:
-    bot_tag_id = get_danswer_bot_slack_bot_id(web_client=client)
+def remove_onyx_bot_tag(message_str: str, client: WebClient) -> str:
+    bot_tag_id = get_onyx_bot_slack_bot_id(web_client=client)
     return re.sub(rf"<@{bot_tag_id}>\s", "", message_str)
 
 
@@ -518,19 +518,19 @@ def read_slack_thread(
             )
             message_type = MessageType.USER
         else:
-            self_slack_bot_id = get_danswer_bot_slack_bot_id(client)
+            self_slack_bot_id = get_onyx_bot_slack_bot_id(client)
 
             if reply.get("user") == self_slack_bot_id:
-                # DanswerBot response
+                # OnyxBot response
                 message_type = MessageType.ASSISTANT
                 user_sem_id = "Assistant"
 
-                # DanswerBot responses have both text and blocks
+                # OnyxBot responses have both text and blocks
                 # The useful content is in the blocks, specifically the first block unless there are
                 # auto-detected filters
                 blocks = reply.get("blocks")
                 if not blocks:
-                    logger.warning(f"DanswerBot response has no blocks: {reply}")
+                    logger.warning(f"OnyxBot response has no blocks: {reply}")
                     continue
 
                 message = blocks[0].get("text", {}).get("text")
@@ -541,11 +541,11 @@ def read_slack_thread(
                     if len(blocks) < 2:
                         logger.warning(f"Only filter blocks found: {reply}")
                         continue
-                    # This is the DanswerBot answer format, if there is a change to how we respond,
+                    # This is the OnyxBot answer format, if there is a change to how we respond,
                     # this will need to be updated to get the correct "answer" portion
                     message = reply["blocks"][1].get("text", {}).get("text")
             else:
-                # Other bots are not counted as the LLM response which only comes from Danswer
+                # Other bots are not counted as the LLM response which only comes from Onyx
                 message_type = MessageType.USER
                 bot_user_name = fetch_user_semantic_id_from_id(
                     reply.get("user"), client
@@ -562,7 +562,7 @@ def read_slack_thread(
                 logger.warning("Skipping Slack thread message, no text found")
                 continue
 
-        message = remove_danswer_bot_tag(message, client=client)
+        message = remove_onyx_bot_tag(message, client=client)
         thread_messages.append(
             ThreadMessage(message=message, sender=user_sem_id, role=message_type)
         )
@@ -576,7 +576,7 @@ def slack_usage_report(
     if DISABLE_TELEMETRY:
         return
 
-    danswer_user = None
+    onyx_user = None
     sender_email = None
     try:
         sender_email = client.users_info(user=sender_id).data["user"]["profile"]["email"]  # type: ignore
@@ -585,12 +585,12 @@ def slack_usage_report(
 
     if sender_email is not None:
         with get_session_with_tenant(tenant_id) as db_session:
-            danswer_user = get_user_by_email(email=sender_email, db_session=db_session)
+            onyx_user = get_user_by_email(email=sender_email, db_session=db_session)
 
     optional_telemetry(
         record_type=RecordType.USAGE,
         data={"action": action},
-        user_id=str(danswer_user.id) if danswer_user else "Non-Danswer-Or-No-Auth-User",
+        user_id=str(onyx_user.id) if onyx_user else "Non-Onyx-Or-No-Auth-User",
     )
 
 

@@ -7,10 +7,10 @@ from langchain_core.messages import AIMessageChunk
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel
 
-from danswer.configs.app_configs import DISABLE_GENERATIVE_AI
-from danswer.configs.app_configs import LOG_DANSWER_MODEL_INTERACTIONS
-from danswer.configs.app_configs import LOG_INDIVIDUAL_MODEL_TOKENS
-from danswer.utils.logger import setup_logger
+from onyx.configs.app_configs import DISABLE_GENERATIVE_AI
+from onyx.configs.app_configs import LOG_DANSWER_MODEL_INTERACTIONS
+from onyx.configs.app_configs import LOG_INDIVIDUAL_MODEL_TOKENS
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()

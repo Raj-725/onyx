@@ -22,14 +22,14 @@ import requests
 from bs4 import BeautifulSoup
 from bs4 import Tag
 
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.cross_connector_utils.miscellaneous_utils import datetime_to_utc
-from danswer.connectors.interfaces import GenerateDocumentsOutput
-from danswer.connectors.interfaces import LoadConnector
-from danswer.connectors.models import BasicExpertInfo
-from danswer.connectors.models import Document
-from danswer.connectors.models import Section
-from danswer.utils.logger import setup_logger
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.cross_connector_utils.miscellaneous_utils import datetime_to_utc
+from onyx.connectors.interfaces import GenerateDocumentsOutput
+from onyx.connectors.interfaces import LoadConnector
+from onyx.connectors.models import BasicExpertInfo
+from onyx.connectors.models import Document
+from onyx.connectors.models import Section
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

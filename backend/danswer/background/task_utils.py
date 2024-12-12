@@ -8,10 +8,10 @@ from celery import Task
 from celery.result import AsyncResult
 from sqlalchemy.orm import Session
 
-from danswer.db.engine import get_sqlalchemy_engine
-from danswer.db.tasks import mark_task_finished
-from danswer.db.tasks import mark_task_start
-from danswer.db.tasks import register_task
+from onyx.db.engine import get_sqlalchemy_engine
+from onyx.db.tasks import mark_task_finished
+from onyx.db.tasks import mark_task_start
+from onyx.db.tasks import register_task
 
 
 T = TypeVar("T", bound=Callable)

@@ -4,30 +4,30 @@ from datetime import timezone
 from typing import Any
 from urllib.parse import quote
 
-from danswer.configs.app_configs import CONFLUENCE_CONNECTOR_LABELS_TO_SKIP
-from danswer.configs.app_configs import CONFLUENCE_TIMEZONE_OFFSET
-from danswer.configs.app_configs import CONTINUE_ON_CONNECTOR_FAILURE
-from danswer.configs.app_configs import INDEX_BATCH_SIZE
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.confluence.onyx_confluence import build_confluence_client
-from danswer.connectors.confluence.onyx_confluence import OnyxConfluence
-from danswer.connectors.confluence.utils import attachment_to_content
-from danswer.connectors.confluence.utils import build_confluence_document_id
-from danswer.connectors.confluence.utils import datetime_from_string
-from danswer.connectors.confluence.utils import extract_text_from_confluence_html
-from danswer.connectors.confluence.utils import validate_attachment_filetype
-from danswer.connectors.interfaces import GenerateDocumentsOutput
-from danswer.connectors.interfaces import GenerateSlimDocumentOutput
-from danswer.connectors.interfaces import LoadConnector
-from danswer.connectors.interfaces import PollConnector
-from danswer.connectors.interfaces import SecondsSinceUnixEpoch
-from danswer.connectors.interfaces import SlimConnector
-from danswer.connectors.models import BasicExpertInfo
-from danswer.connectors.models import ConnectorMissingCredentialError
-from danswer.connectors.models import Document
-from danswer.connectors.models import Section
-from danswer.connectors.models import SlimDocument
-from danswer.utils.logger import setup_logger
+from onyx.configs.app_configs import CONFLUENCE_CONNECTOR_LABELS_TO_SKIP
+from onyx.configs.app_configs import CONFLUENCE_TIMEZONE_OFFSET
+from onyx.configs.app_configs import CONTINUE_ON_CONNECTOR_FAILURE
+from onyx.configs.app_configs import INDEX_BATCH_SIZE
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.confluence.onyx_confluence import build_confluence_client
+from onyx.connectors.confluence.onyx_confluence import OnyxConfluence
+from onyx.connectors.confluence.utils import attachment_to_content
+from onyx.connectors.confluence.utils import build_confluence_document_id
+from onyx.connectors.confluence.utils import datetime_from_string
+from onyx.connectors.confluence.utils import extract_text_from_confluence_html
+from onyx.connectors.confluence.utils import validate_attachment_filetype
+from onyx.connectors.interfaces import GenerateDocumentsOutput
+from onyx.connectors.interfaces import GenerateSlimDocumentOutput
+from onyx.connectors.interfaces import LoadConnector
+from onyx.connectors.interfaces import PollConnector
+from onyx.connectors.interfaces import SecondsSinceUnixEpoch
+from onyx.connectors.interfaces import SlimConnector
+from onyx.connectors.models import BasicExpertInfo
+from onyx.connectors.models import ConnectorMissingCredentialError
+from onyx.connectors.models import Document
+from onyx.connectors.models import Section
+from onyx.connectors.models import SlimDocument
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

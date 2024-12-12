@@ -6,37 +6,37 @@ from typing import cast
 
 import httpx
 
-from danswer.chat.chat_utils import combine_message_chain
-from danswer.chat.models import AnswerStyleConfig
-from danswer.chat.models import LlmDoc
-from danswer.chat.models import PromptConfig
-from danswer.chat.prompt_builder.build import AnswerPromptBuilder
-from danswer.configs.constants import DocumentSource
-from danswer.configs.model_configs import GEN_AI_HISTORY_CUTOFF
-from danswer.context.search.models import SearchDoc
-from danswer.llm.interfaces import LLM
-from danswer.llm.models import PreviousMessage
-from danswer.llm.utils import message_to_string
-from danswer.prompts.chat_prompts import INTERNET_SEARCH_QUERY_REPHRASE
-from danswer.prompts.constants import GENERAL_SEP_PAT
-from danswer.secondary_llm_flows.query_expansion import history_based_query_rephrase
-from danswer.tools.message import ToolCallSummary
-from danswer.tools.models import ToolResponse
-from danswer.tools.tool import Tool
-from danswer.tools.tool_implementations.internet_search.models import (
+from onyx.chat.chat_utils import combine_message_chain
+from onyx.chat.models import AnswerStyleConfig
+from onyx.chat.models import LlmDoc
+from onyx.chat.models import PromptConfig
+from onyx.chat.prompt_builder.build import AnswerPromptBuilder
+from onyx.configs.constants import DocumentSource
+from onyx.configs.model_configs import GEN_AI_HISTORY_CUTOFF
+from onyx.context.search.models import SearchDoc
+from onyx.llm.interfaces import LLM
+from onyx.llm.models import PreviousMessage
+from onyx.llm.utils import message_to_string
+from onyx.prompts.chat_prompts import INTERNET_SEARCH_QUERY_REPHRASE
+from onyx.prompts.constants import GENERAL_SEP_PAT
+from onyx.secondary_llm_flows.query_expansion import history_based_query_rephrase
+from onyx.tools.message import ToolCallSummary
+from onyx.tools.models import ToolResponse
+from onyx.tools.tool import Tool
+from onyx.tools.tool_implementations.internet_search.models import (
     InternetSearchResponse,
 )
-from danswer.tools.tool_implementations.internet_search.models import (
+from onyx.tools.tool_implementations.internet_search.models import (
     InternetSearchResult,
 )
-from danswer.tools.tool_implementations.search_like_tool_utils import (
+from onyx.tools.tool_implementations.search_like_tool_utils import (
     build_next_prompt_for_search_like_tool,
 )
-from danswer.tools.tool_implementations.search_like_tool_utils import (
+from onyx.tools.tool_implementations.search_like_tool_utils import (
     FINAL_CONTEXT_DOCUMENTS_ID,
 )
-from danswer.utils.logger import setup_logger
-from danswer.utils.special_types import JSON_ro
+from onyx.utils.logger import setup_logger
+from onyx.utils.special_types import JSON_ro
 
 logger = setup_logger()
 

@@ -6,13 +6,13 @@ from fastapi import Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from danswer.context.search.models import SearchRequest
-from danswer.context.search.pipeline import SearchPipeline
-from danswer.db.engine import get_session
-from danswer.db.models import User
-from danswer.llm.factory import get_default_llms
-from danswer.server.danswer_api.ingestion import api_key_dep
-from danswer.utils.logger import setup_logger
+from onyx.context.search.models import SearchRequest
+from onyx.context.search.pipeline import SearchPipeline
+from onyx.db.engine import get_session
+from onyx.db.models import User
+from onyx.llm.factory import get_default_llms
+from onyx.server.onyx_api.ingestion import api_key_dep
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()

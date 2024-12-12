@@ -3,22 +3,22 @@ from fastapi import Depends
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import current_admin_user
-from danswer.db.engine import get_session
-from danswer.db.models import User
-from ee.danswer.db.standard_answer import fetch_standard_answer
-from ee.danswer.db.standard_answer import fetch_standard_answer_categories
-from ee.danswer.db.standard_answer import fetch_standard_answer_category
-from ee.danswer.db.standard_answer import fetch_standard_answers
-from ee.danswer.db.standard_answer import insert_standard_answer
-from ee.danswer.db.standard_answer import insert_standard_answer_category
-from ee.danswer.db.standard_answer import remove_standard_answer
-from ee.danswer.db.standard_answer import update_standard_answer
-from ee.danswer.db.standard_answer import update_standard_answer_category
-from ee.danswer.server.manage.models import StandardAnswer
-from ee.danswer.server.manage.models import StandardAnswerCategory
-from ee.danswer.server.manage.models import StandardAnswerCategoryCreationRequest
-from ee.danswer.server.manage.models import StandardAnswerCreationRequest
+from ee.onyx.db.standard_answer import fetch_standard_answer
+from ee.onyx.db.standard_answer import fetch_standard_answer_categories
+from ee.onyx.db.standard_answer import fetch_standard_answer_category
+from ee.onyx.db.standard_answer import fetch_standard_answers
+from ee.onyx.db.standard_answer import insert_standard_answer
+from ee.onyx.db.standard_answer import insert_standard_answer_category
+from ee.onyx.db.standard_answer import remove_standard_answer
+from ee.onyx.db.standard_answer import update_standard_answer
+from ee.onyx.db.standard_answer import update_standard_answer_category
+from ee.onyx.server.manage.models import StandardAnswer
+from ee.onyx.server.manage.models import StandardAnswerCategory
+from ee.onyx.server.manage.models import StandardAnswerCategoryCreationRequest
+from ee.onyx.server.manage.models import StandardAnswerCreationRequest
+from onyx.auth.users import current_admin_user
+from onyx.db.engine import get_session
+from onyx.db.models import User
 
 router = APIRouter(prefix="/manage")
 

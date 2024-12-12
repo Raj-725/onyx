@@ -1,12 +1,12 @@
 from datetime import datetime
 from datetime import timezone
 
-from danswer.access.models import DocExternalAccess
-from danswer.access.models import ExternalAccess
-from danswer.connectors.gmail.connector import GmailConnector
-from danswer.connectors.interfaces import GenerateSlimDocumentOutput
-from danswer.db.models import ConnectorCredentialPair
-from danswer.utils.logger import setup_logger
+from onyx.access.models import DocExternalAccess
+from onyx.access.models import ExternalAccess
+from onyx.connectors.gmail.connector import GmailConnector
+from onyx.connectors.interfaces import GenerateSlimDocumentOutput
+from onyx.db.models import ConnectorCredentialPair
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

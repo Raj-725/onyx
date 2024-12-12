@@ -4,14 +4,14 @@ https://confluence.atlassian.com/conf85/check-who-can-view-a-page-1283360557.htm
 """
 from typing import Any
 
-from danswer.access.models import DocExternalAccess
-from danswer.access.models import ExternalAccess
-from danswer.connectors.confluence.connector import ConfluenceConnector
-from danswer.connectors.confluence.onyx_confluence import OnyxConfluence
-from danswer.connectors.confluence.utils import get_user_email_from_username__server
-from danswer.connectors.models import SlimDocument
-from danswer.db.models import ConnectorCredentialPair
-from danswer.utils.logger import setup_logger
+from onyx.access.models import DocExternalAccess
+from onyx.access.models import ExternalAccess
+from onyx.connectors.confluence.connector import ConfluenceConnector
+from onyx.connectors.confluence.onyx_confluence import OnyxConfluence
+from onyx.connectors.confluence.utils import get_user_email_from_username__server
+from onyx.connectors.models import SlimDocument
+from onyx.db.models import ConnectorCredentialPair
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

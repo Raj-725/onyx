@@ -22,13 +22,13 @@ SECTION_SEPARATOR = "\n\n"
 INDEX_SEPARATOR = "==="
 
 # For File Connector Metadata override file
-DANSWER_METADATA_FILENAME = ".danswer_metadata.json"
+DANSWER_METADATA_FILENAME = ".onyx_metadata.json"
 
 # Messages
 DISABLED_GEN_AI_MSG = (
-    "Your System Admin has disabled the Generative AI functionalities of Danswer.\n"
+    "Your System Admin has disabled the Generative AI functionalities of Onyx.\n"
     "Please contact them if you wish to have this enabled.\n"
-    "You can still use Danswer as a search engine."
+    "You can still use Onyx as a search engine."
 )
 
 DEFAULT_PERSONA_ID = 0
@@ -48,7 +48,7 @@ POSTGRES_UNKNOWN_APP_NAME = "unknown"
 
 # API Keys
 DANSWER_API_KEY_PREFIX = "API_KEY__"
-DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN = "danswerapikey.ai"
+DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN = "onyxapikey.ai"
 UNNAMED_KEY_PLACEHOLDER = "Unnamed"
 
 # Key-Value store keys
@@ -63,10 +63,10 @@ KV_GMAIL_SERVICE_ACCOUNT_KEY = "gmail_service_account_key"
 KV_GOOGLE_DRIVE_CRED_KEY = "google_drive_app_credential"
 KV_GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY = "google_drive_service_account_key"
 KV_GEN_AI_KEY_CHECK_TIME = "genai_api_key_last_check_time"
-KV_SETTINGS_KEY = "danswer_settings"
+KV_SETTINGS_KEY = "onyx_settings"
 KV_CUSTOMER_UUID_KEY = "customer_uuid"
 KV_INSTANCE_DOMAIN_KEY = "instance_domain"
-KV_ENTERPRISE_SETTINGS_KEY = "danswer_enterprise_settings"
+KV_ENTERPRISE_SETTINGS_KEY = "onyx_enterprise_settings"
 KV_CUSTOM_ANALYTICS_SCRIPT_KEY = "__custom_analytics_script__"
 KV_DOCUMENTS_SEEDED_KEY = "documents_seeded"
 
@@ -89,7 +89,7 @@ DANSWER_REDIS_FUNCTION_LOCK_PREFIX = "da_function_lock:"
 
 
 class DocumentSource(str, Enum):
-    # Special case, document passed in via Danswer APIs without specifying a source type
+    # Special case, document passed in via Onyx APIs without specifying a source type
     INGESTION_API = "ingestion_api"
     SLACK = "slack"
     WEB = "web"
@@ -214,7 +214,7 @@ class PostgresAdvisoryLocks(Enum):
     KOMBU_MESSAGE_CLEANUP_LOCK_ID = auto()
 
 
-class DanswerCeleryQueues:
+class OnyxCeleryQueues:
     # Light queue
     VESPA_METADATA_SYNC = "vespa_metadata_sync"
     DOC_PERMISSIONS_UPSERT = "doc_permissions_upsert"
@@ -229,7 +229,7 @@ class DanswerCeleryQueues:
     CONNECTOR_INDEXING = "connector_indexing"
 
 
-class DanswerRedisLocks:
+class OnyxRedisLocks:
     PRIMARY_WORKER = "da_lock:primary_worker"
     CHECK_VESPA_SYNC_BEAT_LOCK = "da_lock:check_vespa_sync_beat"
     CHECK_CONNECTOR_DELETION_BEAT_LOCK = "da_lock:check_connector_deletion_beat"
@@ -254,7 +254,7 @@ class DanswerRedisLocks:
     SLACK_BOT_HEARTBEAT_PREFIX = "da_heartbeat:slack_bot"
 
 
-class DanswerCeleryPriority(int, Enum):
+class OnyxCeleryPriority(int, Enum):
     HIGHEST = 0
     HIGH = auto()
     MEDIUM = auto()
@@ -262,7 +262,7 @@ class DanswerCeleryPriority(int, Enum):
     LOWEST = auto()
 
 
-class DanswerCeleryTask:
+class OnyxCeleryTask:
     CHECK_FOR_CONNECTOR_DELETION = "check_for_connector_deletion_task"
     CHECK_FOR_VESPA_SYNC_TASK = "check_for_vespa_sync_task"
     CHECK_FOR_INDEXING = "check_for_indexing"

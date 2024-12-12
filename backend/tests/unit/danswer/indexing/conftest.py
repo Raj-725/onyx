@@ -1,6 +1,6 @@
 import pytest
 
-from danswer.indexing.indexing_heartbeat import IndexingHeartbeatInterface
+from onyx.indexing.indexing_heartbeat import IndexingHeartbeatInterface
 
 
 class MockHeartbeat(IndexingHeartbeatInterface):

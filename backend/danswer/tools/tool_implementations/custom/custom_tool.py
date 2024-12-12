@@ -15,49 +15,49 @@ from langchain_core.messages import SystemMessage
 from pydantic import BaseModel
 from requests import JSONDecodeError
 
-from danswer.chat.prompt_builder.build import AnswerPromptBuilder
-from danswer.configs.constants import FileOrigin
-from danswer.db.engine import get_session_with_default_tenant
-from danswer.file_store.file_store import get_default_file_store
-from danswer.file_store.models import ChatFileType
-from danswer.file_store.models import InMemoryChatFile
-from danswer.llm.interfaces import LLM
-from danswer.llm.models import PreviousMessage
-from danswer.tools.base_tool import BaseTool
-from danswer.tools.message import ToolCallSummary
-from danswer.tools.models import CHAT_SESSION_ID_PLACEHOLDER
-from danswer.tools.models import DynamicSchemaInfo
-from danswer.tools.models import MESSAGE_ID_PLACEHOLDER
-from danswer.tools.models import ToolResponse
-from danswer.tools.tool_implementations.custom.custom_tool_prompts import (
+from onyx.chat.prompt_builder.build import AnswerPromptBuilder
+from onyx.configs.constants import FileOrigin
+from onyx.db.engine import get_session_with_default_tenant
+from onyx.file_store.file_store import get_default_file_store
+from onyx.file_store.models import ChatFileType
+from onyx.file_store.models import InMemoryChatFile
+from onyx.llm.interfaces import LLM
+from onyx.llm.models import PreviousMessage
+from onyx.tools.base_tool import BaseTool
+from onyx.tools.message import ToolCallSummary
+from onyx.tools.models import CHAT_SESSION_ID_PLACEHOLDER
+from onyx.tools.models import DynamicSchemaInfo
+from onyx.tools.models import MESSAGE_ID_PLACEHOLDER
+from onyx.tools.models import ToolResponse
+from onyx.tools.tool_implementations.custom.custom_tool_prompts import (
     SHOULD_USE_CUSTOM_TOOL_SYSTEM_PROMPT,
 )
-from danswer.tools.tool_implementations.custom.custom_tool_prompts import (
+from onyx.tools.tool_implementations.custom.custom_tool_prompts import (
     SHOULD_USE_CUSTOM_TOOL_USER_PROMPT,
 )
-from danswer.tools.tool_implementations.custom.custom_tool_prompts import (
+from onyx.tools.tool_implementations.custom.custom_tool_prompts import (
     TOOL_ARG_SYSTEM_PROMPT,
 )
-from danswer.tools.tool_implementations.custom.custom_tool_prompts import (
+from onyx.tools.tool_implementations.custom.custom_tool_prompts import (
     TOOL_ARG_USER_PROMPT,
 )
-from danswer.tools.tool_implementations.custom.custom_tool_prompts import USE_TOOL
-from danswer.tools.tool_implementations.custom.openapi_parsing import MethodSpec
-from danswer.tools.tool_implementations.custom.openapi_parsing import (
+from onyx.tools.tool_implementations.custom.custom_tool_prompts import USE_TOOL
+from onyx.tools.tool_implementations.custom.openapi_parsing import MethodSpec
+from onyx.tools.tool_implementations.custom.openapi_parsing import (
     openapi_to_method_specs,
 )
-from danswer.tools.tool_implementations.custom.openapi_parsing import openapi_to_url
-from danswer.tools.tool_implementations.custom.openapi_parsing import REQUEST_BODY
-from danswer.tools.tool_implementations.custom.openapi_parsing import (
+from onyx.tools.tool_implementations.custom.openapi_parsing import openapi_to_url
+from onyx.tools.tool_implementations.custom.openapi_parsing import REQUEST_BODY
+from onyx.tools.tool_implementations.custom.openapi_parsing import (
     validate_openapi_schema,
 )
-from danswer.tools.tool_implementations.custom.prompt import (
+from onyx.tools.tool_implementations.custom.prompt import (
     build_custom_image_generation_user_prompt,
 )
-from danswer.utils.headers import header_list_to_header_dict
-from danswer.utils.headers import HeaderItemDict
-from danswer.utils.logger import setup_logger
-from danswer.utils.special_types import JSON_ro
+from onyx.utils.headers import header_list_to_header_dict
+from onyx.utils.headers import HeaderItemDict
+from onyx.utils.logger import setup_logger
+from onyx.utils.special_types import JSON_ro
 
 logger = setup_logger()
 

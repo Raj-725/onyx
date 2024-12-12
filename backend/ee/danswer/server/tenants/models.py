@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
-from danswer.configs.constants import NotificationType
-from danswer.server.settings.models import GatingType
+from onyx.configs.constants import NotificationType
+from onyx.server.settings.models import GatingType
 
 
 class CheckoutSessionCreationRequest(BaseModel):

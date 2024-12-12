@@ -7,7 +7,7 @@ from typing import TypeVar
 
 import requests
 
-from danswer.utils.logger import setup_logger
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

@@ -5,12 +5,12 @@ from typing import Any
 
 from googleapiclient.discovery import Resource  # type: ignore
 
-from danswer.connectors.google_drive.constants import DRIVE_FOLDER_TYPE
-from danswer.connectors.google_drive.constants import DRIVE_SHORTCUT_TYPE
-from danswer.connectors.google_drive.models import GoogleDriveFileType
-from danswer.connectors.google_utils.google_utils import execute_paginated_retrieval
-from danswer.connectors.interfaces import SecondsSinceUnixEpoch
-from danswer.utils.logger import setup_logger
+from onyx.connectors.google_drive.constants import DRIVE_FOLDER_TYPE
+from onyx.connectors.google_drive.constants import DRIVE_SHORTCUT_TYPE
+from onyx.connectors.google_drive.models import GoogleDriveFileType
+from onyx.connectors.google_utils.google_utils import execute_paginated_retrieval
+from onyx.connectors.interfaces import SecondsSinceUnixEpoch
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

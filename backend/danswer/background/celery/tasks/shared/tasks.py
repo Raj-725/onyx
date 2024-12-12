@@ -6,22 +6,22 @@ from celery import Task
 from celery.exceptions import SoftTimeLimitExceeded
 from tenacity import RetryError
 
-from danswer.access.access import get_access_for_document
-from danswer.background.celery.apps.app_base import task_logger
-from danswer.background.celery.tasks.shared.RetryDocumentIndex import RetryDocumentIndex
-from danswer.configs.constants import DanswerCeleryTask
-from danswer.db.document import delete_document_by_connector_credential_pair__no_commit
-from danswer.db.document import delete_documents_complete__no_commit
-from danswer.db.document import get_document
-from danswer.db.document import get_document_connector_count
-from danswer.db.document import mark_document_as_modified
-from danswer.db.document import mark_document_as_synced
-from danswer.db.document_set import fetch_document_sets_for_document
-from danswer.db.engine import get_session_with_tenant
-from danswer.document_index.document_index_utils import get_both_index_names
-from danswer.document_index.factory import get_default_document_index
-from danswer.document_index.interfaces import VespaDocumentFields
-from danswer.server.documents.models import ConnectorCredentialPairIdentifier
+from onyx.access.access import get_access_for_document
+from onyx.background.celery.apps.app_base import task_logger
+from onyx.background.celery.tasks.shared.RetryDocumentIndex import RetryDocumentIndex
+from onyx.configs.constants import OnyxCeleryTask
+from onyx.db.document import delete_document_by_connector_credential_pair__no_commit
+from onyx.db.document import delete_documents_complete__no_commit
+from onyx.db.document import get_document
+from onyx.db.document import get_document_connector_count
+from onyx.db.document import mark_document_as_modified
+from onyx.db.document import mark_document_as_synced
+from onyx.db.document_set import fetch_document_sets_for_document
+from onyx.db.engine import get_session_with_tenant
+from onyx.document_index.document_index_utils import get_both_index_names
+from onyx.document_index.factory import get_default_document_index
+from onyx.document_index.interfaces import VespaDocumentFields
+from onyx.server.documents.models import ConnectorCredentialPairIdentifier
 
 DOCUMENT_BY_CC_PAIR_CLEANUP_MAX_RETRIES = 3
 
@@ -32,7 +32,7 @@ LIGHT_TIME_LIMIT = LIGHT_SOFT_TIME_LIMIT + 15
 
 
 @shared_task(
-    name=DanswerCeleryTask.DOCUMENT_BY_CC_PAIR_CLEANUP_TASK,
+    name=OnyxCeleryTask.DOCUMENT_BY_CC_PAIR_CLEANUP_TASK,
     soft_time_limit=LIGHT_SOFT_TIME_LIMIT,
     time_limit=LIGHT_TIME_LIMIT,
     max_retries=DOCUMENT_BY_CC_PAIR_CLEANUP_MAX_RETRIES,

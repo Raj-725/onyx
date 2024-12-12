@@ -1,16 +1,16 @@
 from langchain.schema.messages import HumanMessage
 
-from danswer.chat.models import LlmDoc
-from danswer.chat.models import PromptConfig
-from danswer.configs.chat_configs import LANGUAGE_HINT
-from danswer.context.search.models import InferenceChunk
-from danswer.db.search_settings import get_multilingual_expansion
-from danswer.llm.utils import message_to_prompt_and_imgs
-from danswer.prompts.direct_qa_prompts import CONTEXT_BLOCK
-from danswer.prompts.direct_qa_prompts import HISTORY_BLOCK
-from danswer.prompts.direct_qa_prompts import JSON_PROMPT
-from danswer.prompts.prompt_utils import add_date_time_to_prompt
-from danswer.prompts.prompt_utils import build_complete_context_str
+from onyx.chat.models import LlmDoc
+from onyx.chat.models import PromptConfig
+from onyx.configs.chat_configs import LANGUAGE_HINT
+from onyx.context.search.models import InferenceChunk
+from onyx.db.search_settings import get_multilingual_expansion
+from onyx.llm.utils import message_to_prompt_and_imgs
+from onyx.prompts.direct_qa_prompts import CONTEXT_BLOCK
+from onyx.prompts.direct_qa_prompts import HISTORY_BLOCK
+from onyx.prompts.direct_qa_prompts import JSON_PROMPT
+from onyx.prompts.prompt_utils import add_date_time_to_prompt
+from onyx.prompts.prompt_utils import build_complete_context_str
 
 
 def _build_strong_llm_quotes_prompt(

@@ -3,11 +3,11 @@ from typing import cast
 import requests
 import stripe
 
-from danswer.configs.app_configs import CONTROL_PLANE_API_BASE_URL
-from danswer.utils.logger import setup_logger
-from ee.danswer.configs.app_configs import STRIPE_PRICE_ID
-from ee.danswer.configs.app_configs import STRIPE_SECRET_KEY
-from ee.danswer.server.tenants.access import generate_data_plane_token
+from ee.onyx.configs.app_configs import STRIPE_PRICE_ID
+from ee.onyx.configs.app_configs import STRIPE_SECRET_KEY
+from ee.onyx.server.tenants.access import generate_data_plane_token
+from onyx.configs.app_configs import CONTROL_PLANE_API_BASE_URL
+from onyx.utils.logger import setup_logger
 
 stripe.api_key = STRIPE_SECRET_KEY
 

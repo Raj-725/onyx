@@ -1,9 +1,9 @@
-from danswer.connectors.google_drive.connector import GoogleDriveConnector
-from danswer.connectors.google_utils.google_utils import execute_paginated_retrieval
-from danswer.connectors.google_utils.resources import get_admin_service
-from danswer.db.models import ConnectorCredentialPair
-from danswer.utils.logger import setup_logger
-from ee.danswer.db.external_perm import ExternalUserGroup
+from ee.onyx.db.external_perm import ExternalUserGroup
+from onyx.connectors.google_drive.connector import GoogleDriveConnector
+from onyx.connectors.google_utils.google_utils import execute_paginated_retrieval
+from onyx.connectors.google_utils.resources import get_admin_service
+from onyx.db.models import ConnectorCredentialPair
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -19,7 +19,7 @@ def gdrive_group_sync(
         google_drive_connector.creds, google_drive_connector.primary_admin_email
     )
 
-    danswer_groups: list[ExternalUserGroup] = []
+    onyx_groups: list[ExternalUserGroup] = []
     for group in execute_paginated_retrieval(
         admin_service.groups().list,
         list_key="groups",
@@ -42,11 +42,11 @@ def gdrive_group_sync(
         if not group_member_emails:
             continue
 
-        danswer_groups.append(
+        onyx_groups.append(
             ExternalUserGroup(
                 id=group_email,
                 user_emails=list(group_member_emails),
             )
         )
 
-    return danswer_groups
+    return onyx_groups

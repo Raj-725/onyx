@@ -6,13 +6,13 @@ from langchain.schema.messages import HumanMessage
 from langchain.schema.messages import SystemMessage
 from pydantic import BaseModel
 
-from danswer.configs.constants import MessageType
-from danswer.file_store.models import InMemoryChatFile
-from danswer.llm.utils import build_content_with_imgs
-from danswer.tools.models import ToolCallFinalResult
+from onyx.configs.constants import MessageType
+from onyx.file_store.models import InMemoryChatFile
+from onyx.llm.utils import build_content_with_imgs
+from onyx.tools.models import ToolCallFinalResult
 
 if TYPE_CHECKING:
-    from danswer.db.models import ChatMessage
+    from onyx.db.models import ChatMessage
 
 
 class PreviousMessage(BaseModel):

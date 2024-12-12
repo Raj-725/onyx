@@ -6,33 +6,33 @@ from fastapi import HTTPException
 from fastapi.datastructures import Headers
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import is_user_admin
-from danswer.chat.models import CitationInfo
-from danswer.chat.models import LlmDoc
-from danswer.chat.models import PersonaOverrideConfig
-from danswer.chat.models import ThreadMessage
-from danswer.configs.constants import DEFAULT_PERSONA_ID
-from danswer.configs.constants import MessageType
-from danswer.context.search.models import InferenceSection
-from danswer.context.search.models import RerankingDetails
-from danswer.context.search.models import RetrievalDetails
-from danswer.db.chat import create_chat_session
-from danswer.db.chat import get_chat_messages_by_session
-from danswer.db.llm import fetch_existing_doc_sets
-from danswer.db.llm import fetch_existing_tools
-from danswer.db.models import ChatMessage
-from danswer.db.models import Persona
-from danswer.db.models import Prompt
-from danswer.db.models import Tool
-from danswer.db.models import User
-from danswer.db.persona import get_prompts_by_ids
-from danswer.llm.models import PreviousMessage
-from danswer.natural_language_processing.utils import BaseTokenizer
-from danswer.server.query_and_chat.models import CreateChatMessageRequest
-from danswer.tools.tool_implementations.custom.custom_tool import (
+from onyx.auth.users import is_user_admin
+from onyx.chat.models import CitationInfo
+from onyx.chat.models import LlmDoc
+from onyx.chat.models import PersonaOverrideConfig
+from onyx.chat.models import ThreadMessage
+from onyx.configs.constants import DEFAULT_PERSONA_ID
+from onyx.configs.constants import MessageType
+from onyx.context.search.models import InferenceSection
+from onyx.context.search.models import RerankingDetails
+from onyx.context.search.models import RetrievalDetails
+from onyx.db.chat import create_chat_session
+from onyx.db.chat import get_chat_messages_by_session
+from onyx.db.llm import fetch_existing_doc_sets
+from onyx.db.llm import fetch_existing_tools
+from onyx.db.models import ChatMessage
+from onyx.db.models import Persona
+from onyx.db.models import Prompt
+from onyx.db.models import Tool
+from onyx.db.models import User
+from onyx.db.persona import get_prompts_by_ids
+from onyx.llm.models import PreviousMessage
+from onyx.natural_language_processing.utils import BaseTokenizer
+from onyx.server.query_and_chat.models import CreateChatMessageRequest
+from onyx.tools.tool_implementations.custom.custom_tool import (
     build_custom_tools_from_openapi_schema_and_headers,
 )
-from danswer.utils.logger import setup_logger
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 
@@ -56,7 +56,7 @@ def prepare_chat_message_request(
         user_id=user.id if user else None,
         # If using an override, this id will be ignored later on
         persona_id=persona_id or DEFAULT_PERSONA_ID,
-        danswerbot_flow=True,
+        onyxbot_flow=True,
         slack_thread_id=message_ts_to_respond_to,
     )
 

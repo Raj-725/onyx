@@ -11,16 +11,16 @@ from pydantic import BaseModel
 from pydantic import Field
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import current_user
-from danswer.configs.constants import MessageType
-from danswer.db.chat import create_new_chat_message
-from danswer.db.chat import get_chat_message
-from danswer.db.chat import get_chat_messages_by_session
-from danswer.db.chat import get_chat_session_by_id
-from danswer.db.chat import get_or_create_root_message
-from danswer.db.engine import get_session
-from danswer.db.models import User
-from danswer.llm.utils import check_number_of_tokens
+from onyx.auth.users import current_user
+from onyx.configs.constants import MessageType
+from onyx.db.chat import create_new_chat_message
+from onyx.db.chat import get_chat_message
+from onyx.db.chat import get_chat_messages_by_session
+from onyx.db.chat import get_chat_session_by_id
+from onyx.db.chat import get_or_create_root_message
+from onyx.db.engine import get_session
+from onyx.db.models import User
+from onyx.llm.utils import check_number_of_tokens
 
 router = APIRouter(prefix="")
 

@@ -8,40 +8,40 @@ from google.oauth2.credentials import Credentials as OAuthCredentials  # type: i
 from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore
 from sqlalchemy.orm import Session
 
-from danswer.configs.app_configs import WEB_DOMAIN
-from danswer.configs.constants import DocumentSource
-from danswer.configs.constants import KV_CRED_KEY
-from danswer.configs.constants import KV_GMAIL_CRED_KEY
-from danswer.configs.constants import KV_GMAIL_SERVICE_ACCOUNT_KEY
-from danswer.configs.constants import KV_GOOGLE_DRIVE_CRED_KEY
-from danswer.configs.constants import KV_GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY
-from danswer.connectors.google_utils.resources import get_drive_service
-from danswer.connectors.google_utils.resources import get_gmail_service
-from danswer.connectors.google_utils.shared_constants import (
+from onyx.configs.app_configs import WEB_DOMAIN
+from onyx.configs.constants import DocumentSource
+from onyx.configs.constants import KV_CRED_KEY
+from onyx.configs.constants import KV_GMAIL_CRED_KEY
+from onyx.configs.constants import KV_GMAIL_SERVICE_ACCOUNT_KEY
+from onyx.configs.constants import KV_GOOGLE_DRIVE_CRED_KEY
+from onyx.configs.constants import KV_GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY
+from onyx.connectors.google_utils.resources import get_drive_service
+from onyx.connectors.google_utils.resources import get_gmail_service
+from onyx.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_DICT_SERVICE_ACCOUNT_KEY,
 )
-from danswer.connectors.google_utils.shared_constants import (
+from onyx.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_DICT_TOKEN_KEY,
 )
-from danswer.connectors.google_utils.shared_constants import (
+from onyx.connectors.google_utils.shared_constants import (
     DB_CREDENTIALS_PRIMARY_ADMIN_KEY,
 )
-from danswer.connectors.google_utils.shared_constants import (
+from onyx.connectors.google_utils.shared_constants import (
     GOOGLE_SCOPES,
 )
-from danswer.connectors.google_utils.shared_constants import (
+from onyx.connectors.google_utils.shared_constants import (
     MISSING_SCOPES_ERROR_STR,
 )
-from danswer.connectors.google_utils.shared_constants import (
+from onyx.connectors.google_utils.shared_constants import (
     ONYX_SCOPE_INSTRUCTIONS,
 )
-from danswer.db.credentials import update_credential_json
-from danswer.db.models import User
-from danswer.key_value_store.factory import get_kv_store
-from danswer.server.documents.models import CredentialBase
-from danswer.server.documents.models import GoogleAppCredentials
-from danswer.server.documents.models import GoogleServiceAccountKey
-from danswer.utils.logger import setup_logger
+from onyx.db.credentials import update_credential_json
+from onyx.db.models import User
+from onyx.key_value_store.factory import get_kv_store
+from onyx.server.documents.models import CredentialBase
+from onyx.server.documents.models import GoogleAppCredentials
+from onyx.server.documents.models import GoogleServiceAccountKey
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

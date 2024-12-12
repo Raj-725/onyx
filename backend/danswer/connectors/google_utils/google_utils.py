@@ -8,9 +8,9 @@ from typing import Any
 
 from googleapiclient.errors import HttpError  # type: ignore
 
-from danswer.connectors.google_drive.models import GoogleDriveFileType
-from danswer.utils.logger import setup_logger
-from danswer.utils.retry_wrapper import retry_builder
+from onyx.connectors.google_drive.models import GoogleDriveFileType
+from onyx.utils.logger import setup_logger
+from onyx.utils.retry_wrapper import retry_builder
 
 logger = setup_logger()
 

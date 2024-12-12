@@ -10,8 +10,8 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import UnaryExpression
 
-from danswer.db.models import ChatMessage
-from danswer.db.models import ChatSession
+from onyx.db.models import ChatMessage
+from onyx.db.models import ChatSession
 
 SortByOptions = Literal["time_sent"]
 

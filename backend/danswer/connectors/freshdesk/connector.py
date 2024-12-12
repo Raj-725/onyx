@@ -6,17 +6,17 @@ from typing import List
 
 import requests
 
-from danswer.configs.app_configs import INDEX_BATCH_SIZE
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.interfaces import GenerateDocumentsOutput
-from danswer.connectors.interfaces import LoadConnector
-from danswer.connectors.interfaces import PollConnector
-from danswer.connectors.interfaces import SecondsSinceUnixEpoch
-from danswer.connectors.models import ConnectorMissingCredentialError
-from danswer.connectors.models import Document
-from danswer.connectors.models import Section
-from danswer.file_processing.html_utils import parse_html_page_basic
-from danswer.utils.logger import setup_logger
+from onyx.configs.app_configs import INDEX_BATCH_SIZE
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.interfaces import GenerateDocumentsOutput
+from onyx.connectors.interfaces import LoadConnector
+from onyx.connectors.interfaces import PollConnector
+from onyx.connectors.interfaces import SecondsSinceUnixEpoch
+from onyx.connectors.models import ConnectorMissingCredentialError
+from onyx.connectors.models import Document
+from onyx.connectors.models import Section
+from onyx.file_processing.html_utils import parse_html_page_basic
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

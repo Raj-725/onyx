@@ -6,16 +6,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 
-from danswer.auth.api_key import ApiKeyDescriptor
-from danswer.auth.api_key import build_displayable_api_key
-from danswer.auth.api_key import generate_api_key
-from danswer.auth.api_key import hash_api_key
-from danswer.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
-from danswer.configs.constants import DANSWER_API_KEY_PREFIX
-from danswer.configs.constants import UNNAMED_KEY_PLACEHOLDER
-from danswer.db.models import ApiKey
-from danswer.db.models import User
-from danswer.server.api_key.models import APIKeyArgs
+from onyx.auth.api_key import ApiKeyDescriptor
+from onyx.auth.api_key import build_displayable_api_key
+from onyx.auth.api_key import generate_api_key
+from onyx.auth.api_key import hash_api_key
+from onyx.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
+from onyx.configs.constants import DANSWER_API_KEY_PREFIX
+from onyx.configs.constants import UNNAMED_KEY_PLACEHOLDER
+from onyx.db.models import ApiKey
+from onyx.db.models import User
+from onyx.server.api_key.models import APIKeyArgs
 from shared_configs.configs import MULTI_TENANT
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 

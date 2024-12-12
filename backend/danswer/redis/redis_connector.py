@@ -2,14 +2,14 @@ import time
 
 import redis
 
-from danswer.db.models import SearchSettings
-from danswer.redis.redis_connector_delete import RedisConnectorDelete
-from danswer.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
-from danswer.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
-from danswer.redis.redis_connector_index import RedisConnectorIndex
-from danswer.redis.redis_connector_prune import RedisConnectorPrune
-from danswer.redis.redis_connector_stop import RedisConnectorStop
-from danswer.redis.redis_pool import get_redis_client
+from onyx.db.models import SearchSettings
+from onyx.redis.redis_connector_delete import RedisConnectorDelete
+from onyx.redis.redis_connector_doc_perm_sync import RedisConnectorPermissionSync
+from onyx.redis.redis_connector_ext_group_sync import RedisConnectorExternalGroupSync
+from onyx.redis.redis_connector_index import RedisConnectorIndex
+from onyx.redis.redis_connector_prune import RedisConnectorPrune
+from onyx.redis.redis_connector_stop import RedisConnectorStop
+from onyx.redis.redis_pool import get_redis_client
 
 
 class RedisConnector:

@@ -16,31 +16,31 @@ from slack_sdk.models.blocks import SectionBlock
 from slack_sdk.models.blocks.basic_components import MarkdownTextObject
 from slack_sdk.models.blocks.block_elements import ImageElement
 
-from danswer.chat.models import ChatDanswerBotResponse
-from danswer.configs.app_configs import DISABLE_GENERATIVE_AI
-from danswer.configs.app_configs import WEB_DOMAIN
-from danswer.configs.constants import DocumentSource
-from danswer.configs.constants import SearchFeedbackType
-from danswer.configs.danswerbot_configs import DANSWER_BOT_NUM_DOCS_TO_DISPLAY
-from danswer.context.search.models import SavedSearchDoc
-from danswer.danswerbot.slack.constants import CONTINUE_IN_WEB_UI_ACTION_ID
-from danswer.danswerbot.slack.constants import DISLIKE_BLOCK_ACTION_ID
-from danswer.danswerbot.slack.constants import FEEDBACK_DOC_BUTTON_BLOCK_ACTION_ID
-from danswer.danswerbot.slack.constants import FOLLOWUP_BUTTON_ACTION_ID
-from danswer.danswerbot.slack.constants import FOLLOWUP_BUTTON_RESOLVED_ACTION_ID
-from danswer.danswerbot.slack.constants import IMMEDIATE_RESOLVED_BUTTON_ACTION_ID
-from danswer.danswerbot.slack.constants import LIKE_BLOCK_ACTION_ID
-from danswer.danswerbot.slack.formatting import format_slack_message
-from danswer.danswerbot.slack.icons import source_to_github_img_link
-from danswer.danswerbot.slack.models import SlackMessageInfo
-from danswer.danswerbot.slack.utils import build_continue_in_web_ui_id
-from danswer.danswerbot.slack.utils import build_feedback_id
-from danswer.danswerbot.slack.utils import remove_slack_text_interactions
-from danswer.danswerbot.slack.utils import translate_vespa_highlight_to_slack
-from danswer.db.chat import get_chat_session_by_message_id
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.models import ChannelConfig
-from danswer.utils.text_processing import decode_escapes
+from onyx.chat.models import ChatOnyxBotResponse
+from onyx.configs.app_configs import DISABLE_GENERATIVE_AI
+from onyx.configs.app_configs import WEB_DOMAIN
+from onyx.configs.constants import DocumentSource
+from onyx.configs.constants import SearchFeedbackType
+from onyx.configs.onyxbot_configs import DANSWER_BOT_NUM_DOCS_TO_DISPLAY
+from onyx.context.search.models import SavedSearchDoc
+from onyx.db.chat import get_chat_session_by_message_id
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.models import ChannelConfig
+from onyx.onyxbot.slack.constants import CONTINUE_IN_WEB_UI_ACTION_ID
+from onyx.onyxbot.slack.constants import DISLIKE_BLOCK_ACTION_ID
+from onyx.onyxbot.slack.constants import FEEDBACK_DOC_BUTTON_BLOCK_ACTION_ID
+from onyx.onyxbot.slack.constants import FOLLOWUP_BUTTON_ACTION_ID
+from onyx.onyxbot.slack.constants import FOLLOWUP_BUTTON_RESOLVED_ACTION_ID
+from onyx.onyxbot.slack.constants import IMMEDIATE_RESOLVED_BUTTON_ACTION_ID
+from onyx.onyxbot.slack.constants import LIKE_BLOCK_ACTION_ID
+from onyx.onyxbot.slack.formatting import format_slack_message
+from onyx.onyxbot.slack.icons import source_to_github_img_link
+from onyx.onyxbot.slack.models import SlackMessageInfo
+from onyx.onyxbot.slack.utils import build_continue_in_web_ui_id
+from onyx.onyxbot.slack.utils import build_feedback_id
+from onyx.onyxbot.slack.utils import remove_slack_text_interactions
+from onyx.onyxbot.slack.utils import translate_vespa_highlight_to_slack
+from onyx.utils.text_processing import decode_escapes
 
 _MAX_BLURB_LEN = 45
 
@@ -325,7 +325,7 @@ def _build_sources_blocks(
 
 
 def _priority_ordered_documents_blocks(
-    answer: ChatDanswerBotResponse,
+    answer: ChatOnyxBotResponse,
 ) -> list[Block]:
     docs_response = answer.docs if answer.docs else None
     top_docs = docs_response.top_documents if docs_response else []
@@ -348,7 +348,7 @@ def _priority_ordered_documents_blocks(
 
 
 def _build_citations_blocks(
-    answer: ChatDanswerBotResponse,
+    answer: ChatOnyxBotResponse,
 ) -> list[Block]:
     docs_response = answer.docs if answer.docs else None
     top_docs = docs_response.top_documents if docs_response else []
@@ -368,7 +368,7 @@ def _build_citations_blocks(
 
 
 def _build_qa_response_blocks(
-    answer: ChatDanswerBotResponse,
+    answer: ChatOnyxBotResponse,
     process_message_for_citations: bool = False,
 ) -> list[Block]:
     retrieval_info = answer.docs
@@ -450,7 +450,7 @@ def _build_continue_in_web_ui_block(
             elements=[
                 ButtonElement(
                     action_id=CONTINUE_IN_WEB_UI_ACTION_ID,
-                    text="Continue Chat in Danswer!",
+                    text="Continue Chat in Onyx!",
                     style="primary",
                     url=f"{WEB_DOMAIN}/chat?slackChatId={chat_session.id}",
                 ),
@@ -506,7 +506,7 @@ def build_follow_up_resolved_blocks(
 
 
 def build_slack_response_blocks(
-    answer: ChatDanswerBotResponse,
+    answer: ChatOnyxBotResponse,
     tenant_id: str | None,
     message_info: SlackMessageInfo,
     channel_conf: ChannelConfig | None,
@@ -518,7 +518,7 @@ def build_slack_response_blocks(
     This function is a top level function that builds all the blocks for the Slack response.
     It also handles combining all the blocks together.
     """
-    # If called with the DanswerBot slash command, the question is lost so we have to reshow it
+    # If called with the OnyxBot slash command, the question is lost so we have to reshow it
     restate_question_block = get_restate_blocks(
         message_info.thread_messages[-1].message, message_info.is_bot_msg
     )

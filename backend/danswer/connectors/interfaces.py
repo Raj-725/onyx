@@ -2,9 +2,9 @@ import abc
 from collections.abc import Iterator
 from typing import Any
 
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.models import Document
-from danswer.connectors.models import SlimDocument
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.models import Document
+from onyx.connectors.models import SlimDocument
 
 
 SecondsSinceUnixEpoch = float

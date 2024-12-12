@@ -8,11 +8,11 @@ from celery import Celery
 from pydantic import BaseModel
 from redis.lock import Lock as RedisLock
 
-from danswer.access.models import DocExternalAccess
-from danswer.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
-from danswer.configs.constants import DanswerCeleryPriority
-from danswer.configs.constants import DanswerCeleryQueues
-from danswer.configs.constants import DanswerCeleryTask
+from onyx.access.models import DocExternalAccess
+from onyx.configs.constants import CELERY_VESPA_SYNC_BEAT_LOCK_TIMEOUT
+from onyx.configs.constants import OnyxCeleryPriority
+from onyx.configs.constants import OnyxCeleryQueues
+from onyx.configs.constants import OnyxCeleryTask
 
 
 class RedisConnectorPermissionSyncPayload(BaseModel):
@@ -152,7 +152,7 @@ class RedisConnectorPermissionSync:
             self.redis.sadd(self.taskset_key, custom_task_id)
 
             result = celery_app.send_task(
-                DanswerCeleryTask.UPDATE_EXTERNAL_DOCUMENT_PERMISSIONS_TASK,
+                OnyxCeleryTask.UPDATE_EXTERNAL_DOCUMENT_PERMISSIONS_TASK,
                 kwargs=dict(
                     tenant_id=self.tenant_id,
                     serialized_doc_external_access=doc_perm.to_dict(),
@@ -160,9 +160,9 @@ class RedisConnectorPermissionSync:
                     connector_id=connector_id,
                     credential_id=credential_id,
                 ),
-                queue=DanswerCeleryQueues.DOC_PERMISSIONS_UPSERT,
+                queue=OnyxCeleryQueues.DOC_PERMISSIONS_UPSERT,
                 task_id=custom_task_id,
-                priority=DanswerCeleryPriority.MEDIUM,
+                priority=OnyxCeleryPriority.MEDIUM,
             )
             async_results.append(result)
 

@@ -1,13 +1,13 @@
 from slack_sdk import WebClient
 
-from danswer.access.models import DocExternalAccess
-from danswer.access.models import ExternalAccess
-from danswer.connectors.slack.connector import get_channels
-from danswer.connectors.slack.connector import make_paginated_slack_api_call_w_retries
-from danswer.connectors.slack.connector import SlackPollConnector
-from danswer.db.models import ConnectorCredentialPair
-from danswer.utils.logger import setup_logger
-from ee.danswer.external_permissions.slack.utils import fetch_user_id_to_email_map
+from ee.onyx.external_permissions.slack.utils import fetch_user_id_to_email_map
+from onyx.access.models import DocExternalAccess
+from onyx.access.models import ExternalAccess
+from onyx.connectors.slack.connector import get_channels
+from onyx.connectors.slack.connector import make_paginated_slack_api_call_w_retries
+from onyx.connectors.slack.connector import SlackPollConnector
+from onyx.db.models import ConnectorCredentialPair
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()

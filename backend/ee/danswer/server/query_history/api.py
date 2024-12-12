@@ -13,21 +13,21 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import current_admin_user
-from danswer.auth.users import get_display_email
-from danswer.chat.chat_utils import create_chat_chain
-from danswer.configs.constants import MessageType
-from danswer.configs.constants import QAFeedbackType
-from danswer.configs.constants import SessionType
-from danswer.db.chat import get_chat_session_by_id
-from danswer.db.chat import get_chat_sessions_by_user
-from danswer.db.engine import get_session
-from danswer.db.models import ChatMessage
-from danswer.db.models import ChatSession
-from danswer.db.models import User
-from danswer.server.query_and_chat.models import ChatSessionDetails
-from danswer.server.query_and_chat.models import ChatSessionsResponse
-from ee.danswer.db.query_history import fetch_chat_sessions_eagerly_by_time
+from ee.onyx.db.query_history import fetch_chat_sessions_eagerly_by_time
+from onyx.auth.users import current_admin_user
+from onyx.auth.users import get_display_email
+from onyx.chat.chat_utils import create_chat_chain
+from onyx.configs.constants import MessageType
+from onyx.configs.constants import QAFeedbackType
+from onyx.configs.constants import SessionType
+from onyx.db.chat import get_chat_session_by_id
+from onyx.db.chat import get_chat_sessions_by_user
+from onyx.db.engine import get_session
+from onyx.db.models import ChatMessage
+from onyx.db.models import ChatSession
+from onyx.db.models import User
+from onyx.server.query_and_chat.models import ChatSessionDetails
+from onyx.server.query_and_chat.models import ChatSessionsResponse
 
 router = APIRouter()
 
@@ -179,7 +179,7 @@ class QuestionAnswerPairSnapshot(BaseModel):
 
 
 def determine_flow_type(chat_session: ChatSession) -> SessionType:
-    return SessionType.SLACK if chat_session.danswerbot_flow else SessionType.CHAT
+    return SessionType.SLACK if chat_session.onyxbot_flow else SessionType.CHAT
 
 
 def fetch_and_process_chat_session_history_minimal(
@@ -454,7 +454,5 @@ def get_query_history_as_csv(
     return StreamingResponse(
         iter([stream.getvalue()]),
         media_type="text/csv",
-        headers={
-            "Content-Disposition": "attachment;filename=danswer_query_history.csv"
-        },
+        headers={"Content-Disposition": "attachment;filename=onyx_query_history.csv"},
     )

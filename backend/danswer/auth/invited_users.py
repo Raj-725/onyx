@@ -1,9 +1,9 @@
 from typing import cast
 
-from danswer.configs.constants import KV_USER_STORE_KEY
-from danswer.key_value_store.factory import get_kv_store
-from danswer.key_value_store.interface import KvKeyNotFoundError
-from danswer.utils.special_types import JSON_ro
+from onyx.configs.constants import KV_USER_STORE_KEY
+from onyx.key_value_store.factory import get_kv_store
+from onyx.key_value_store.interface import KvKeyNotFoundError
+from onyx.utils.special_types import JSON_ro
 
 
 def get_invited_users() -> list[str]:

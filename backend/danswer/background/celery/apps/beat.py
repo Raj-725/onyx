@@ -6,19 +6,19 @@ from celery import signals
 from celery.beat import PersistentScheduler  # type: ignore
 from celery.signals import beat_init
 
-import danswer.background.celery.apps.app_base as app_base
-from danswer.configs.constants import POSTGRES_CELERY_BEAT_APP_NAME
-from danswer.db.engine import get_all_tenant_ids
-from danswer.db.engine import SqlEngine
-from danswer.utils.logger import setup_logger
-from danswer.utils.variable_functionality import fetch_versioned_implementation
+import onyx.background.celery.apps.app_base as app_base
+from onyx.configs.constants import POSTGRES_CELERY_BEAT_APP_NAME
+from onyx.db.engine import get_all_tenant_ids
+from onyx.db.engine import SqlEngine
+from onyx.utils.logger import setup_logger
+from onyx.utils.variable_functionality import fetch_versioned_implementation
 from shared_configs.configs import IGNORED_SYNCING_TENANT_LIST
 from shared_configs.configs import MULTI_TENANT
 
 logger = setup_logger(__name__)
 
 celery_app = Celery(__name__)
-celery_app.config_from_object("danswer.background.celery.configs.beat")
+celery_app.config_from_object("onyx.background.celery.configs.beat")
 
 
 class DynamicTenantScheduler(PersistentScheduler):
@@ -59,7 +59,7 @@ class DynamicTenantScheduler(PersistentScheduler):
 
             logger.info("Fetching tasks to schedule")
             tasks_to_schedule = fetch_versioned_implementation(
-                "danswer.background.celery.tasks.beat_schedule", "get_tasks_to_schedule"
+                "onyx.background.celery.tasks.beat_schedule", "get_tasks_to_schedule"
             )
 
             new_beat_schedule: dict[str, dict[str, Any]] = {}

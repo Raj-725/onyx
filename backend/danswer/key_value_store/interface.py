@@ -1,6 +1,6 @@
 import abc
 
-from danswer.utils.special_types import JSON_ro
+from onyx.utils.special_types import JSON_ro
 
 
 class KvKeyNotFoundError(Exception):

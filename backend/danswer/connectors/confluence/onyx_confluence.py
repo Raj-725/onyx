@@ -10,7 +10,7 @@ from urllib.parse import quote
 from atlassian import Confluence  # type:ignore
 from requests import HTTPError
 
-from danswer.utils.logger import setup_logger
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

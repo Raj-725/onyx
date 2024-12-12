@@ -5,8 +5,8 @@ from pydantic import BaseModel
 from pydantic import field_validator
 from pydantic import model_validator
 
-from danswer.db.models import StandardAnswer as StandardAnswerModel
-from danswer.db.models import StandardAnswerCategory as StandardAnswerCategoryModel
+from onyx.db.models import StandardAnswer as StandardAnswerModel
+from onyx.db.models import StandardAnswerCategory as StandardAnswerCategoryModel
 
 
 class StandardAnswerCategoryCreationRequest(BaseModel):

@@ -9,17 +9,17 @@ from celery.signals import worker_init
 from celery.signals import worker_ready
 from celery.signals import worker_shutdown
 
-import danswer.background.celery.apps.app_base as app_base
-from danswer.configs.constants import POSTGRES_CELERY_WORKER_LIGHT_APP_NAME
-from danswer.db.engine import SqlEngine
-from danswer.utils.logger import setup_logger
+import onyx.background.celery.apps.app_base as app_base
+from onyx.configs.constants import POSTGRES_CELERY_WORKER_LIGHT_APP_NAME
+from onyx.db.engine import SqlEngine
+from onyx.utils.logger import setup_logger
 from shared_configs.configs import MULTI_TENANT
 
 
 logger = setup_logger()
 
 celery_app = Celery(__name__)
-celery_app.config_from_object("danswer.background.celery.configs.light")
+celery_app.config_from_object("onyx.background.celery.configs.light")
 
 
 @signals.task_prerun.connect
@@ -89,9 +89,9 @@ def on_setup_logging(
 
 celery_app.autodiscover_tasks(
     [
-        "danswer.background.celery.tasks.shared",
-        "danswer.background.celery.tasks.vespa",
-        "danswer.background.celery.tasks.connector_deletion",
-        "danswer.background.celery.tasks.doc_permission_syncing",
+        "onyx.background.celery.tasks.shared",
+        "onyx.background.celery.tasks.vespa",
+        "onyx.background.celery.tasks.connector_deletion",
+        "onyx.background.celery.tasks.doc_permission_syncing",
     ]
 )

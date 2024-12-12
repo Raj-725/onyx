@@ -6,16 +6,16 @@ from urllib.parse import quote
 
 import bs4
 
-from danswer.configs.app_configs import (
+from onyx.configs.app_configs import (
     CONFLUENCE_CONNECTOR_ATTACHMENT_CHAR_COUNT_THRESHOLD,
 )
-from danswer.configs.app_configs import CONFLUENCE_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD
-from danswer.connectors.confluence.onyx_confluence import (
+from onyx.configs.app_configs import CONFLUENCE_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD
+from onyx.connectors.confluence.onyx_confluence import (
     OnyxConfluence,
 )
-from danswer.file_processing.extract_file_text import extract_file_text
-from danswer.file_processing.html_utils import format_document_soup
-from danswer.utils.logger import setup_logger
+from onyx.file_processing.extract_file_text import extract_file_text
+from onyx.file_processing.html_utils import format_document_soup
+from onyx.utils.logger import setup_logger
 
 logger = setup_logger()
 

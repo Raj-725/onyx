@@ -10,48 +10,48 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from danswer.auth.users import current_curator_or_admin_user
-from danswer.auth.users import current_user
-from danswer.background.celery.celery_utils import get_deletion_attempt_snapshot
-from danswer.background.celery.tasks.doc_permission_syncing.tasks import (
+from onyx.auth.users import current_curator_or_admin_user
+from onyx.auth.users import current_user
+from onyx.background.celery.celery_utils import get_deletion_attempt_snapshot
+from onyx.background.celery.tasks.doc_permission_syncing.tasks import (
     try_creating_permissions_sync_task,
 )
-from danswer.background.celery.tasks.pruning.tasks import (
+from onyx.background.celery.tasks.pruning.tasks import (
     try_creating_prune_generator_task,
 )
-from danswer.background.celery.versioned_apps.primary import app as primary_app
-from danswer.db.connector_credential_pair import add_credential_to_connector
-from danswer.db.connector_credential_pair import get_connector_credential_pair_from_id
-from danswer.db.connector_credential_pair import remove_credential_from_connector
-from danswer.db.connector_credential_pair import (
+from onyx.background.celery.versioned_apps.primary import app as primary_app
+from onyx.db.connector_credential_pair import add_credential_to_connector
+from onyx.db.connector_credential_pair import get_connector_credential_pair_from_id
+from onyx.db.connector_credential_pair import remove_credential_from_connector
+from onyx.db.connector_credential_pair import (
     update_connector_credential_pair_from_id,
 )
-from danswer.db.document import get_document_counts_for_cc_pairs
-from danswer.db.document import get_documents_for_cc_pair
-from danswer.db.engine import CURRENT_TENANT_ID_CONTEXTVAR
-from danswer.db.engine import get_current_tenant_id
-from danswer.db.engine import get_session
-from danswer.db.enums import AccessType
-from danswer.db.enums import ConnectorCredentialPairStatus
-from danswer.db.index_attempt import count_index_attempts_for_connector
-from danswer.db.index_attempt import get_latest_index_attempt_for_cc_pair_id
-from danswer.db.index_attempt import get_paginated_index_attempts_for_cc_pair_id
-from danswer.db.models import SearchSettings
-from danswer.db.models import User
-from danswer.db.search_settings import get_active_search_settings
-from danswer.db.search_settings import get_current_search_settings
-from danswer.redis.redis_connector import RedisConnector
-from danswer.redis.redis_pool import get_redis_client
-from danswer.server.documents.models import CCPairFullInfo
-from danswer.server.documents.models import CCPropertyUpdateRequest
-from danswer.server.documents.models import CCStatusUpdateRequest
-from danswer.server.documents.models import ConnectorCredentialPairIdentifier
-from danswer.server.documents.models import ConnectorCredentialPairMetadata
-from danswer.server.documents.models import DocumentSyncStatus
-from danswer.server.documents.models import PaginatedIndexAttempts
-from danswer.server.models import StatusResponse
-from danswer.utils.logger import setup_logger
-from danswer.utils.variable_functionality import fetch_ee_implementation_or_noop
+from onyx.db.document import get_document_counts_for_cc_pairs
+from onyx.db.document import get_documents_for_cc_pair
+from onyx.db.engine import CURRENT_TENANT_ID_CONTEXTVAR
+from onyx.db.engine import get_current_tenant_id
+from onyx.db.engine import get_session
+from onyx.db.enums import AccessType
+from onyx.db.enums import ConnectorCredentialPairStatus
+from onyx.db.index_attempt import count_index_attempts_for_connector
+from onyx.db.index_attempt import get_latest_index_attempt_for_cc_pair_id
+from onyx.db.index_attempt import get_paginated_index_attempts_for_cc_pair_id
+from onyx.db.models import SearchSettings
+from onyx.db.models import User
+from onyx.db.search_settings import get_active_search_settings
+from onyx.db.search_settings import get_current_search_settings
+from onyx.redis.redis_connector import RedisConnector
+from onyx.redis.redis_pool import get_redis_client
+from onyx.server.documents.models import CCPairFullInfo
+from onyx.server.documents.models import CCPropertyUpdateRequest
+from onyx.server.documents.models import CCStatusUpdateRequest
+from onyx.server.documents.models import ConnectorCredentialPairIdentifier
+from onyx.server.documents.models import ConnectorCredentialPairMetadata
+from onyx.server.documents.models import DocumentSyncStatus
+from onyx.server.documents.models import PaginatedIndexAttempts
+from onyx.server.models import StatusResponse
+from onyx.utils.logger import setup_logger
+from onyx.utils.variable_functionality import fetch_ee_implementation_or_noop
 
 logger = setup_logger()
 router = APIRouter(prefix="/manage")
@@ -510,7 +510,7 @@ def associate_credential_to_connector(
     db_session: Session = Depends(get_session),
 ) -> StatusResponse[int]:
     fetch_ee_implementation_or_noop(
-        "danswer.db.user_group", "validate_user_creation_permissions", None
+        "onyx.db.user_group", "validate_user_creation_permissions", None
     )(
         db_session=db_session,
         user=user,

@@ -2,8 +2,8 @@ import logging
 
 from celery import current_task
 
-from danswer.utils.logger import ColoredFormatter
-from danswer.utils.logger import PlainFormatter
+from onyx.utils.logger import ColoredFormatter
+from onyx.utils.logger import PlainFormatter
 
 
 class CeleryTaskPlainFormatter(PlainFormatter):

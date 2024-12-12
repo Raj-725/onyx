@@ -2,8 +2,8 @@ import os
 
 from sqlalchemy.orm import Session
 
-from danswer.db.models import SlackChannelConfig
-from danswer.db.slack_channel_config import fetch_slack_channel_configs
+from onyx.db.models import SlackChannelConfig
+from onyx.db.slack_channel_config import fetch_slack_channel_configs
 
 
 VALID_SLACK_FILTERS = [

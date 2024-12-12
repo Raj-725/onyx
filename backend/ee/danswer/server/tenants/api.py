@@ -4,26 +4,26 @@ from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import Response
 
-from danswer.auth.users import auth_backend
-from danswer.auth.users import current_admin_user
-from danswer.auth.users import get_jwt_strategy
-from danswer.auth.users import User
-from danswer.configs.app_configs import WEB_DOMAIN
-from danswer.db.engine import get_session_with_tenant
-from danswer.db.notification import create_notification
-from danswer.db.users import get_user_by_email
-from danswer.server.settings.store import load_settings
-from danswer.server.settings.store import store_settings
-from danswer.utils.logger import setup_logger
-from ee.danswer.auth.users import current_cloud_superuser
-from ee.danswer.configs.app_configs import STRIPE_SECRET_KEY
-from ee.danswer.server.tenants.access import control_plane_dep
-from ee.danswer.server.tenants.billing import fetch_billing_information
-from ee.danswer.server.tenants.billing import fetch_tenant_stripe_information
-from ee.danswer.server.tenants.models import BillingInformation
-from ee.danswer.server.tenants.models import ImpersonateRequest
-from ee.danswer.server.tenants.models import ProductGatingRequest
-from ee.danswer.server.tenants.user_mapping import get_tenant_id_for_email
+from ee.onyx.auth.users import current_cloud_superuser
+from ee.onyx.configs.app_configs import STRIPE_SECRET_KEY
+from ee.onyx.server.tenants.access import control_plane_dep
+from ee.onyx.server.tenants.billing import fetch_billing_information
+from ee.onyx.server.tenants.billing import fetch_tenant_stripe_information
+from ee.onyx.server.tenants.models import BillingInformation
+from ee.onyx.server.tenants.models import ImpersonateRequest
+from ee.onyx.server.tenants.models import ProductGatingRequest
+from ee.onyx.server.tenants.user_mapping import get_tenant_id_for_email
+from onyx.auth.users import auth_backend
+from onyx.auth.users import current_admin_user
+from onyx.auth.users import get_jwt_strategy
+from onyx.auth.users import User
+from onyx.configs.app_configs import WEB_DOMAIN
+from onyx.db.engine import get_session_with_tenant
+from onyx.db.notification import create_notification
+from onyx.db.users import get_user_by_email
+from onyx.server.settings.store import load_settings
+from onyx.server.settings.store import store_settings
+from onyx.utils.logger import setup_logger
 from shared_configs.contextvars import CURRENT_TENANT_ID_CONTEXTVAR
 
 stripe.api_key = STRIPE_SECRET_KEY

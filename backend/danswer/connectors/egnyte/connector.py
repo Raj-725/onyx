@@ -11,28 +11,28 @@ from typing import IO
 import requests
 from retry import retry
 
-from danswer.configs.app_configs import EGNYTE_BASE_DOMAIN
-from danswer.configs.app_configs import EGNYTE_CLIENT_ID
-from danswer.configs.app_configs import EGNYTE_CLIENT_SECRET
-from danswer.configs.app_configs import EGNYTE_LOCALHOST_OVERRIDE
-from danswer.configs.app_configs import INDEX_BATCH_SIZE
-from danswer.configs.constants import DocumentSource
-from danswer.connectors.interfaces import GenerateDocumentsOutput
-from danswer.connectors.interfaces import LoadConnector
-from danswer.connectors.interfaces import OAuthConnector
-from danswer.connectors.interfaces import PollConnector
-from danswer.connectors.interfaces import SecondsSinceUnixEpoch
-from danswer.connectors.models import BasicExpertInfo
-from danswer.connectors.models import ConnectorMissingCredentialError
-from danswer.connectors.models import Document
-from danswer.connectors.models import Section
-from danswer.file_processing.extract_file_text import detect_encoding
-from danswer.file_processing.extract_file_text import extract_file_text
-from danswer.file_processing.extract_file_text import get_file_ext
-from danswer.file_processing.extract_file_text import is_text_file_extension
-from danswer.file_processing.extract_file_text import is_valid_file_ext
-from danswer.file_processing.extract_file_text import read_text_file
-from danswer.utils.logger import setup_logger
+from onyx.configs.app_configs import EGNYTE_BASE_DOMAIN
+from onyx.configs.app_configs import EGNYTE_CLIENT_ID
+from onyx.configs.app_configs import EGNYTE_CLIENT_SECRET
+from onyx.configs.app_configs import EGNYTE_LOCALHOST_OVERRIDE
+from onyx.configs.app_configs import INDEX_BATCH_SIZE
+from onyx.configs.constants import DocumentSource
+from onyx.connectors.interfaces import GenerateDocumentsOutput
+from onyx.connectors.interfaces import LoadConnector
+from onyx.connectors.interfaces import OAuthConnector
+from onyx.connectors.interfaces import PollConnector
+from onyx.connectors.interfaces import SecondsSinceUnixEpoch
+from onyx.connectors.models import BasicExpertInfo
+from onyx.connectors.models import ConnectorMissingCredentialError
+from onyx.connectors.models import Document
+from onyx.connectors.models import Section
+from onyx.file_processing.extract_file_text import detect_encoding
+from onyx.file_processing.extract_file_text import extract_file_text
+from onyx.file_processing.extract_file_text import get_file_ext
+from onyx.file_processing.extract_file_text import is_text_file_extension
+from onyx.file_processing.extract_file_text import is_valid_file_ext
+from onyx.file_processing.extract_file_text import read_text_file
+from onyx.utils.logger import setup_logger
 
 
 logger = setup_logger()
@@ -118,7 +118,7 @@ def _process_egnyte_file(
     if is_text_file_extension(file_name):
         encoding = detect_encoding(file_content)
         file_content_raw, file_metadata = read_text_file(
-            file_content, encoding=encoding, ignore_danswer_metadata=False
+            file_content, encoding=encoding, ignore_onyx_metadata=False
         )
     else:
         file_content_raw = extract_file_text(

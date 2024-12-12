@@ -7,14 +7,14 @@ from sqlalchemy import select
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm import Session
 
-from danswer.configs.constants import TokenRateLimitScope
-from danswer.db.models import TokenRateLimit
-from danswer.db.models import TokenRateLimit__UserGroup
-from danswer.db.models import User
-from danswer.db.models import User__UserGroup
-from danswer.db.models import UserGroup
-from danswer.db.models import UserRole
-from danswer.server.token_rate_limits.models import TokenRateLimitArgs
+from onyx.configs.constants import TokenRateLimitScope
+from onyx.db.models import TokenRateLimit
+from onyx.db.models import TokenRateLimit__UserGroup
+from onyx.db.models import User
+from onyx.db.models import User__UserGroup
+from onyx.db.models import UserGroup
+from onyx.db.models import UserRole
+from onyx.server.token_rate_limits.models import TokenRateLimitArgs
 
 
 def _add_user_filters(
