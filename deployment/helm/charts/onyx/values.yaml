@@ -23,7 +23,7 @@ inferenceCapability:
       - key: app
         value: inference-model-server
     image:
-      repository: onyx/onyx-model-server
+      repository: danswer/danswer-model-server
       tag: latest
       pullPolicy: IfNotPresent
     command:
@@ -113,7 +113,7 @@ nginx:
 webserver:
   replicaCount: 1
   image:
-    repository: onyx/onyx-web-server
+    repository: danswer/danswer-web-server
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -178,7 +178,7 @@ webserver:
 api:
   replicaCount: 1
   image:
-    repository: onyx/onyx-backend
+    repository: danswer/danswer-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -244,7 +244,7 @@ api:
 background:
   replicaCount: 1
   image:
-    repository: onyx/onyx-backend
+    repository: danswer/danswer-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: latest

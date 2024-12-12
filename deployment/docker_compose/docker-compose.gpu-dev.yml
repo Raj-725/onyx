@@ -1,6 +1,6 @@
 services:
   api_server:
-    image: onyx/onyx-backend:${IMAGE_TAG:-latest}
+    image: danswer/danswer-backend:${IMAGE_TAG:-latest}
     build:
       context: ../../backend
       dockerfile: Dockerfile
@@ -100,7 +100,7 @@ services:
         max-file: "6"
 
   background:
-    image: onyx/onyx-backend:${IMAGE_TAG:-latest}
+    image: danswer/danswer-backend:${IMAGE_TAG:-latest}
     build:
       context: ../../backend
       dockerfile: Dockerfile
@@ -201,7 +201,7 @@ services:
         max-file: "6"
 
   web_server:
-    image: onyx/onyx-web-server:${IMAGE_TAG:-latest}
+    image: danswer/danswer-web-server:${IMAGE_TAG:-latest}
     build:
       context: ../../web
       dockerfile: Dockerfile
@@ -225,7 +225,7 @@ services:
       - ENABLE_PAID_ENTERPRISE_EDITION_FEATURES=${ENABLE_PAID_ENTERPRISE_EDITION_FEATURES:-false}
 
   inference_model_server:
-    image: onyx/onyx-model-server:${IMAGE_TAG:-latest}
+    image: danswer/danswer-model-server:${IMAGE_TAG:-latest}
     # for GPU support, please read installation guidelines in the README.md
     # bare minimum to get this working is to install nvidia-container-toolkit
     deploy:
@@ -262,7 +262,7 @@ services:
         max-file: "6"
 
   indexing_model_server:
-    image: onyx/onyx-model-server:${IMAGE_TAG:-latest}
+    image: danswer/danswer-model-server:${IMAGE_TAG:-latest}
     build:
       context: ../../backend
       dockerfile: Dockerfile.model_server

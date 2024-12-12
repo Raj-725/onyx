@@ -1,6 +1,6 @@
 services:
   api_server:
-    image: onyx/onyx-backend:${IMAGE_TAG:-latest}
+    image: danswer/danswer-backend:${IMAGE_TAG:-latest}
     build:
       context: ../../backend
       dockerfile: Dockerfile
@@ -111,7 +111,7 @@ services:
         max-file: "6"
 
   background:
-    image: onyx/onyx-backend:${IMAGE_TAG:-latest}
+    image: danswer/danswer-backend:${IMAGE_TAG:-latest}
     build:
       context: ../../backend
       dockerfile: Dockerfile
@@ -239,7 +239,7 @@ services:
     #   - ${CA_CERT_PATH:-./custom-ca.crt}:/etc/ssl/certs/custom-ca.crt:ro
 
   web_server:
-    image: onyx/onyx-web-server:${IMAGE_TAG:-latest}
+    image: danswer/danswer-web-server:${IMAGE_TAG:-latest}
     build:
       context: ../../web
       dockerfile: Dockerfile
@@ -269,7 +269,7 @@ services:
       - NEXT_PUBLIC_CUSTOM_REFRESH_URL=${NEXT_PUBLIC_CUSTOM_REFRESH_URL:-}
 
   inference_model_server:
-    image: onyx/onyx-model-server:${IMAGE_TAG:-latest}
+    image: danswer/danswer-model-server:${IMAGE_TAG:-latest}
     build:
       context: ../../backend
       dockerfile: Dockerfile.model_server
@@ -298,7 +298,7 @@ services:
         max-file: "6"
 
   indexing_model_server:
-    image: onyx/onyx-model-server:${IMAGE_TAG:-latest}
+    image: danswer/danswer-model-server:${IMAGE_TAG:-latest}
     build:
       context: ../../backend
       dockerfile: Dockerfile.model_server

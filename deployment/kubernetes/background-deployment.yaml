@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: background
-          image: onyx/onyx-backend:latest
+          image: danswer/danswer-backend:latest
           imagePullPolicy: IfNotPresent
           command:
             - "/bin/sh"

@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: inference-model-server
-          image: onyx/onyx-model-server:latest
+          image: danswer/danswer-model-server:latest
           imagePullPolicy: IfNotPresent
           command:
             [

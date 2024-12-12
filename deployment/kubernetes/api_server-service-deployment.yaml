@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: api-server
-          image: onyx/onyx-backend:latest
+          image: danswer/danswer-backend:latest
           imagePullPolicy: IfNotPresent
           command:
             - "/bin/sh"
