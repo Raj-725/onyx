@@ -10,7 +10,7 @@
             <node hostalias="onyx-node" />
         </nodes>
     </container>
-    <content id="onyx_index" version="1.0">
+    <content id="danswer_index" version="1.0">
         <redundancy>1</redundancy>
         <documents>
             <!-- <document type="onyx_chunk" mode="index" /> -->
