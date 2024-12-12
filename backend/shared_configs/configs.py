@@ -21,9 +21,9 @@ INDEXING_MODEL_SERVER_PORT = int(
 )
 
 # Onyx custom Deep Learning Models
-CONNECTOR_CLASSIFIER_MODEL_REPO = "Onyx/filter-extraction-model"
+CONNECTOR_CLASSIFIER_MODEL_REPO = "Danswer/filter-extraction-model"
 CONNECTOR_CLASSIFIER_MODEL_TAG = "1.0.0"
-INTENT_MODEL_VERSION = "onyx/hybrid-intent-token-classifier"
+INTENT_MODEL_VERSION = "danswer/hybrid-intent-token-classifier"
 INTENT_MODEL_TAG = "v1.0.3"
 
 
